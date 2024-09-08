@@ -1,0 +1,24 @@
+.icon-container {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+.btn {
+  margin-left: 10px;
+}
+
+.icon-container button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.icon-container button:hover .icon {
+  fill: #007bff;
+}

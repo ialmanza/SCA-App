@@ -1,0 +1,75 @@
+
+.form-container {
+  max-width: 400px;
+  width: 100%;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.form-header {
+  margin-bottom: 20px;
+}
+.form-header img {
+  margin-right: 10px;
+}
+.form-header h1 {
+  font-size: 24px;
+  font-weight: bold;
+}
+.form-group {
+  margin-bottom: 15px;
+}
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  color: #333;
+}
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border-radius: 5px;
+}
+.form-group input:focus {
+  outline: none;
+  border-color: #007bff;
+  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+}
+.form-group .checkbox {
+  display: flex;
+  align-items: center;
+}
+.form-group .checkbox input {
+  margin-right: 10px;
+}
+.form-group .checkbox label {
+  margin: 0;
+}
+.form-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+}
+.form-button:hover {
+  background-color: #0056b3;
+}
+.form-footer {
+  margin-top: 15px;
+  text-align: center;
+}
+.form-footer a {
+  color: #007bff;
+  text-decoration: none;
+}
+.form-footer a:hover {
+  text-decoration: underline;
+}
+
+.btn {
+  border-radius: 5px; /* Redondea las esquinas de los botones */
+  transition: border-color 0.3s, box-shadow 0.3s;
+
+ }

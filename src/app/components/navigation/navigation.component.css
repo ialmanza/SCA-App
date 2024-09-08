@@ -1,0 +1,60 @@
+.navbar .btn {
+  padding: 10px 20px;
+  margin-right: 10px;
+}
+
+.navbar-buttons {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+}
+
+.avatar {
+  text-align: center;
+}
+
+.navbar-brand {
+  font-size: 24px;
+  color: #007bff;
+}
+
+
+
+body {
+  font-family: 'Arial', sans-serif;
+}
+
+.navbar {
+  padding: 20px 0;
+  z-index: 50;
+}
+
+
+.btn {
+  padding: 10px 15px;
+  border-radius: 5px;
+}
+
+.btn:hover {
+  color: blue;
+}
+
+.navbar.nav-link {
+  color: #0874e8;
+}
+.navbar.nav-link:hover {
+  color: blue;
+}
+
+a{
+  text-decoration: none;
+  color:black;
+  border-radius: 5px;
+  padding: 10px 15px;
+}
+
+a:hover{
+  color:blue;
+}
+

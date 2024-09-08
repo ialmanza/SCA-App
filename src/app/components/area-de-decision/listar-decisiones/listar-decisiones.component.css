@@ -1,0 +1,147 @@
+.icon-container {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+.icon-container button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.icon-container button:hover .icon {
+  fill: #007bff;
+}
+
+
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.page-size-options {
+  display: flex;
+  align-items: center;
+}
+
+.page-size-options label {
+  margin-right: 10px;
+}
+
+.pagination-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.pagination-buttons button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  border: 1px solid #007bff;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-buttons button:disabled {
+  background-color: #d0d0d0;
+  border: 1px solid #d0d0d0;
+  cursor: not-allowed;
+}
+
+.pagination-buttons button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+/* RESPONSIVE */
+ .container {
+  display: flex;
+  flex-direction: column;
+  padding: 2px;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+.col {
+  flex: 1 1 100%;
+  padding: 10px;
+}
+.form-group {
+  display: flex;
+  justify-content: center;
+}
+.form-control {
+  width: 100%;
+  max-width: 600px;
+}
+.table {
+  width: 80%;
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+.table th:hover {
+  color: blue;
+}
+.header-actions {
+  display: flex;
+  justify-content: center;
+}
+.skills-list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.icon-container {
+  margin: 0 5px;
+}
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+.page-size-options, .pagination-buttons {
+  display: flex;
+  align-items: center;
+}
+.pagination-buttons button {
+  margin: 0 5px;
+}
+
+@media (min-width: 768px) {
+  .col {
+    flex: 1;
+  }
+  .form-control {
+    max-width: 400px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .form-control {
+    max-width: 600px;
+  }
+}
+
+.pagination-container {
+  padding-left: 15px; /* Alinear a la izquierda */
+  padding-right: 15px; /* Alinear a la derecha */
+  margin-top: 10px; /* Ajuste de margen superior */
+}
+
