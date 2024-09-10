@@ -1,0 +1,219 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  /* background-color: #f8f9fa;  Color de fondo opcional */
+}
+
+.card-container {
+  width: 400px; /* Tamaño de la tarjeta (ajústalo según sea necesario) */
+  max-width: 90%; /* Máximo tamaño para pantallas más pequeñas */
+  margin: auto; /* Margen automático para centrar en su contenedor */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra suave */
+  padding: 20px; /* Padding interno */
+  background-color: #ffffff; /* Fondo blanco */
+  border-radius: 8px; /* Bordes redondeados */
+}
+
+
+.button-container {
+  display: flex; /* Alineación horizontal de los botones */
+  justify-content: center; /* Centramos los botones en el contenedor */
+  gap: 16px; /* Espacio entre los botones */
+  margin-top: 24px; /* Separación del resto del contenido */
+}
+
+.contact-card, .confirmation-card {
+  width: 80%; /* Aumentar el ancho de las tarjetas al 80% del contenedor */
+  max-width: 600px; /* Establecer un ancho máximo */
+  margin: 0 auto; /* Centrar la tarjeta */
+  padding: 20px; /* Añadir padding adicional para más espacio interno */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra para darle profundidad */
+  border-radius: 8px; /* Bordes más redondeados */
+  background-color: white; /* Fondo blanco */
+  transition: all 0.3s ease; /* Transición suave para efectos de hover */
+}
+
+.contact-card:hover, .confirmation-card:hover {
+  transform: scale(1.02); /* Efecto de agrandamiento suave al pasar el cursor */
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Sombra más intensa en hover */
+}
+
+.confirmar-button, .cancelar-button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.375rem; /* rounded-md */
+  font-weight: 500; /* medium */
+  cursor: pointer;
+  transition: background-color 0.3s, border-color 0.3s;
+}
+
+.confirmar-button {
+  background-color: #6366f1; /* Tailwind indigo-500 */
+  color: white;
+  border: 1px solid #6366f1; /* Border color similar to button color */
+}
+
+.confirmar-button:hover {
+  background-color: #4f46e5; /* Tailwind indigo-600 */
+}
+
+.cancelar-button {
+  background-color: #e2e8f0; /* Tailwind gray-200 */
+  color: #4b5563; /* Tailwind gray-700 */
+  border: 1px solid #e2e8f0; /* Border color similar to button color */
+}
+
+.cancelar-button:hover {
+  background-color: #cbd5e1; /* Tailwind gray-300 */
+  border-color: #cbd5e1; /* Darker gray on hover */
+}
+
+
+.icon-container {
+  display: flex;
+  align-items: center;
+}
+
+.icon {
+  width: 24px;
+  height: 24px;
+}
+
+.icon-container button {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.icon-container button:hover .icon {
+  fill: #007bff;
+}
+
+
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.page-size-options {
+  display: flex;
+  align-items: center;
+}
+
+.page-size-options label {
+  margin-right: 10px;
+}
+
+.pagination-buttons {
+  display: flex;
+  align-items: center;
+}
+
+.pagination-buttons button {
+  margin: 0 5px;
+  padding: 5px 10px;
+  border: 1px solid #007bff;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-buttons button:disabled {
+  background-color: #d0d0d0;
+  border: 1px solid #d0d0d0;
+  cursor: not-allowed;
+}
+
+.pagination-buttons button:hover:not(:disabled) {
+  background-color: #0056b3;
+}
+
+/* RESPONSIVE */
+ .container {
+  display: flex;
+  flex-direction: column;
+  padding: 2px;
+}
+.row {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+.col {
+  flex: 1 1 100%;
+  padding: 10px;
+}
+.form-group {
+  display: flex;
+  justify-content: center;
+}
+.form-control {
+  width: 100%;
+  max-width: 600px;
+}
+.table {
+  width: 80%;
+  border-collapse: collapse;
+  margin: 0 auto;
+}
+.table th, .table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+.table th:hover {
+  color: blue;
+}
+.header-actions {
+  display: flex;
+  justify-content: center;
+}
+.skills-list {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.icon-container {
+  margin: 0 5px;
+}
+.pagination-controls {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 20px;
+}
+.page-size-options, .pagination-buttons {
+  display: flex;
+  align-items: center;
+}
+.pagination-buttons button {
+  margin: 0 5px;
+}
+
+@media (min-width: 768px) {
+  .col {
+    flex: 1;
+  }
+  .form-control {
+    max-width: 400px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .form-control {
+    max-width: 600px;
+  }
+}
+
+.pagination-container {
+  padding-left: 15px; /* Alinear a la izquierda */
+  padding-right: 15px; /* Alinear a la derecha */
+  margin-top: 10px; /* Ajuste de margen superior */
+}
+

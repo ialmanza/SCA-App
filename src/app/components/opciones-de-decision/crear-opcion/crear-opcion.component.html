@@ -1,0 +1,24 @@
+<!--
+
+<div class="container">
+  <input type="text" class="form-control" placeholder="Opciones del área" aria-label="Opciones">
+
+</div>
+ -->
+
+<div class="container p-4">
+  <div class="row">
+    <div class="col-md-6 mx-auto">
+      <form (submit)="addOpcion(opcion)">
+        <div class="col-md-9 mx-auto">
+
+          <input type="text" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3" placeholder="Opciones del área" #opcion required>
+
+        </div>
+        <button class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">Agregar</button>
+      </form>
+    </div>
+
+  </div>
+</div>
+

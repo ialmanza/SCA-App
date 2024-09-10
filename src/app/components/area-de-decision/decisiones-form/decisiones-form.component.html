@@ -1,0 +1,195 @@
+
+<div class="container mx-auto px-4 py-6">
+  <div *ngIf="pasoActual === 1">
+    <!-- Paso 1: Formulario para generar área de desarrollo -->
+    <div class="flex flex-col items-center gap-6">
+      <h2 class="text-2xl font-bold text-center text-gray-900">Generar Área de Desarrollo</h2>
+
+      <div class="w-full max-w-md bg-white shadow-md rounded-lg p-6">
+        <form (submit)="addDecision(rotulo, nombre_area, descripcion)" class="space-y-4">
+          <div class="form-group">
+            <label for="rotulo" class="block text-sm font-medium text-gray-700">Complete código:</label>
+            <input type="password" class="form-control" name="rotulo" id="rotulo" placeholder="••••••••"
+              class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-600 focus:border-indigo-600" required="" #rotulo>
+          </div>
+          <div class="form-group">
+            <label for="nombre_area" class="block text-sm font-medium text-gray-700">Nombre del área:</label>
+            <input type="text" class="form-control" name="nombre_area" id="nombre_area" placeholder="Nombre"
+              class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-600 focus:border-indigo-600" required="" #nombre_area>
+          </div>
+          <div class="form-group">
+            <label for="descripcion" class="block text-sm font-medium text-gray-700">Complete descripción:</label>
+            <textarea name="descripcion" id="descripcion" placeholder="Descripción"
+              class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-600 focus:border-indigo-600" required="" rows="4" #descripcion></textarea>
+          </div>
+          <div class="flex justify-between">
+            <button type="submit" class="w-full py-2 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Añadir</button>
+            <button type="button" class="w-full py-2 px-4 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">Cancelar</button>
+          </div>
+        </form>
+      </div>
+
+      <button class="mt-4 w-full max-w-md py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500" (click)="avanzarPaso()">Continuar</button>
+    </div>
+  </div>
+
+  <div *ngIf="pasoActual === 2">
+    <!-- Paso 2: Tabla de decisiones -->
+    <div class="overflow-x-auto mt-6">
+      <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="py-3 px-4 text-left text-gray-700">Área de decisión</th>
+            <th class="py-3 px-4 text-left text-gray-700">Descripción</th>
+            <th class="py-3 px-4 text-left text-gray-700">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let decision of decisiones" class="border-b hover:bg-gray-100">
+            <td class="py-3 px-4">{{decision.area}}</td>
+            <td class="py-3 px-4">{{decision.description}}</td>
+            <td class="py-3 px-4">
+              <div class="flex space-x-2">
+                <button class="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon">
+                    <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+                    <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+                  </svg>
+                </button>
+                <button class="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600" (click)="deleteDecision(decision)">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon">
+                    <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
+      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
+    </div>
+  </div>
+
+  <div *ngIf="pasoActual === 3">
+    <!-- Paso 3: Conexión de grafos -->
+    <h2 class="text-lg font-semibold leading-6 text-gray-900 mb-4">Aquí se crea el grafo que conectará con cada nodo</h2>
+    <p>preguntar a q se refieren con que pueden mostrar el código</p>
+
+    <button class="btn btn-primary">Crear Conexión</button>
+    <button class="btn btn-danger">Eliminar Conexión</button>
+    <button class="btn btn-success">Previsualizar Conexión</button>
+
+
+    <div class="flex justify-between mt-6">
+      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
+      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
+    </div>
+
+  </div>
+
+  <div *ngIf="pasoActual === 4">
+    <!-- Paso 4: Muestra los grafos conectados -->
+    <h2 class="text-lg font-semibold leading-6 text-gray-900 mb-4">Aquí se muestra el gráfico con las decisiones</h2>
+    <p>antes de continuar el usuario piensa cuales son los nodos importantes </p>
+
+    <div class="flex justify-between mt-6">
+      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
+      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
+    </div>
+
+  </div>
+
+  <div *ngIf="pasoActual === 5">
+    <!-- Paso 5: Elección de áreas que pasan a la siguiente fase -->
+
+    <div class="overflow-x-auto mt-6">
+      <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="py-3 px-4 text-center text-gray-700">Área de decisión</th>
+            <th class="py-3 px-4 text-center text-gray-700">Seleccionar</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-200">
+          <tr *ngFor="let decision of decisiones" class="border-b hover:bg-gray-100">
+            <td class="py-3 px-4 text-left text-gray-700">{{ decision.area }}</td>
+            <td class="py-3 px-4 text-center">
+              <input type="checkbox"> <!--(change)="guardarSeleccion(decision)"-->
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+
+    <div class="flex justify-between mt-6">
+      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
+      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
+    </div>
+
+  </div>
+
+
+
+  <div *ngIf="pasoActual === 6">
+    <!--Aquí van las opciones de desarrollo-->
+    <div class="overflow-x-auto mt-6">
+      <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
+        <thead class="bg-gray-200">
+          <tr>
+            <th class="py-3 px-4 text-left text-gray-700">Área de decisión</th>
+            <th class="py-3 px-4 text-left text-gray-700">Opciones de decisión</th>
+            <th class="py-3 px-4 text-left text-gray-700">Rótulo</th>
+            <th class="py-3 px-4 text-left text-gray-700">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let decision of decisiones" class="border-b hover:bg-gray-100">
+            <td class="py-3 px-4">{{decision.area}}</td>
+            <td class="py-3 px-4">Opciones CRUD</td>
+            <td class="py-3 px-4">{{decision.rotulo}}</td>
+
+            <td class="py-3 px-4">
+              <div class="flex space-x-2">
+                <button class="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon">
+                    <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+                    <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+                  </svg>
+                </button>
+                <button class="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600" (click)="deleteDecision(decision)">
+                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon">
+                    <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
+                  </svg>
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="flex justify-between mt-6">
+      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
+      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
+    </div>
+
+  </div>
+
+  <div *ngIf="pasoActual === 7">
+      <!-- Paso 4: Muestra los grafos conectados -->
+      <h2 class="text-lg font-semibold leading-6 text-gray-900 mb-4">Próximo paso</h2>
+
+
+      <div class="flex justify-between mt-6">
+        <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
+        <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
+      </div>
+
+    </div>
+
+</div>

@@ -26,14 +26,11 @@ export class CrearDecisionComponent {
         description: descripcion.value
 
       })
-      console.log( "Area: ", area.value, "Rotulo: ", rotulo.value, "Descripción: ", descripcion.value); //para debug
       area.value = '';
       rotulo.value = '';
       descripcion.value = '';
       rotulo.focus();
       return false;
-
-
   }
 
 }
