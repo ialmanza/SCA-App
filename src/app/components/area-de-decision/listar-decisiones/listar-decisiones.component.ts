@@ -4,16 +4,20 @@ import { DecisionComponent } from "../decision/decision.component";
 import { DecisionService } from '../../../services/decision.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { OpcionService } from '../../../services/opcion.service';
+import { Opcion } from '../../../models/opcion';
 
 @Component({
   selector: 'app-listar-decisiones',
   standalone: true,
   imports: [DecisionComponent, FormsModule, CommonModule],
+  providers: [DecisionService, OpcionService],
   templateUrl: './listar-decisiones.component.html',
   styleUrl: './listar-decisiones.component.css'
 })
 export class ListarDecisionesComponent {
   decisiones : Decision[];
+  opciones: Opcion[];
 
   // PAGINACIÓN
   pageSizeOptions = [5, 10, 20];
@@ -22,13 +26,18 @@ export class ListarDecisionesComponent {
   totalItems = 0;
 
 
-  constructor( private decisionService: DecisionService) {
+  constructor( private decisionService: DecisionService, private opcionService: OpcionService) {
     this.decisiones = [];
+    this.opciones = [];
   }
 
   ngOnInit(): void {
     this.decisionService.getDecisiones().subscribe((decisiones : Decision[]) => {
       this.decisiones = decisiones
+    });
+
+    this.opcionService.getOpciones().subscribe((opciones: Opcion[]) => {
+      this.opciones = opciones;
     });
   }
 

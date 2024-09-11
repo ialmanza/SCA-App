@@ -27,7 +27,13 @@
               <td>{{decision.area}}</td>
               <td>{{decision.description}}</td>
               <td>{{decision.rotulo}}</td>
-              <td>{{"Opciones CRUD"}}</td>
+              <td><!-- Aquí muestra las opciones relacionadas -->
+                <ul>
+                  <li *ngFor="let opcion of opciones">
+                    {{opcion.descripcion}}
+                  </li>
+                </ul>
+              </td>
               <td><div>
                 <ul class="skills-list d-flex align-items-center">
 
@@ -57,6 +63,8 @@
         </table>
       </div>
 
+
+      <!-- PAGINACIÓN EN DESARROLLO -->
 
       <!-- <div class="pagination-container d-flex justify-content-between align-items-center mt-3 px-3">
         <div class="page-size-options">

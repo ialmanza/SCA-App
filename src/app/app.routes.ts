@@ -9,7 +9,7 @@ import { CrearOpcionComponent } from './components/opciones-de-decision/crear-op
 import { ListarOpcionesComponent } from './components/opciones-de-decision/listar-opciones/listar-opciones.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'crear-decision', pathMatch: 'full' },
+  { path: '', redirectTo: 'decisiones-form', pathMatch: 'full' },
   { path: 'decisiones', component: DecisionComponent },
   { path: 'crear-decision', component: CrearDecisionComponent },
   { path: 'listar-decisiones', component: ListarDecisionesComponent },

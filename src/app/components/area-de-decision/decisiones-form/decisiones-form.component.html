@@ -6,16 +6,25 @@
       <h2 class="text-2xl font-bold text-center text-gray-900">Generar Área de Desarrollo</h2>
 
       <div class="w-full max-w-md bg-white shadow-md rounded-lg p-6">
-        <form (submit)="addDecision(rotulo, nombre_area, descripcion)" class="space-y-4">
+        <form (submit)="addDecision( nombre_area, descripcion)" class="space-y-4">
           <div class="form-group">
             <label for="rotulo" class="block text-sm font-medium text-gray-700">Complete código:</label>
-            <input type="password" class="form-control" name="rotulo" id="rotulo" placeholder="••••••••"
-              class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-600 focus:border-indigo-600" required="" #rotulo>
+            <input
+            type="text"
+            name="rotulo"
+            id="rotulo"
+            placeholder="ABC-DEF"
+            pattern="^[A-Z]{3}-[A-Z]{3}$"
+            class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3"
+            required
+            [(ngModel)]="rotuloValue"
+            #rotulo="ngModel"
+          />
           </div>
           <div class="form-group">
             <label for="nombre_area" class="block text-sm font-medium text-gray-700">Nombre del área:</label>
             <input type="text" class="form-control" name="nombre_area" id="nombre_area" placeholder="Nombre"
-              class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-600 focus:border-indigo-600" required="" #nombre_area>
+              class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-600 focus:border-indigo-600" required #nombre_area>
           </div>
           <div class="form-group">
             <label for="descripcion" class="block text-sm font-medium text-gray-700">Complete descripción:</label>
@@ -150,7 +159,15 @@
         <tbody>
           <tr *ngFor="let decision of decisiones" class="border-b hover:bg-gray-100">
             <td class="py-3 px-4">{{decision.area}}</td>
-            <td class="py-3 px-4">Opciones CRUD</td>
+            <td class="py-3 px-4">
+
+               <!-- Aquí se muestran las opciones relacionadas al área -->
+               <ul>
+                <li *ngFor="let opcion of getOpcionesPorArea(decision.id)">
+                  {{opcion.descripcion}}
+                </li>
+              </ul>
+            </td>
             <td class="py-3 px-4">{{decision.rotulo}}</td>
 
             <td class="py-3 px-4">
