@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {FormBuilder, Validators, FormsModule, ReactiveFormsModule, FormGroup} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CrearDecisionComponent } from "../crear-decision/crear-decision.component";
 import { ListarDecisionesComponent } from "../listar-decisiones/listar-decisiones.component";
@@ -24,7 +24,10 @@ export class DecisionesFormComponent {
   decisiones : Decision[];
   opciones: Opcion[];
   rotuloValue: any;
-
+  areasSeleccionadas: Decision[] = [];
+  nuevaDescripcion: string = '';
+  modalAbierto: boolean = false;
+  decisionSeleccionada: Decision | null = null;
 
 
   constructor( private decisionService: DecisionService, private opcionService: OpcionService, public dialog: MatDialog) {
@@ -97,12 +100,18 @@ export class DecisionesFormComponent {
   avanzarPaso() {
     if (this.pasoActual < 10) {
       this.pasoActual++;
+      if (this.pasoActual === 5 || this.pasoActual === 7) {
+        this.areasSeleccionadas = [];
+      }
     }
   }
 
   retrocederPaso() {
     if (this.pasoActual > 1) {
       this.pasoActual--;
+      if (this.pasoActual === 5 ) {
+        this.areasSeleccionadas = [];
+      }
     }
   }
 
@@ -110,18 +119,66 @@ export class DecisionesFormComponent {
     return this.opciones.filter(opcion => opcion.cod_area === areaId);  // Filtrar opciones por área de decisión
   }
 
+  onCheckboxChange(decision: Decision, event: any): void {
+    if (event.target.checked) {
+      this.areasSeleccionadas.push(decision);
+    } else {
+      this.areasSeleccionadas = this.areasSeleccionadas.filter(d => d.id !== decision.id); // Elimina si se deselecciona el área
+    }
+  }
 
-   //FUNCIONALIDAD EN DESARROLLO
-  // guardarSeleccion(decision: any): void {
-  //   if (decision.seleccionado) {
-  //     this.areasSeleccionadas.push(decision.area);
-  //     console.log(this.areasSeleccionadas);
-  //   } else {
-  //     this.areasSeleccionadas = this.areasSeleccionadas.filter(area => area !== decision.area);
-  //   }
+  //CRUD PARA LAS OPCIONES DENTRO DE LAS DECISIONES
+
+  agregarOpcion() {
+    if (!this.nuevaDescripcion.trim()) {
+      alert('Por favor, ingresa una descripción válida.');
+      return;
+    }
+
+    const nuevaOpcion: Opcion = {
+      id: Date.now().toString(),
+      descripcion: this.nuevaDescripcion,
+      cod_area: this.decisionSeleccionada!.id
+    };
 
 
-  // }
+    this.opcionService.addOpcion(nuevaOpcion);
+
+
+    this.opcionService.getOpciones().subscribe((opcionesActualizadas) => {
+      this.opciones = opcionesActualizadas;
+    });
+
+
+    this.cerrarModal();
+  }
+
+  eliminarOpcion(id: string) {
+    this.opcionService.deleteOpcion(id);
+    this.opcionService.getOpciones().subscribe((opcionesActualizadas) => {
+      this.opciones = opcionesActualizadas;
+    });
+  }
+
+  actualizarOpcion(opcion: Opcion) {
+    this.opcionService.updateOpcion(opcion);
+    this.opcionService.getOpciones().subscribe((opcionesActualizadas) => {
+      this.opciones = opcionesActualizadas;
+    });
+  }
+
+
+  abrirModal(decision: Decision) {
+    this.decisionSeleccionada = decision;
+    this.modalAbierto = true;
+  }
+
+
+  cerrarModal() {
+    this.modalAbierto = false;
+    this.nuevaDescripcion = '';
+  }
+
 
 
 }

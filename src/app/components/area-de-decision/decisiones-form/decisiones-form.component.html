@@ -127,7 +127,8 @@
           <tr *ngFor="let decision of decisiones" class="border-b hover:bg-gray-100">
             <td class="py-3 px-4 text-left text-gray-700">{{ decision.area }}</td>
             <td class="py-3 px-4 text-center">
-              <input type="checkbox"> <!--(change)="guardarSeleccion(decision)"-->
+              <!-- <input type="checkbox" [(ngModel)]="decision.id" (change)="guardarSeleccion(decision)"> -->
+              <input type="checkbox" (change)="onCheckboxChange(decision, $event)">
             </td>
           </tr>
         </tbody>
@@ -157,16 +158,37 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let decision of decisiones" class="border-b hover:bg-gray-100">
+          <tr *ngFor="let decision of areasSeleccionadas" class="border-b hover:bg-gray-100">
             <td class="py-3 px-4">{{decision.area}}</td>
             <td class="py-3 px-4">
 
                <!-- Aquí se muestran las opciones relacionadas al área -->
                <ul>
                 <li *ngFor="let opcion of getOpcionesPorArea(decision.id)">
-                  {{opcion.descripcion}}
+                  <span (click)="actualizarOpcion(opcion)" contenteditable="true">{{opcion.descripcion}}</span>
+                  <button class="p-1 text-red-500 hover:text-red-700" (click)="eliminarOpcion(opcion.id)">
+                    Eliminar
+                </button>
                 </li>
               </ul>
+              <button class="p-1 text-blue-500 hover:text-blue-700" (click)="abrirModal(decision)">
+                Agregar Opción
+            </button>
+
+            <!-- Modal para ingresar la descripción -->
+              <div *ngIf="modalAbierto" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                <div class="bg-white p-4 rounded shadow-lg">
+                  <h2 class="text-xl font-bold mb-4">Agregar Descripción de la Opción</h2>
+
+                  <label for="descripcion" class="block mb-2">Descripción:</label>
+                  <input id="descripcion" type="text" [(ngModel)]="nuevaDescripcion" class="border p-2 w-full mb-4" placeholder="Escribe la descripción">
+
+                  <div class="flex justify-end">
+                    <button (click)="cerrarModal()" class="mr-2 p-2 bg-gray-300 hover:bg-gray-400 rounded">Cancelar</button>
+                    <button (click)="agregarOpcion()" class="p-2 bg-blue-500 text-white hover:bg-blue-700 rounded">Guardar</button>
+                  </div>
+                </div>
+              </div>
             </td>
             <td class="py-3 px-4">{{decision.rotulo}}</td>
 
