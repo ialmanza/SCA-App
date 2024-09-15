@@ -7,9 +7,10 @@ import { CheckMostrarDecisionesComponent } from './components/area-de-decision/c
 import { OpcionComponent } from './components/opciones-de-decision/opcion/opcion.component';
 import { CrearOpcionComponent } from './components/opciones-de-decision/crear-opcion/crear-opcion.component';
 import { ListarOpcionesComponent } from './components/opciones-de-decision/listar-opciones/listar-opciones.component';
+import { LayoutComponent } from './components/layout/layout.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'decisiones-form', pathMatch: 'full' },
+  { path: '', redirectTo: 'layout', pathMatch: 'full' },
   { path: 'decisiones', component: DecisionComponent },
   { path: 'crear-decision', component: CrearDecisionComponent },
   { path: 'listar-decisiones', component: ListarDecisionesComponent },
@@ -19,4 +20,6 @@ export const routes: Routes = [
   { path: 'opciones', component: OpcionComponent },
   { path: 'crear-opcion', component: CrearOpcionComponent },
   { path: 'listar-opciones', component: ListarOpcionesComponent },
+
+  { path: 'layout', component: LayoutComponent },
 ];

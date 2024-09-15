@@ -61,7 +61,7 @@ export class OpcionService {
         this.saveOpcionesToLocalStorage(storedOpciones);
         this.opcionesSubject.next(storedOpciones);
     } else {
-        console.error('Opcion no encontrada.');
+        console.error('Opción no encontrada.');
     }
   }
 }

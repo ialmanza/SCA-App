@@ -52,15 +52,15 @@ export class DecisionService {
     }
   }
 
-  updateReserva(updatedDecision: Decision) {
+  updateDecision(updatedDecision: Decision) {
     let storedDecisiones = this.getDecisionesFromLocalStorage();
-    const index = storedDecisiones.findIndex(reserva => reserva.id === updatedDecision.id);
+    const index = storedDecisiones.findIndex(decision => decision.id === updatedDecision.id);
     if (index !== -1) {
       storedDecisiones[index] = updatedDecision;
         this.saveDecisionesToLocalStorage(storedDecisiones);
         this.decisionesSubject.next(storedDecisiones);
     } else {
-        console.error('Reserva no encontrada.');
+        console.error('Decisión no encontrada.');
     }
   }
 

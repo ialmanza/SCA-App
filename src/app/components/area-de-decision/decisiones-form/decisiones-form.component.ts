@@ -28,6 +28,7 @@ export class DecisionesFormComponent {
   nuevaDescripcion: string = '';
   modalAbierto: boolean = false;
   decisionSeleccionada: Decision | null = null;
+  opcionSeleccionada: Opcion | null = null;
 
 
   constructor( private decisionService: DecisionService, private opcionService: OpcionService, public dialog: MatDialog) {
@@ -97,6 +98,16 @@ export class DecisionesFormComponent {
     });
   }
 
+  updateDecision(updatedDecision: Decision) {
+    this.decisionService.updateDecision(updatedDecision);
+    this.decisionService.getDecisiones().subscribe((decisiones : Decision[]) => {
+      this.decisiones = decisiones.map(decision => ({ ...decision, seleccionado: false }));
+    })
+
+    this.cerrarModal();
+
+  }
+
   avanzarPaso() {
     if (this.pasoActual < 10) {
       this.pasoActual++;
@@ -161,10 +172,21 @@ export class DecisionesFormComponent {
   }
 
   actualizarOpcion(opcion: Opcion) {
-    this.opcionService.updateOpcion(opcion);
-    this.opcionService.getOpciones().subscribe((opcionesActualizadas) => {
-      this.opciones = opcionesActualizadas;
-    });
+    //EN DESARROLLO TODAVÍA NO FUNCIONA
+
+    // this.opcionService.updateOpcion(opcion);
+    // this.opcionService.getOpciones().subscribe((opcionesActualizadas) => {
+    //   this.opciones = opcionesActualizadas;
+    // });
+
+    // console.log(opcion);
+    // if (this.decisionSeleccionada) {
+    //   this.opcionService.updateOpcion(this.opcionSeleccionada!);
+    //   this.opcionService.getOpciones().subscribe((opcionesActualizadas) => {
+    //     this.opciones = opcionesActualizadas;
+
+    //   });
+    // }
   }
 
 
