@@ -29,6 +29,7 @@ export class DecisionesFormComponent {
   modalAbierto: boolean = false;
   decisionSeleccionada: Decision | null = null;
   opcionSeleccionada: Opcion | null = null;
+  modalEditarDecisionAbierto: boolean = false;
 
 
   constructor( private decisionService: DecisionService, private opcionService: OpcionService, public dialog: MatDialog) {
@@ -105,6 +106,7 @@ export class DecisionesFormComponent {
     })
 
     this.cerrarModal();
+    this.cerrarModalEditarDecision();
 
   }
 
@@ -195,6 +197,10 @@ export class DecisionesFormComponent {
     this.modalAbierto = true;
   }
 
+  abrirModalEditarDecision(decision: Decision) {
+    this.decisionSeleccionada = decision;
+    this.modalEditarDecisionAbierto = true;
+  }
 
   cerrarModal() {
     this.modalAbierto = false;
@@ -202,5 +208,9 @@ export class DecisionesFormComponent {
   }
 
 
+  cerrarModalEditarDecision() {
+    this.modalEditarDecisionAbierto = false;
+    this.nuevaDescripcion = '';
+  }
 
 }
