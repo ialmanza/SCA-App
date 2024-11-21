@@ -30,6 +30,11 @@ export class DecisionesFormComponent {
   decisionSeleccionada: Decision | null = null;
   opcionSeleccionada: Opcion | null = null;
   modalEditarDecisionAbierto: boolean = false;
+  modalEliminarDecisionAbierto: boolean = false;
+  areas: Decision[] = [];
+  vinculos: string[] = [ ];
+  selectedArea1: Decision | null = null;
+  selectedArea2: Decision | null = null;
 
 
   constructor( private decisionService: DecisionService, private opcionService: OpcionService, public dialog: MatDialog) {
@@ -39,7 +44,7 @@ export class DecisionesFormComponent {
 
   ngOnInit(): void {
     this.decisionService.getDecisiones().subscribe((decisiones : Decision[]) => {
-      //this.decisiones = decisiones
+      this.areas = decisiones
       this.decisiones = decisiones.map(decision => ({ ...decision, seleccionado: false }));
     });
 
@@ -48,11 +53,25 @@ export class DecisionesFormComponent {
     });
   }
 
+  crearVinculo(): void {
+    if (this.selectedArea1 && this.selectedArea2 && this.selectedArea1 !== this.selectedArea2) {
+      const nuevoVinculo = `${this.selectedArea1.area} - ${this.selectedArea2.area}`;
+      this.vinculos.push(nuevoVinculo);
+
+      // Reiniciar selects
+      this.selectedArea1 = null;
+      this.selectedArea2 = null;
+    } else {
+      console.error('Áreas no válidas para crear un vínculo.');
+    }
+  }
+
+
   addDecision( area:HTMLInputElement, descripcion:HTMLTextAreaElement) {
-    const rotuloPattern = /^[A-Z]{3}-[A-Z]{3}$/;
+    const rotuloPattern = /^[A-Z]{3}_[A-Z]{3}$/;
 
     if (!rotuloPattern.test(this.rotuloValue)) {
-      alert('El rotulo debe estar en el formato "ABC-DEF".');
+      alert('El rotulo debe estar en el formato "ABC_DEF".');
       area.value = '';
       this.rotuloValue = '';
       descripcion.value = '';
@@ -80,24 +99,28 @@ export class DecisionesFormComponent {
       descripcion.value = '';
       return false;
   }
-  // deleteDecision(decisiones : Decision) {
-  //   if(confirm('Está seguro que desea borrar esta área de decisión?')) {
-  //     this.decisionService.deleteDecision(decisiones.id);
-  //   }
-  // }
 
-  deleteDecision(decision: Decision) {
-    const dialogRef = this.dialog.open(DialogAnimationsExampleDialog, {
-      width: '250px',
-      data: decision
-    });
+  deleteDecision(decisiones : Decision) {
+      this.decisionService.deleteDecision(decisiones.id);
+      this.decisionService.getDecisiones().subscribe((decisiones : Decision[]) => {
+        this.decisiones = decisiones.map(decision => ({ ...decision, seleccionado: false }));
+      })
+      this.cerrarModalEliminarDecision();
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result === true) {
-        this.decisionService.deleteDecision(decision.id);
-      }
-    });
   }
+
+  // deleteDecision(decision: Decision) {
+  //   const dialogRef = this.dialog.open(DialogAnimationsExampleDialog, {
+  //     width: '250px',
+  //     data: decision
+  //   });
+
+  //   dialogRef.afterClosed().subscribe(result => {
+  //     if (result === true) {
+  //       this.decisionService.deleteDecision(decision.id);
+  //     }
+  //   });
+  // }
 
   updateDecision(updatedDecision: Decision) {
     this.decisionService.updateDecision(updatedDecision);
@@ -135,6 +158,7 @@ export class DecisionesFormComponent {
   onCheckboxChange(decision: Decision, event: any): void {
     if (event.target.checked) {
       this.areasSeleccionadas.push(decision);
+
     } else {
       this.areasSeleccionadas = this.areasSeleccionadas.filter(d => d.id !== decision.id); // Elimina si se deselecciona el área
     }
@@ -202,6 +226,11 @@ export class DecisionesFormComponent {
     this.modalEditarDecisionAbierto = true;
   }
 
+  abrirModalEliminarDecision(decision: Decision) {
+    this.decisionSeleccionada = decision;
+    this.modalEliminarDecisionAbierto = true;
+  }
+
   cerrarModal() {
     this.modalAbierto = false;
     this.nuevaDescripcion = '';
@@ -210,6 +239,11 @@ export class DecisionesFormComponent {
 
   cerrarModalEditarDecision() {
     this.modalEditarDecisionAbierto = false;
+    this.nuevaDescripcion = '';
+  }
+
+  cerrarModalEliminarDecision() {
+    this.modalEliminarDecisionAbierto = false;
     this.nuevaDescripcion = '';
   }
 

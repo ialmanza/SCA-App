@@ -3,7 +3,7 @@
   <div *ngIf="pasoActual === 1">
     <!-- Paso 1: Formulario para generar área de desarrollo -->
     <div class="flex flex-col items-center gap-6">
-      <h2 class="text-2xl font-bold text-center text-gray-900">Generar Área de Desarrollo</h2>
+      <h2 class="text-2xl font-bold text-center text-gray-900">Generar áreas de decisiones</h2>
 
       <div class="w-full max-w-md bg-white shadow-md rounded-lg p-6">
         <form (submit)="addDecision( nombre_area, descripcion)" class="space-y-4">
@@ -13,8 +13,8 @@
             type="text"
             name="rotulo"
             id="rotulo"
-            placeholder="ABC-DEF"
-            pattern="^[A-Z]{3}-[A-Z]{3}$"
+            placeholder="ABC_DEF"
+            pattern="^[A-Z]{3}_[A-Z]{3}$"
             class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3"
             required
             [(ngModel)]="rotuloValue"
@@ -65,7 +65,7 @@
                     <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
                   </svg>
                 </button>
-                <button class="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600" (click)="deleteDecision(decision)">
+                <button class="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600" (click)="abrirModalEliminarDecision(decision)">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon">
                     <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
                   </svg>
@@ -92,6 +92,21 @@
                 </div>
               </div>
 
+              <!-- Modal para eliminar la desición -->
+              <div *ngIf="modalEliminarDecisionAbierto" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                <div class="bg-white p-4 rounded shadow-lg">
+                  <h2 class="text-xl font-bold mb-4">Eliminar</h2>
+
+                  <label for="descripcion" class="block mb-2">Está seguro de eliminar esta descripción?</label>
+
+
+                  <div class="flex justify-end">
+                    <button (click)="cerrarModalEliminarDecision()" class="mr-2 p-2 bg-gray-300 hover:bg-gray-400 rounded">Cancelar</button>
+                    <button (click)="deleteDecision(decisionSeleccionada!)" class="p-2 bg-blue-500 text-white hover:bg-blue-700 rounded">Aceptar</button>
+                  </div>
+                </div>
+              </div>
+
               </div>
             </td>
           </tr>
@@ -106,21 +121,59 @@
   </div>
 
   <div *ngIf="pasoActual === 3">
-    <!-- Paso 3: Conexión de grafos -->
-    <h2 class="text-lg font-semibold leading-6 text-gray-900 mb-4">Aquí se crea el grafo que conectará con cada nodo</h2>
-    <p>preguntar a q se refieren con que pueden mostrar el código</p>
+    <!-- Card para crear conexiones -->
+    <div class="p-4 border border-gray-300 rounded-lg shadow-md bg-white mb-4">
+      <h3 class="text-lg font-bold mb-2">Crear conexión entre áreas</h3>
 
-    <button class="btn btn-primary">Crear Conexión</button>
-    <button class="btn btn-danger">Eliminar Conexión</button>
-    <button class="btn btn-success">Previsualizar Conexión</button>
+      <div class="flex gap-4 items-center">
+        <!-- Select para el primer área -->
+        <select
+          [(ngModel)]="selectedArea1"
+          class="p-2 border border-gray-300 rounded w-1/2"
+          [disabled]="areas.length === 0"
+        >
+          <option *ngFor="let area of areas" [ngValue]="area">{{ area.area }}</option>
+        </select>
 
+        <!-- Select para el segundo área -->
+        <select
+          [(ngModel)]="selectedArea2"
+          class="p-2 border border-gray-300 rounded w-1/2"
+          [disabled]="areas.length === 0"
+        >
+          <option *ngFor="let area of areas" [ngValue]="area">{{ area.area }}</option>
+        </select>
 
+        <!-- Botón para crear vínculo -->
+        <button
+          (click)="crearVinculo()"
+          class="py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700"
+          [disabled]="!selectedArea1 || !selectedArea2 || selectedArea1 === selectedArea2"
+        >
+          Crear vínculo
+        </button>
+      </div>
+    </div>
+
+    <!-- Card para mostrar vínculos creados -->
+    <div class="p-4 border border-gray-300 rounded-lg shadow-md bg-white">
+      <h3 class="text-lg font-bold mb-2">Vínculos creados</h3>
+
+      <div *ngIf="vinculos.length === 0" class="text-gray-500">No hay vínculos creados aún.</div>
+      <ul *ngIf="vinculos.length > 0" class="list-disc pl-5">
+        <li *ngFor="let vinculo of vinculos" class="mb-2">
+          {{ vinculo }}
+        </li>
+      </ul>
+    </div>
+
+    <!-- Botones de navegación -->
     <div class="flex justify-between mt-6">
       <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
       <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
     </div>
-
   </div>
+
 
   <div *ngIf="pasoActual === 4">
     <!-- Paso 4: Muestra los grafos conectados -->
@@ -222,7 +275,7 @@
                     <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
                   </svg>
                 </button>
-                <button class="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600" (click)="deleteDecision(decision)">
+                <button class="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600" (click)="abrirModalEliminarDecision(decision)">
                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon">
                     <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
                   </svg>
@@ -243,6 +296,21 @@
                   <div class="flex justify-end">
                     <button (click)="cerrarModalEditarDecision()" class="mr-2 p-2 bg-gray-300 hover:bg-gray-400 rounded">Cancelar</button>
                     <button (click)="updateDecision(decisionSeleccionada!)" class="p-2 bg-blue-500 text-white hover:bg-blue-700 rounded">Guardar</button>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Modal para eliminar la desición -->
+              <div *ngIf="modalEliminarDecisionAbierto" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                <div class="bg-white p-4 rounded shadow-lg">
+                  <h2 class="text-xl font-bold mb-4">Eliminar</h2>
+
+                  <label for="descripcion" class="block mb-2">Está seguro de eliminar esta desición?</label>
+
+
+                  <div class="flex justify-end">
+                    <button (click)="cerrarModalEliminarDecision()" class="mr-2 p-2 bg-gray-300 hover:bg-gray-400 rounded">Cancelar</button>
+                    <button (click)="deleteDecision(decisionSeleccionada!)" class="p-2 bg-blue-500 text-white hover:bg-blue-700 rounded">Aceptar</button>
                   </div>
                 </div>
               </div>

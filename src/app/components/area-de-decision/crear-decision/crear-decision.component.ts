@@ -19,10 +19,10 @@ rotuloValue: any;
   constructor(private decisionService: DecisionService) {}
 
   addDecision( area:HTMLInputElement, descripcion:HTMLTextAreaElement) {
-    const rotuloPattern = /^[A-Z]{3}-[A-Z]{3}$/;
+    const rotuloPattern = /^[A-Z]{3}_[A-Z]{3}$/;
 
     if (!rotuloPattern.test(this.rotuloValue)) {
-      alert('El rotulo debe estar en el formato "ABC-DEF".');
+      alert('El rotulo debe estar en el formato "ABC_DEF".');
       area.value = '';
       this.rotuloValue = '';
       descripcion.value = '';

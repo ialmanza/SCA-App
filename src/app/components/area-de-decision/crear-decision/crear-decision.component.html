@@ -18,15 +18,15 @@
                   type="text"
                   name="rotulo"
                   id="rotulo"
-                  placeholder="ABC-DEF"
-                  pattern="^[A-Z]{3}-[A-Z]{3}$"
+                  placeholder="ABC_DEF"
+                  pattern="^[A-Z]{3}_[A-Z]{3}$"
                   class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3"
                   required
                   [(ngModel)]="rotuloValue"
                   #rotulo="ngModel"
                 />
                 <div *ngIf="rotulo.invalid && rotulo.touched" class="text-red-600 text-sm">
-                  El formato debe ser "ABC-DEF".
+                  El formato debe ser "ABC_DEF".
                 </div>
                 </div>
 
