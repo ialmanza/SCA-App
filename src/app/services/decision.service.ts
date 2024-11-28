@@ -7,9 +7,12 @@ import { BehaviorSubject, Observable } from 'rxjs';
 })
 export class DecisionService {
   private decisionesSubject: BehaviorSubject<Decision[]> = new BehaviorSubject<Decision[]>([])
+  private vinculoSubject: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([])
+
 
   constructor() {
     this.loadDecisionesFromLocalStorage();
+    this.loadVinculosFromLocalStorage();
    }
 
    getDecisiones():Observable<Decision[]> {
@@ -64,5 +67,32 @@ export class DecisionService {
     }
   }
 
+  crearVinculo(vinculo: string) {
+    const vinculosActuales = this.getVinculosFromLocalStorage();
+    vinculosActuales.push(vinculo);
+    this.saveVinculosToLocalStorage(vinculosActuales);
+    this.vinculoSubject.next([...vinculosActuales]);
+  }
 
+  obtenerVinculos(): Observable<string[]> {
+    return this.vinculoSubject.asObservable();
+  }
+
+  private getVinculosFromLocalStorage(): string[] {
+    const storedVinculos = localStorage.getItem('vinculos');
+    return storedVinculos ? JSON.parse(storedVinculos) : [];
+  }
+
+  private loadVinculosFromLocalStorage() {
+    const storedVinculos = this.getVinculosFromLocalStorage();
+    this.vinculoSubject.next(storedVinculos);
+  }
+
+  private saveVinculosToLocalStorage(vinculos: string[]) {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('vinculos', JSON.stringify(vinculos));
+    } else {
+      console.warn('localStorage no disponible.');
+    }
+  }
 }

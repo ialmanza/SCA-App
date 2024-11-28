@@ -1,0 +1,375 @@
+ /* .tree {
+  font-family: Arial, sans-serif;
+  position: relative;
+  padding: 10px;
+}
+
+.tree ul {
+  padding-left: 20px;
+  list-style: none;
+  position: relative;
+}
+
+.tree ul::before {
+  content: '';
+  border-left: 2px solid #ccc;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1px;
+}
+
+.tree li {
+  margin: 10px 0;
+  position: relative;
+  padding-left: 20px;
+}
+
+.tree li::before,
+.tree li::after {
+  content: '';
+  position: absolute;
+  left: 0;
+}
+
+.tree li::before {
+  border-top: 2px solid #ccc;
+  top: 10px;
+  width: 10px;
+  height: 0;
+}
+
+.tree li::after {
+  border-left: 2px solid #ccc;
+  height: 100%;
+  top: 0;
+}
+
+.tree li:last-child::after {
+  height: 10px;
+}
+
+.decision-node,
+.option-node,
+.sub-option-node {
+  display: inline-block;
+  padding: 5px 10px;
+  background: #e1f5fe;
+  border: 1px solid #81d4fa;
+  border-radius: 4px;
+  color: #0277bd;
+  font-weight: bold;
+} */
+
+
+/* /////////////////////OPCION QUE MAS SE PARECE A LO QUE HAY QUE HACER///////////////////////////////////////////////////////////////////////////////////////////// */
+
+.decision-tree-container {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+}
+
+.decision-areas {
+  flex: 3;
+  overflow-x: auto;
+}
+
+.tree-structure {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.combined-decisions-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.combined-decision {
+  display: flex;
+  justify-content: space-between;
+  border: 1px solid #e0e0e0;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.combined-areas {
+  font-weight: bold;
+  color: #333;
+}
+
+.combined-options {
+  color: #666;
+}
+
+.alternatives-panel {
+  flex: 1;
+  min-width: 300px;
+  border-left: 1px solid #ccc;
+  padding-left: 2rem;
+  overflow-y: auto;
+  max-height: 600px;
+}
+
+/* Resto de los estilos previos... */
+
+
+.decision-tree-container {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+}
+
+.decision-areas {
+  flex: 3;
+}
+
+.alternatives-panel {
+  flex: 1;
+  min-width: 300px;
+  border-left: 1px solid #ccc;
+  padding-left: 2rem;
+}
+
+.areas-header,
+.alternatives-header {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.tree-structure {
+  display: flex;
+  gap: 2rem;
+  position: relative;
+}
+
+.area-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+  border-right: 2px solid #ccc;
+}
+
+.area-title {
+  font-weight: bold;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.decisions-group {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.decision-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+  padding-right: 2rem;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.option-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.option-text {
+  padding: 0.5rem;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.option-text.selected {
+  background-color: #007bff;
+  color: white;
+  border-color: #007bff;
+}
+
+.connector-line {
+  position: absolute;
+  right: -2rem;
+  width: 2rem;
+  height: 2px;
+  background-color: #ccc;
+}
+
+.alternatives-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.alternative-item {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.alternative-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 30px;
+}
+
+.alternative-text {
+  font-weight: bold;
+}
+
+.path-description {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+}
+
+
+
+
+/* ////////////////////////////////////////////////////////////////////////////////////////////////////////////////// */
+
+/* posibles-alternativas.component.css */
+/* .decision-tree-container {
+  display: flex;
+  gap: 2rem;
+  padding: 2rem;
+  font-family: Arial, sans-serif;
+}
+
+.decision-areas {
+  flex: 3;
+}
+
+.alternatives-panel {
+  flex: 1;
+  min-width: 300px;
+  border-left: 1px solid #ccc;
+  padding-left: 2rem;
+}
+
+.areas-header,
+.alternatives-header {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.tree-structure {
+  display: flex;
+  gap: 2rem;
+  position: relative;
+}
+
+.area-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 200px;
+}
+
+.area-title {
+  font-weight: bold;
+  margin-bottom: 1rem;
+  padding: 0.5rem;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.decisions-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.decision-options {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.option-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  position: relative;
+}
+
+.option-text {
+  padding: 0.5rem;
+  background-color: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  z-index: 1;
+}
+
+.connector-line {
+  position: absolute;
+  right: -2rem;
+  width: 2rem;
+  height: 2px;
+  background-color: #ccc;
+}
+
+.alternatives-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.alternative-item {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  padding: 0.5rem;
+  border-radius: 4px;
+  background-color: #f9f9f9;
+}
+
+.alternative-label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 30px;
+}
+
+.alternative-text {
+  font-weight: bold;
+}
+
+.path-description {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+} */

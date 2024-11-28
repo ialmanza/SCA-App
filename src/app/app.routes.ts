@@ -8,6 +8,8 @@ import { OpcionComponent } from './components/opciones-de-decision/opcion/opcion
 import { CrearOpcionComponent } from './components/opciones-de-decision/crear-opcion/crear-opcion.component';
 import { ListarOpcionesComponent } from './components/opciones-de-decision/listar-opciones/listar-opciones.component';
 import { LayoutComponent } from './components/layout/layout.component';
+import { GrafoComponent } from './components/grafo/grafo.component';
+import { PosiblesAlternativasComponent } from './components/posibles-alternativas/posibles-alternativas.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -16,10 +18,10 @@ export const routes: Routes = [
   { path: 'listar-decisiones', component: ListarDecisionesComponent },
   { path: 'decisiones-form', component: DecisionesFormComponent },
   { path: 'check-mostrar-decisiones', component: CheckMostrarDecisionesComponent },
-
   { path: 'opciones', component: OpcionComponent },
   { path: 'crear-opcion', component: CrearOpcionComponent },
   { path: 'listar-opciones', component: ListarOpcionesComponent },
-
   { path: 'layout', component: LayoutComponent },
+  { path: 'grafo', component: GrafoComponent },
+  { path: 'posibles-alternativas', component: PosiblesAlternativasComponent },
 ];

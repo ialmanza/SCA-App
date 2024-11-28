@@ -7,13 +7,17 @@ import { Decision } from '../../../models/decision';
 import { DecisionService } from '../../../services/decision.service';
 import { OpcionService } from '../../../services/opcion.service';
 import { Opcion } from '../../../models/opcion';
-import { DialogAnimationsExampleDialog } from '../eliminar-decision-modal/eliminar-decision.component';
 import { MatDialog } from '@angular/material/dialog';
+import * as d3 from 'd3';
+import { GrafoComponent } from "../../grafo/grafo.component";
 
+interface CustomNode extends d3.SimulationNodeDatum {
+  id: string;
+}
 @Component({
   selector: 'app-decisiones-form',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, CrearDecisionComponent, ListarDecisionesComponent],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, CrearDecisionComponent, ListarDecisionesComponent, GrafoComponent],
   providers: [DecisionService, OpcionService],
   templateUrl: './decisiones-form.component.html',
   styleUrl: './decisiones-form.component.css'
@@ -32,9 +36,10 @@ export class DecisionesFormComponent {
   modalEditarDecisionAbierto: boolean = false;
   modalEliminarDecisionAbierto: boolean = false;
   areas: Decision[] = [];
-  vinculos: string[] = [ ];
+  vinculos: string[] = [];
   selectedArea1: Decision | null = null;
   selectedArea2: Decision | null = null;
+
 
 
   constructor( private decisionService: DecisionService, private opcionService: OpcionService, public dialog: MatDialog) {
@@ -51,21 +56,30 @@ export class DecisionesFormComponent {
     this.opcionService.getOpciones().subscribe((opciones: Opcion[]) => {
       this.opciones = opciones;
     });
+
+    this.eliminarVinculos();
+
+    this.decisionService.obtenerVinculos().subscribe((vinculos: string[]) => {
+      this.vinculos = vinculos;
+    });
+
+  }
+
+  eliminarVinculos(): void {
+    this.vinculos = [];
   }
 
   crearVinculo(): void {
     if (this.selectedArea1 && this.selectedArea2 && this.selectedArea1 !== this.selectedArea2) {
       const nuevoVinculo = `${this.selectedArea1.area} - ${this.selectedArea2.area}`;
-      this.vinculos.push(nuevoVinculo);
+      this.decisionService.crearVinculo(nuevoVinculo);
 
-      // Reiniciar selects
       this.selectedArea1 = null;
       this.selectedArea2 = null;
     } else {
       console.error('Áreas no válidas para crear un vínculo.');
     }
   }
-
 
   addDecision( area:HTMLInputElement, descripcion:HTMLTextAreaElement) {
     const rotuloPattern = /^[A-Z]{3}_[A-Z]{3}$/;
@@ -109,19 +123,6 @@ export class DecisionesFormComponent {
 
   }
 
-  // deleteDecision(decision: Decision) {
-  //   const dialogRef = this.dialog.open(DialogAnimationsExampleDialog, {
-  //     width: '250px',
-  //     data: decision
-  //   });
-
-  //   dialogRef.afterClosed().subscribe(result => {
-  //     if (result === true) {
-  //       this.decisionService.deleteDecision(decision.id);
-  //     }
-  //   });
-  // }
-
   updateDecision(updatedDecision: Decision) {
     this.decisionService.updateDecision(updatedDecision);
     this.decisionService.getDecisiones().subscribe((decisiones : Decision[]) => {
@@ -136,18 +137,19 @@ export class DecisionesFormComponent {
   avanzarPaso() {
     if (this.pasoActual < 10) {
       this.pasoActual++;
-      if (this.pasoActual === 5 || this.pasoActual === 7) {
-        this.areasSeleccionadas = [];
-      }
+      // if (this.pasoActual === 7 || this.pasoActual === 10) {
+      //   console.log(this.areasSeleccionadas);
+      //   this.areasSeleccionadas = [];
+      // }
     }
   }
 
   retrocederPaso() {
     if (this.pasoActual > 1) {
       this.pasoActual--;
-      if (this.pasoActual === 5 ) {
-        this.areasSeleccionadas = [];
-      }
+      // if (this.pasoActual === 7 ) {
+      //   this.areasSeleccionadas = [];
+      // }
     }
   }
 
@@ -195,24 +197,6 @@ export class DecisionesFormComponent {
     this.opcionService.getOpciones().subscribe((opcionesActualizadas) => {
       this.opciones = opcionesActualizadas;
     });
-  }
-
-  actualizarOpcion(opcion: Opcion) {
-    //EN DESARROLLO TODAVÍA NO FUNCIONA
-
-    // this.opcionService.updateOpcion(opcion);
-    // this.opcionService.getOpciones().subscribe((opcionesActualizadas) => {
-    //   this.opciones = opcionesActualizadas;
-    // });
-
-    // console.log(opcion);
-    // if (this.decisionSeleccionada) {
-    //   this.opcionService.updateOpcion(this.opcionSeleccionada!);
-    //   this.opcionService.getOpciones().subscribe((opcionesActualizadas) => {
-    //     this.opciones = opcionesActualizadas;
-
-    //   });
-    // }
   }
 
 

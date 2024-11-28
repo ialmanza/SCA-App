@@ -120,13 +120,13 @@
     </div>
   </div>
 
-  <div *ngIf="pasoActual === 3">
-    <!-- Card para crear conexiones -->
-    <div class="p-4 border border-gray-300 rounded-lg shadow-md bg-white mb-4">
-      <h3 class="text-lg font-bold mb-2">Crear conexión entre áreas</h3>
 
+  <div *ngIf="pasoActual === 3">
+    <br>
+    <div class="p-4 border border-gray-300 rounded-lg shadow-md bg-white mb-4">
+
+      <h3 class="text-lg font-bold mb-2">Crear conexión entre áreas</h3>
       <div class="flex gap-4 items-center">
-        <!-- Select para el primer área -->
         <select
           [(ngModel)]="selectedArea1"
           class="p-2 border border-gray-300 rounded w-1/2"
@@ -134,8 +134,6 @@
         >
           <option *ngFor="let area of areas" [ngValue]="area">{{ area.area }}</option>
         </select>
-
-        <!-- Select para el segundo área -->
         <select
           [(ngModel)]="selectedArea2"
           class="p-2 border border-gray-300 rounded w-1/2"
@@ -143,8 +141,6 @@
         >
           <option *ngFor="let area of areas" [ngValue]="area">{{ area.area }}</option>
         </select>
-
-        <!-- Botón para crear vínculo -->
         <button
           (click)="crearVinculo()"
           class="py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700"
@@ -155,19 +151,25 @@
       </div>
     </div>
 
-    <!-- Card para mostrar vínculos creados -->
     <div class="p-4 border border-gray-300 rounded-lg shadow-md bg-white">
       <h3 class="text-lg font-bold mb-2">Vínculos creados</h3>
 
-      <div *ngIf="vinculos.length === 0" class="text-gray-500">No hay vínculos creados aún.</div>
-      <ul *ngIf="vinculos.length > 0" class="list-disc pl-5">
-        <li *ngFor="let vinculo of vinculos" class="mb-2">
-          {{ vinculo }}
-        </li>
-      </ul>
+      <div class="content-wrapper">
+        <div class="vinculos-list">
+          <div *ngIf="vinculos.length === 0" class="text-gray-500">
+            No hay vínculos creados aún.
+          </div>
+          <ul *ngIf="vinculos.length > 0" class="list-disc pl-5">
+            <li *ngFor="let vinculo of vinculos" class="mb-2">
+              {{ vinculo }}
+            </li>
+          </ul>
+        </div>
+        <div class="grafo-container">
+          <app-grafo></app-grafo>
+        </div>
+      </div>
     </div>
-
-    <!-- Botones de navegación -->
     <div class="flex justify-between mt-6">
       <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
       <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
@@ -176,18 +178,6 @@
 
 
   <div *ngIf="pasoActual === 4">
-    <!-- Paso 4: Muestra los grafos conectados -->
-    <h2 class="text-lg font-semibold leading-6 text-gray-900 mb-4">Aquí se muestra el gráfico con las decisiones</h2>
-    <p>antes de continuar el usuario piensa cuales son los nodos importantes </p>
-
-    <div class="flex justify-between mt-6">
-      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
-      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
-    </div>
-
-  </div>
-
-  <div *ngIf="pasoActual === 5">
     <!-- Paso 5: Elección de áreas que pasan a la siguiente fase -->
 
     <div class="overflow-x-auto mt-6">
@@ -218,13 +208,21 @@
 
   </div>
 
+  <div *ngIf="pasoActual === 5">
+    <!-- Paso 4: Muestra los grafos conectados -->
+    <app-grafo></app-grafo>
+    <div class="flex justify-between mt-6">
+      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
+      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
+    </div>
 
+  </div>
 
   <div *ngIf="pasoActual === 6">
     <!--Paso 6:Aquí van las opciones de desarrollo-->
-    <div class="overflow-x-auto mt-6">
-      <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
-        <thead class="bg-gray-200">
+    <div class="overflow-x-auto overflow-y-auto mt-6">
+      <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden" >
+        <thead class="bg-gray-200" style="position: sticky; top: 0;">
           <tr>
             <th class="py-3 px-4 text-left text-gray-700">Área de decisión</th>
             <th class="py-3 px-4 text-left text-gray-700">Opciones de decisión</th>
@@ -240,7 +238,7 @@
                <!-- Aquí se muestran las opciones relacionadas al área -->
                <ul>
                 <li *ngFor="let opcion of getOpcionesPorArea(decision.id)">
-                  <span (click)="actualizarOpcion(opcion)" contenteditable="true">{{opcion.descripcion}}</span>
+                  <span>{{opcion.descripcion}}</span>
                   <button class="p-1 text-red-500 hover:text-red-700" (click)="eliminarOpcion(opcion.id)">
                     Eliminar
                 </button>

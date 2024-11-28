@@ -32,8 +32,6 @@ export class OpcionService {
 
   }
 
-
-
   private getOpcionesFromLocalStorage(): Opcion[] {
     const storedOpciones = localStorage.getItem('opciones_areas');
     return storedOpciones ? JSON.parse(storedOpciones) : [];
