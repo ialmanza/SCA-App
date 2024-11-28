@@ -1,5 +1,6 @@
 
 <div class="container mx-auto px-4 py-6">
+
   <div *ngIf="pasoActual === 1">
     <!-- Paso 1: Formulario para generar área de desarrollo -->
     <div class="flex flex-col items-center gap-6">
@@ -327,8 +328,9 @@
   </div>
 
   <div *ngIf="pasoActual === 7">
-      <!-- Paso 7: Muestra los grafos conectados -->
-      <h2 class="text-lg font-semibold leading-6 text-gray-900 mb-4">Próximo paso</h2>
+      <!-- Paso 7: Posibles alternativas -->
+
+      <app-posibles-alternativas></app-posibles-alternativas>
 
 
       <div class="flex justify-between mt-6">
@@ -337,5 +339,67 @@
       </div>
 
     </div>
+
+    <div *ngIf="pasoActual === 8">
+      <!-- Paso 8: Próximo paso -->
+
+     <app-modo-de-comparacion></app-modo-de-comparacion>
+
+
+      <div class="flex justify-between mt-6">
+        <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
+        <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
+      </div>
+
+    </div>
+
+    <div *ngIf="pasoActual === 9">
+      <!-- Paso 9: Próximo paso -->
+
+     <app-tabla-de-comparacion></app-tabla-de-comparacion>
+
+      <div class="flex justify-between mt-6">
+        <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
+        <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
+      </div>
+
+    </div>
+
+    <div *ngIf="pasoActual === 10">
+      <!-- Paso 10: Próximo paso -->
+
+     <h2><strong>Cuenta par armar la próxima tabla </strong></h2>
+
+      <div class="flex justify-between mt-6">
+        <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
+        <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
+      </div>
+
+    </div>
+
+    <div *ngIf="pasoActual === 11">
+      <!-- Paso 11: Próximo paso -->
+
+     <h2><strong>Aquí iría lo que declaras como el mínimo servible</strong></h2>
+
+      <div class="flex justify-between mt-6">
+        <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
+        <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
+      </div>
+
+    </div>
+
+    <div *ngIf="pasoActual === 12">
+      <!-- Paso 12: Próximo paso -->
+
+     <h2><strong>Próximo paso</strong></h2>
+
+      <div class="flex justify-between mt-6">
+        <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
+        <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
+      </div>
+
+    </div>
+
 
 </div>

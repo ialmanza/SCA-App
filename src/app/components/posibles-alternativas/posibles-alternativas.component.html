@@ -1,157 +1,56 @@
-<!--
-<div class="tree">
-
-  <div class="decision-container">
-    <ul>
-      <li *ngFor="let decision of decisions">
-        <div class="decision-node">{{ decision.area }}</div>
-      </li>
-    </ul>
-  </div>
-
-
-  <div class="option-container">
-    <ul>
-      <li *ngFor="let decision of decisions">
-        <ul>
-          <li *ngFor="let opcion of decision.opciones">
-            <div class="option-node">{{ opcion.descripcion }}</div>
-            <ul *ngIf="opcion.subOpciones">
-              <li *ngFor="let subOpcion of opcion.subOpciones">
-                <div class="sub-option-node">{{ subOpcion }}</div>
-              </li>
-            </ul>
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-</div> -->
-
-<!-- /////////////////////////////////////  LO QU EMAS SE APRECE A LO QUE HAY QUE HACER///////////////////////////////////////////////////////////////////////// -->
-
 <div class="decision-tree-container">
-  <div class="decision-areas">
-    <div class="areas-header">Áreas de decisión</div>
-    <div class="tree-structure">
-      <div class="area-column" *ngFor="let area of getUniqueAreas()">
-        <div class="area-title">{{ area }}</div>
-        <div class="decisions-group">
-          <ng-container *ngFor="let decision of getDecisionsByArea(area)">
-            <div class="decision-options">
-              <div class="option-item" *ngFor="let opcion of getOpcionesPorArea(decision.id)">
-                <div class="option-container">
-                  <div class="option-text" [class.selected]="isOptionSelected(area, opcion.descripcion)">
-                    {{ opcion.descripcion }}
-                  </div>
-                  <div class="connector-line"></div>
-                </div>
+  <div class="area-titles">
+    <ng-container *ngFor="let area of getUniqueAreas()">
+      <div class="area-title">{{ area }}</div>
+    </ng-container>
+  </div>
+
+  <div class="decision-tree">
+    <ng-container *ngFor="let node of decisionTree">
+      <div class="decision-area">
+        <div class="options-container">
+          <ng-container *ngFor="let option of node.options">
+            <div class="option-group">
+              <div class="option-item">
+                <label>{{ option.text }}</label>
+                <div class="connector-line" *ngIf="option.children"></div>
+              </div>
+              <div class="children-container" *ngIf="option.children">
+                <ng-container *ngTemplateOutlet="recursiveTree; context: { $implicit: option.children, parentPath: [option.text] }">
+                </ng-container>
               </div>
             </div>
           </ng-container>
         </div>
       </div>
-    </div>
+    </ng-container>
   </div>
+</div>
 
-  <div class="alternatives-panel">
-    <div class="alternatives-header">Alternativas de decisión</div>
-    <div class="alternatives-list">
-      <div *ngFor="let path of decisionPaths; let i = index" class="alternative-item">
-        <label class="alternative-label">
-          <input type="checkbox"
-                 [checked]="path.selected"
-                 (change)="togglePathSelection(path)">
-          <span class="alternative-text">
-            {{ getAlternativeLabel(i) }}
-          </span>
-        </label>
-        <div class="path-description">
-          {{ path.path.join(' → ') }}
-        </div>
-      </div>
-    </div>
-  </div>
- </div>
-
- <!-- ////////////////////////////////////////////////////////////////////////////////////////////////////////////// -->
-
-
- <!-- <div class="decision-tree-container">
-  <div class="decision-areas">
-    <div class="areas-header">Áreas de decisión</div>
-    <div class="tree-structure">
-      <div class="combined-decisions-panel">
-        <div class="combined-decision" *ngFor="let combinedDecision of combinedDecisions">
-          <div class="combined-areas">
-            {{ combinedDecision.areas.join(' → ') }}
+<ng-template #recursiveTree let-nodes let-parentPath="parentPath">
+  <ng-container *ngFor="let node of nodes">
+    <div class="decision-area">
+      <div class="options-container">
+        <div class="option-group" *ngFor="let option of node.options">
+          <div class="option-item">
+            <ng-container *ngIf="option.isLastArea; else regularOption">
+              <input type="checkbox"
+              [(ngModel)]="option.selected"
+              (change)="onOptionSelected(option, parentPath.concat(option.text))">
+              <label>{{ option.text }}</label>
+              <div class="option-hex-code">{{ generateHexCode(option.text) }}</div>
+            </ng-container>
+            <ng-template #regularOption>
+              <label>{{ option.text }}</label>
+              <div class="connector-line" *ngIf="option.children"></div>
+            </ng-template>
           </div>
-          <div class="combined-options">
-            {{ combinedDecision.options.join(' | ') }}
+          <div class="children-container" *ngIf="option.children">
+            <ng-container *ngTemplateOutlet="recursiveTree; context: { $implicit: option.children, parentPath: parentPath.concat([option.text]) }">
+            </ng-container>
           </div>
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="alternatives-panel">
-    <div class="alternatives-header">Alternativas de decisión</div>
-    <div class="alternatives-list">
-      <div *ngFor="let path of decisionPaths; let i = index" class="alternative-item">
-        <label class="alternative-label">
-          <input type="checkbox"
-                 [checked]="path.selected"
-                 (change)="togglePathSelection(path)">
-          <span class="alternative-text">
-            {{ getAlternativeLabel(i) }}
-          </span>
-        </label>
-        <div class="path-description">
-          {{ path.path.join(' → ') }}
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
-
-<!-- <div class="decision-tree-container">
-  <div class="decision-areas">
-    <div class="areas-header">Áreas de decisión</div>
-    <div class="tree-structure">
-      <div class="area-column" *ngFor="let area of getUniqueAreas()">
-        <div class="area-title">{{ area }}</div>
-        <div class="decisions-group">
-          <ng-container *ngFor="let decision of getDecisionsByArea(area)">
-            <div class="decision-options">
-              <ng-container *ngFor="let opcion of getOpcionesPorArea(decision.id)">
-                <div class="option-item">
-                  <span class="option-text">{{ opcion.descripcion }}</span>
-                  <div class="connector-line"></div>
-                </div>
-              </ng-container>
-            </div>
-          </ng-container>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="alternatives-panel">
-    <div class="alternatives-header">Alternativas de decisión</div>
-    <div class="alternatives-list">
-      <div *ngFor="let path of decisionPaths; let i = index" class="alternative-item">
-        <label class="alternative-label">
-          <input type="checkbox"
-                 [checked]="path.selected"
-                 (change)="togglePathSelection(path)">
-          <span class="alternative-text">
-            {{ getAlternativeLabel(i) }}
-          </span>
-        </label>
-        <div class="path-description">
-          {{ path.path.join(' → ') }}
-        </div>
-      </div>
-    </div>
-  </div>
-</div> -->
+  </ng-container>
+</ng-template>

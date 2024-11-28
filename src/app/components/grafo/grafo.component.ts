@@ -4,6 +4,7 @@ import { DecisionService } from '../../services/decision.service';
 
 // Tipos para nodos y enlaces
 interface Node extends d3.SimulationNodeDatum {
+  isSelected: boolean;
   id: string;
 }
 
@@ -41,10 +42,10 @@ export class GrafoComponent implements OnInit {
       if (source && target) {
         // Crear nodos únicos
         if (!nodesMap.has(source)) {
-          nodesMap.set(source, { id: source });
+          nodesMap.set(source, { id: source, isSelected: false });
         }
         if (!nodesMap.has(target)) {
-          nodesMap.set(target, { id: target });
+          nodesMap.set(target, { id: target, isSelected: false });
         }
         // Agregar enlace
         links.push({ source, target });
@@ -92,21 +93,45 @@ export class GrafoComponent implements OnInit {
       .attr('stroke', '#999')
       .attr('stroke-width', 2);
 
-    // Dibujar nodos
+    // // Dibujar nodos
+    // const node = svg
+    //   .selectAll<SVGCircleElement, Node>('.node')
+    //   .data(data.nodes)
+    //   .enter()
+    //   .append('circle')
+    //   .attr('class', 'node')
+    //   .attr('r', 15)
+    //   .attr('fill', '#69b3a2')
+    //   .call(
+    //     d3.drag<SVGCircleElement, Node>()
+    //       .on('start', (event, d) => this.dragstarted(event, simulation))
+    //       .on('drag', (event, d) => this.dragged(event, simulation))
+    //       .on('end', (event, d) => this.dragended(event, simulation)),
+    //   );
+
     const node = svg
-      .selectAll<SVGCircleElement, Node>('.node')
-      .data(data.nodes)
-      .enter()
-      .append('circle')
-      .attr('class', 'node')
-      .attr('r', 15)
-      .attr('fill', '#69b3a2')
-      .call(
-        d3.drag<SVGCircleElement, Node>()
-          .on('start', (event, d) => this.dragstarted(event, simulation))
-          .on('drag', (event, d) => this.dragged(event, simulation))
-          .on('end', (event, d) => this.dragended(event, simulation)),
-      );
+    .selectAll<SVGCircleElement, Node>('.node')
+    .data(data.nodes)
+    .enter()
+    .append('circle')
+    .attr('class', 'node')
+    .attr('r', 15)
+    .attr('fill', (d) => (d.isSelected ? '#ff5733' : '#69b3a2')) // Color inicial basado en isSelected
+    .on('click', (event, d) => {
+      // Cambiar el estado de selección del nodo
+      d.isSelected = !d.isSelected;
+
+      // Actualizar el color del nodo según su estado
+      d3.select(event.target as SVGCircleElement)
+        .attr('fill', d.isSelected ? '#ff5733' : '#69b3a2');
+    })
+    .call(
+      d3.drag<SVGCircleElement, Node>()
+        .on('start', (event, d) => this.dragstarted(event, simulation))
+        .on('drag', (event, d) => this.dragged(event, simulation))
+        .on('end', (event, d) => this.dragended(event, simulation)),
+    );
+
 
     // Añadir etiquetas a los nodos
     svg

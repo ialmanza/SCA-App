@@ -1,0 +1,39 @@
+<ng-container *ngIf="comparisonModes$ | async as modes">
+  <table class="comparison-table" [style.--column-count]="modes.length">
+    <thead>
+      <tr>
+        <th rowspan="2" class="opciones-column">Opciones de Decisión</th>
+        <th [attr.colspan]="modes.length" class="areas-header">Áreas de Decisión</th>
+      </tr>
+      <tr class="label-headers">
+        <th *ngFor="let mode of modes; trackBy: trackByFn">
+          {{ mode.label }}
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <ng-container *ngIf="opciones$ | async as opciones">
+        <tr *ngFor="let opcion of opciones; trackBy: trackByFn">
+          <td class="opciones-column">{{ opcion.descripcion }}</td>
+          <td *ngFor="let mode of modes"
+              class="area-cell"
+              (click)="startEditing(opcion.id, mode.id)">
+            <div class="cell-content">
+              <ng-container *ngIf="!getCellState(opcion.id, mode.id).isEditing">
+                <span [class.default-text]="getCellState(opcion.id, mode.id).value === 'NA'">
+                  {{ getCellState(opcion.id, mode.id).value }}
+                </span>
+              </ng-container>
+              <input *ngIf="getCellState(opcion.id, mode.id).isEditing"
+                     [value]="getCellState(opcion.id, mode.id).value"
+                     (blur)="finishEditing(opcion.id, mode.id, $event)"
+                     (keydown)="handleKeyDown($event, opcion.id, mode.id)"
+                     (click)="$event.stopPropagation()"
+                     autoFocus>
+            </div>
+          </td>
+        </tr>
+      </ng-container>
+    </tbody>
+  </table>
+</ng-container>

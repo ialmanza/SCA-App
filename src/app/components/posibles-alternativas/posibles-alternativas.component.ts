@@ -1,51 +1,3 @@
-// import { Component, OnInit } from '@angular/core';
-// import { Opcion } from '../../models/opcion';
-// import { Decision } from '../../models/decision';
-// import { OpcionService } from '../../services/opcion.service';
-// import { DecisionService } from '../../services/decision.service';
-// import { CommonModule } from '@angular/common';
-
-// @Component({
-//   selector: 'app-posibles-alternativas',
-//   standalone: true,
-//   imports: [ CommonModule ],
-//   providers: [OpcionService, DecisionService],
-//   templateUrl: './posibles-alternativas.component.html',
-//   styleUrl: './posibles-alternativas.component.css'
-// })
-// export class PosiblesAlternativasComponent implements OnInit {
-//   decisions: Decision[] = [];
-
-//   constructor(
-//     private decisionService: DecisionService,
-//     private opcionService: OpcionService
-//   ) {}
-
-//   ngOnInit(): void {
-//     this.loadDecisionTree();
-//   }
-
-//   loadDecisionTree(): void {
-//     this.decisionService.getDecisiones().subscribe((decisiones: Decision[]) => {
-//       this.decisions = decisiones.map((decision) => {
-//         const opciones = this.getOpcionesForDecision(decision.id);
-//         return { ...decision, opciones };
-//       });
-//     });
-//   }
-
-//   getOpcionesForDecision(decisionId: string): Opcion[] {
-//     let opciones: Opcion[] = [];
-//     this.opcionService.getOpciones().subscribe((storedOpciones) => {
-//       opciones = storedOpciones.filter(
-//         (opcion: Opcion) => opcion.cod_area === decisionId
-//       );
-//     });
-//     return opciones;
-//   }
-// }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -53,16 +5,18 @@ import { Decision } from '../../models/decision';
 import { Opcion } from '../../models/opcion';
 import { DecisionService } from '../../services/decision.service';
 import { OpcionService } from '../../services/opcion.service';
+import { SelectedPathsService } from '../../services/selected-path.service';
 
-interface DecisionPath {
-  id: string;
-  path: string[];
-  selected: boolean;
-}
-
-interface CombinedDecision {
-  areas: string[];
-  options: string[];
+interface DecisionNode {
+  areaTitle: string;
+  options: {
+    selected: boolean;
+    text: string;
+    children?: DecisionNode[];
+    isLastChild?: boolean;
+    isLastArea?: boolean;
+    path?: string[];
+  }[];
 }
 
 @Component({
@@ -71,21 +25,33 @@ interface CombinedDecision {
   imports: [CommonModule, FormsModule],
   providers: [OpcionService, DecisionService],
   templateUrl: './posibles-alternativas.component.html',
-  styleUrl: './posibles-alternativas.component.css'
+  styleUrls: ['./posibles-alternativas.component.css'],
 })
 export class PosiblesAlternativasComponent implements OnInit {
   decisions: Decision[] = [];
-  decisionPaths: DecisionPath[] = [];
-  combinedDecisions: CombinedDecision[] = [];
   opciones: Opcion[] = [];
+  decisionTree: DecisionNode[] = [];
 
   constructor(
     private decisionService: DecisionService,
-    private opcionService: OpcionService
+    private opcionService: OpcionService,
+    private selectedPathsService: SelectedPathsService
   ) {}
 
   ngOnInit(): void {
     this.loadDecisionsAndOptions();
+  }
+
+  onOptionSelected(option: any, path: string[]) {
+    const hexCode = this.generateHexCode(option.text);
+
+    if (option.selected) {
+      this.selectedPathsService.addPath(hexCode, path);
+      console.log(hexCode, "added", path);
+    } else {
+      this.selectedPathsService.removePath(hexCode);
+      console.log(hexCode, "removed", path);
+    }
   }
 
   loadDecisionsAndOptions(): void {
@@ -93,67 +59,40 @@ export class PosiblesAlternativasComponent implements OnInit {
       this.decisions = decisions;
       this.opcionService.getOpciones().subscribe(opciones => {
         this.opciones = opciones;
-        this.generateCombinedDecisions();
-        this.generateDecisionPaths();
+        this.buildDecisionTree();
       });
     });
   }
 
-  generateCombinedDecisions(): void {
-    const uniqueAreas = this.getUniqueAreas();
-    this.combinedDecisions = [];
-
-    // Combinar primera opción de cada área
-    for (let i = 0; i < uniqueAreas.length - 1; i++) {
-      const currentArea = uniqueAreas[i];
-      const nextArea = uniqueAreas[i + 1];
-
-      const currentAreaOptions = this.getOpcionesPorArea(
-        this.getDecisionsByArea(currentArea)[0].id
-      );
-      const nextAreaOptions = this.getOpcionesPorArea(
-        this.getDecisionsByArea(nextArea)[0].id
-      );
-
-      currentAreaOptions.forEach(currentOption => {
-        nextAreaOptions.forEach(nextOption => {
-          this.combinedDecisions.push({
-            areas: [currentArea, nextArea],
-            options: [currentOption.descripcion, nextOption.descripcion]
-          });
-        });
-      });
-    }
-  }
-
-  getOpcionesPorArea(areaId: string): Opcion[] {
-    return this.opciones.filter(opcion => opcion.cod_area === areaId);
-  }
-
-  generateDecisionPaths(): void {
-    let paths: string[][] = [[]];
+  buildDecisionTree(): void {
     const areas = this.getUniqueAreas();
+    this.decisionTree = this.buildTreeRecursive(areas, 0);
+  }
 
-    areas.forEach(area => {
-      const areaDecisions = this.decisions.filter(d => d.area === area);
-      const newPaths: string[][] = [];
+  buildTreeRecursive(areas: string[], currentIndex: number): DecisionNode[] {
+    if (currentIndex >= areas.length) {
+      return [];
+    }
 
-      paths.forEach(currentPath => {
-        areaDecisions.forEach(decision => {
-          decision.opciones?.forEach(opcion => {
-            newPaths.push([...currentPath, opcion.descripcion]);
-          });
-        });
-      });
+    const currentArea = areas[currentIndex];
+    const areaDecisions = this.getDecisionsByArea(currentArea);
+    const areaOptions = this.getOpcionesPorArea(areaDecisions[0].id);
+    const isLastArea = currentIndex === areas.length - 1;
 
-      paths = newPaths;
-    });
+    const node: DecisionNode = {
+      areaTitle: currentArea,
+      options: areaOptions.map((option, index) => ({
+        text: option.descripcion,
+        selected: false,
+        children: isLastArea
+          ? undefined
+          : this.buildTreeRecursive(areas, currentIndex + 1),
+        isLastChild: index === areaOptions.length - 1,
+        isLastArea: isLastArea
+      }))
+    };
 
-    this.decisionPaths = paths.map((path, index) => ({
-      id: `path-${index}`,
-      path: path,
-      selected: false
-    }));
+    return [node];
   }
 
   getUniqueAreas(): string[] {
@@ -164,121 +103,12 @@ export class PosiblesAlternativasComponent implements OnInit {
     return this.decisions.filter(d => d.area === area);
   }
 
-  togglePathSelection(path: DecisionPath): void {
-    path.selected = !path.selected;
+  getOpcionesPorArea(areaId: string): Opcion[] {
+    return this.opciones.filter(opcion => opcion.cod_area === areaId);
   }
 
-  getAlternativeLabel(index: number): string {
-    return String.fromCharCode(65 + index);
-  }
-
-  isOptionSelected(area: string, optionText: string): boolean {
-    const selectedPath = this.decisionPaths.find(path => path.selected);
-    return selectedPath ? selectedPath.path.includes(optionText) : false;
+  generateHexCode(text: string): string {
+    const hash = text.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    return `#${hash.toString(16).padStart(6, '0')}`;
   }
 }
-
-////////////////////////////////////EL TIPO ES EL DE ABAJO///////////////////////////////////////////////////////////////////////////////////////////////////
-
-// import { Component, OnInit } from '@angular/core';
-// import { CommonModule } from '@angular/common';
-// import { FormsModule } from '@angular/forms';
-// import { Decision } from '../../models/decision';
-// import { Opcion } from '../../models/opcion';
-// import { DecisionService } from '../../services/decision.service';
-// import { OpcionService } from '../../services/opcion.service';
-
-// interface DecisionPath {
-//   id: string;
-//   path: string[];
-//   selected: boolean;
-// }
-
-
-// @Component({
-//   selector: 'app-posibles-alternativas',
-//   standalone: true,
-//   imports: [ CommonModule, FormsModule ],
-//   providers: [OpcionService, DecisionService],
-//   templateUrl: './posibles-alternativas.component.html',
-//   styleUrl: './posibles-alternativas.component.css'
-// })
-// export class PosiblesAlternativasComponent implements OnInit {
-//   decisions: Decision[] = [];
-//   decisionPaths: DecisionPath[] = [];
-//   selectedArea: string | null = null;
-//   opciones: Opcion[];
-
-//   constructor(private decisionService: DecisionService, private opcionService: OpcionService) {
-//     this.opciones = [];
-//   }
-
-//   ngOnInit(): void {
-//     this.loadDecisions();
-
-//     this.opcionService.getOpciones().subscribe((opciones: Opcion[]) => {
-//       this.opciones = opciones;
-//     });
-//   }
-
-//   getOpcionesPorArea(areaId: string) {
-//     return this.opciones.filter(opcion => opcion.cod_area === areaId);  // Filtrar opciones por área de decisión
-//   }
-
-//   loadDecisions(): void {
-//     this.decisionService.getDecisiones().subscribe(decisions => {
-//       this.decisions = decisions;
-//       this.generateDecisionPaths();
-//     });
-//   }
-
-//   generateDecisionPaths(): void {
-//     let paths: string[][] = [[]];
-//     let areas = this.getUniqueAreas();
-
-//     areas.forEach(area => {
-//       const areaDecisions = this.decisions.filter(d => d.area === area);
-//       const newPaths: string[][] = [];
-
-//       paths.forEach(currentPath => {
-//         areaDecisions.forEach(decision => {
-//           decision.opciones?.forEach(opcion => {
-//             newPaths.push([...currentPath, opcion.descripcion]);
-//           });
-//         });
-//       });
-
-//       paths = newPaths;
-//     });
-
-//     this.decisionPaths = paths.map((path, index) => ({
-//       id: `path-${index}`,
-//       path: path,
-//       selected: false
-//     }));
-//   }
-
-//   getUniqueAreas(): string[] {
-//     return Array.from(new Set(this.decisions.map(d => d.area)));
-//   }
-
-//   getDecisionsByArea(area: string): Decision[] {
-//     return this.decisions.filter(d => d.area === area);
-//   }
-
-//   togglePathSelection(path: DecisionPath): void {
-//     path.selected = !path.selected;
-//   }
-
-//   getAlternativeLabel(index: number): string {
-//     return String.fromCharCode(65 + index);
-//   }
-
-//   isOptionSelected(area: string, optionText: string): boolean {
-//     const selectedPath = this.decisionPaths.find(path => path.selected);
-//     if (selectedPath) {
-//       return selectedPath.path.includes(optionText);
-//     }
-//     return false;
-//   }
-// }

@@ -10,6 +10,9 @@ import { Opcion } from '../../../models/opcion';
 import { MatDialog } from '@angular/material/dialog';
 import * as d3 from 'd3';
 import { GrafoComponent } from "../../grafo/grafo.component";
+import { PosiblesAlternativasComponent } from "../../posibles-alternativas/posibles-alternativas.component";
+import { ModoDeComparacionComponent } from "../../modo-de-comparacion/modo-de-comparacion.component";
+import { TablaDeComparacionComponent } from "../../tabla-de-comparacion/tabla-de-comparacion.component";
 
 interface CustomNode extends d3.SimulationNodeDatum {
   id: string;
@@ -17,7 +20,7 @@ interface CustomNode extends d3.SimulationNodeDatum {
 @Component({
   selector: 'app-decisiones-form',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, CrearDecisionComponent, ListarDecisionesComponent, GrafoComponent],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, CrearDecisionComponent, ListarDecisionesComponent, GrafoComponent, PosiblesAlternativasComponent, ModoDeComparacionComponent, TablaDeComparacionComponent],
   providers: [DecisionService, OpcionService],
   templateUrl: './decisiones-form.component.html',
   styleUrl: './decisiones-form.component.css'
@@ -135,7 +138,7 @@ export class DecisionesFormComponent {
   }
 
   avanzarPaso() {
-    if (this.pasoActual < 10) {
+    if (this.pasoActual < 20) {
       this.pasoActual++;
       // if (this.pasoActual === 7 || this.pasoActual === 10) {
       //   console.log(this.areasSeleccionadas);
