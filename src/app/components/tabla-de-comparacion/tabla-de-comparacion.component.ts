@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable, combineLatest } from 'rxjs';
+import { Component } from '@angular/core';
+import { Observable} from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ComparisonMode } from '../../models/comparacion';
 import { Opcion } from '../../models/opcion';
@@ -70,6 +70,5 @@ export class TablaDeComparacionComponent {
     return item.id;
   }
 }
-
 
 

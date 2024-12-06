@@ -1,9 +1,12 @@
+
 <div class="decision-tree-container">
   <div class="area-titles">
     <ng-container *ngFor="let area of getUniqueAreas()">
       <div class="area-title">{{ area }}</div>
     </ng-container>
+    <div class="area-title">Opciones</div>
   </div>
+
 
   <div class="decision-tree">
     <ng-container *ngFor="let node of decisionTree">
@@ -27,18 +30,23 @@
   </div>
 </div>
 
+
 <ng-template #recursiveTree let-nodes let-parentPath="parentPath">
   <ng-container *ngFor="let node of nodes">
     <div class="decision-area">
       <div class="options-container">
         <div class="option-group" *ngFor="let option of node.options">
-          <div class="option-item">
+          <div class="option-item" [class.last-area-item]="option.isLastArea">
             <ng-container *ngIf="option.isLastArea; else regularOption">
-              <input type="checkbox"
-              [(ngModel)]="option.selected"
-              (change)="onOptionSelected(option, parentPath.concat(option.text))">
-              <label>{{ option.text }}</label>
-              <div class="option-hex-code">{{ generateHexCode(option.text) }}</div>
+              <div class="last-area-content">
+                <div class="option-name">{{ option.text }}</div>
+                <div class="option-controls">
+                  <input type="checkbox"
+                    [(ngModel)]="option.selected"
+                    (change)="onOptionSelected(option, parentPath.concat(option.text))">
+                  <div class="option-hex-code">{{ generateHexCode(option.text) }}</div>
+                </div>
+              </div>
             </ng-container>
             <ng-template #regularOption>
               <label>{{ option.text }}</label>
@@ -54,3 +62,4 @@
     </div>
   </ng-container>
 </ng-template>
+

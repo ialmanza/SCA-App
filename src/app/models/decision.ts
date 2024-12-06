@@ -6,4 +6,5 @@ export interface Decision {
   area: string;
   description: string;
   opciones?: Opcion[];
+  is_important?: boolean;
 }

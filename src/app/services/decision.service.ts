@@ -8,6 +8,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class DecisionService {
   private decisionesSubject: BehaviorSubject<Decision[]> = new BehaviorSubject<Decision[]>([])
   private vinculoSubject: BehaviorSubject<string[]> = new BehaviorSubject<string[]>([])
+  private checkDecisionesSubject: BehaviorSubject<Decision[]> = new BehaviorSubject<Decision[]>([])
 
 
   constructor() {
@@ -15,10 +16,17 @@ export class DecisionService {
     this.loadVinculosFromLocalStorage();
    }
 
+
+
    getDecisiones():Observable<Decision[]> {
     return this.decisionesSubject.asObservable();
 
    }
+
+   getCheckDecisiones():Observable<Decision[]> {
+    return this.checkDecisionesSubject.asObservable();
+   }
+
 
    addDecision(decision : Decision) {
     const storedDecisiones = this.getDecisionesFromLocalStorage();
@@ -94,5 +102,15 @@ export class DecisionService {
     } else {
       console.warn('localStorage no disponible.');
     }
+  }
+
+  agregarDecision(decision: Decision) {
+    this.checkDecisionesSubject.next([...this.checkDecisionesSubject.value, decision]);
+  }
+
+  eliminarDecision(id: string) {
+      this.checkDecisionesSubject.next(
+          this.checkDecisionesSubject.value.filter(d => d.id !== id)
+      );
   }
 }

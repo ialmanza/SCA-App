@@ -14,13 +14,15 @@ import { PosiblesAlternativasComponent } from "../../posibles-alternativas/posib
 import { ModoDeComparacionComponent } from "../../modo-de-comparacion/modo-de-comparacion.component";
 import { TablaDeComparacionComponent } from "../../tabla-de-comparacion/tabla-de-comparacion.component";
 
+
 interface CustomNode extends d3.SimulationNodeDatum {
   id: string;
 }
 @Component({
   selector: 'app-decisiones-form',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, CrearDecisionComponent, ListarDecisionesComponent, GrafoComponent, PosiblesAlternativasComponent, ModoDeComparacionComponent, TablaDeComparacionComponent],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, CrearDecisionComponent, ListarDecisionesComponent,
+           GrafoComponent, PosiblesAlternativasComponent, ModoDeComparacionComponent, TablaDeComparacionComponent],
   providers: [DecisionService, OpcionService],
   templateUrl: './decisiones-form.component.html',
   styleUrl: './decisiones-form.component.css'
@@ -162,12 +164,13 @@ export class DecisionesFormComponent {
 
   onCheckboxChange(decision: Decision, event: any): void {
     if (event.target.checked) {
-      this.areasSeleccionadas.push(decision);
-
+        this.areasSeleccionadas.push(decision);
+        this.decisionService.agregarDecision(decision); // Notifica al servicio para agregar una decisión
     } else {
-      this.areasSeleccionadas = this.areasSeleccionadas.filter(d => d.id !== decision.id); // Elimina si se deselecciona el área
+        this.areasSeleccionadas = this.areasSeleccionadas.filter(d => d.id !== decision.id);
+        this.decisionService.eliminarDecision(decision.id); // Notifica al servicio para eliminar una decisión
     }
-  }
+}
 
   //CRUD PARA LAS OPCIONES DENTRO DE LAS DECISIONES
 
