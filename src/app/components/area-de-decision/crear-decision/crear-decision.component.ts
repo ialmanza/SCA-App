@@ -38,7 +38,6 @@ rotuloValue: any;
       return;
     }
     const id = Date.now().toString();
-      //this.decisionService.addDecision({
       this.decisionesDBService.createItem({
         id: id,
         area: area.value,

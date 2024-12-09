@@ -22,10 +22,6 @@ export class CrearOpcionComponent {
     constructor( private opcionService: OpcionService, private decisionService: DecisionService, private decisionDbService :DecisionesDBService,
                  private opcionDbService:  OpcionesDBService
      ) {
-      // this.decisionService.getDecisiones().subscribe((data: any[]) => {
-      //   this.areasDecisiones = data;
-      // });
-
       this.decisionDbService.getItems().subscribe((data: any[]) => {
         this.areasDecisiones = data;
       })
@@ -38,7 +34,6 @@ export class CrearOpcionComponent {
         return false;
       }
       const id = Date.now().toString();
-      //this.opcionService.addOpcion({
        this.opcionDbService.createItem({
         _id: id,
         descripcion: opcion.value,

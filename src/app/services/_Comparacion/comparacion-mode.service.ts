@@ -14,10 +14,6 @@ export class ComparacionModeService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
-  getItem(id: number): Observable<any> { //id del area
-    return this.http.get(`${'https://sca-omega.vercel.app/api/comparacion/'}/${id}`); //devuelve todas las opciones de esa area
-  }
-
   createItem(item: any): Observable<any> {
     return this.http.post('https://sca-omega.vercel.app/api/comparacion/create/', item);
   }
