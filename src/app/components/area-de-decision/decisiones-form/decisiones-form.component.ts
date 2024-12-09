@@ -13,6 +13,7 @@ import { GrafoComponent } from "../../grafo/grafo.component";
 import { PosiblesAlternativasComponent } from "../../posibles-alternativas/posibles-alternativas.component";
 import { ModoDeComparacionComponent } from "../../modo-de-comparacion/modo-de-comparacion.component";
 import { TablaDeComparacionComponent } from "../../tabla-de-comparacion/tabla-de-comparacion.component";
+import { DecisionesDBService } from '../../../services/_Decisiones/decisiones-db.service';
 
 
 interface CustomNode extends d3.SimulationNodeDatum {
@@ -23,7 +24,7 @@ interface CustomNode extends d3.SimulationNodeDatum {
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, CommonModule, CrearDecisionComponent, ListarDecisionesComponent,
            GrafoComponent, PosiblesAlternativasComponent, ModoDeComparacionComponent, TablaDeComparacionComponent],
-  providers: [DecisionService, OpcionService],
+  providers: [DecisionService, OpcionService, DecisionesDBService],
   templateUrl: './decisiones-form.component.html',
   styleUrl: './decisiones-form.component.css'
 })
@@ -47,13 +48,18 @@ export class DecisionesFormComponent {
 
 
 
-  constructor( private decisionService: DecisionService, private opcionService: OpcionService, public dialog: MatDialog) {
+  constructor( private decisionService: DecisionService, private opcionService: OpcionService, public dialog: MatDialog, private decisionesDBService: DecisionesDBService) {
     this.decisiones = [];
     this.opciones = [];
   }
 
   ngOnInit(): void {
-    this.decisionService.getDecisiones().subscribe((decisiones : Decision[]) => {
+    // this.decisionService.getDecisiones().subscribe((decisiones : Decision[]) => {
+    //   this.areas = decisiones
+    //   this.decisiones = decisiones.map(decision => ({ ...decision, seleccionado: false }));
+    // });
+
+    this.decisionesDBService.getItems().subscribe((decisiones : Decision[]) => {
       this.areas = decisiones
       this.decisiones = decisiones.map(decision => ({ ...decision, seleccionado: false }));
     });

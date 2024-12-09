@@ -6,12 +6,14 @@ import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { OpcionService } from '../../../services/opcion.service';
 import { Opcion } from '../../../models/opcion';
+import { DecisionesDBService } from '../../../services/_Decisiones/decisiones-db.service';
+import { OpcionesDBService } from '../../../services/_Opciones/opciones-db.service';
 
 @Component({
   selector: 'app-listar-decisiones',
   standalone: true,
   imports: [DecisionComponent, FormsModule, CommonModule],
-  providers: [DecisionService, OpcionService],
+  providers: [DecisionService, OpcionService, DecisionesDBService, OpcionesDBService],
   templateUrl: './listar-decisiones.component.html',
   styleUrl: './listar-decisiones.component.css'
 })
@@ -26,17 +28,25 @@ export class ListarDecisionesComponent {
   totalItems = 0;
 
 
-  constructor( private decisionService: DecisionService, private opcionService: OpcionService) {
+  constructor( private decisionService: DecisionService, private opcionService: OpcionService, private decisionesDBService: DecisionesDBService,
+               private opcionesDBService: OpcionesDBService) {
     this.decisiones = [];
     this.opciones = [];
   }
 
   ngOnInit(): void {
-    this.decisionService.getDecisiones().subscribe((decisiones : Decision[]) => {
+    // this.decisionService.getDecisiones().subscribe((decisiones : Decision[]) => {
+    //   this.decisiones = decisiones
+    // });
+    this.decisionesDBService.getItems().subscribe((decisiones : Decision[]) => {
       this.decisiones = decisiones
-    });
+    })
 
-    this.opcionService.getOpciones().subscribe((opciones: Opcion[]) => {
+    // this.opcionService.getOpciones().subscribe((opciones: Opcion[]) => {
+    //   this.opciones = opciones;
+    // });
+
+    this.opcionesDBService.getItems().subscribe((opciones: Opcion[]) => {
       this.opciones = opciones;
     });
   }
