@@ -26,7 +26,7 @@ export class OpcionService {
 
    deleteOpcion(id: string) {
     let storedOpciones = this.getOpcionesFromLocalStorage();
-    storedOpciones = storedOpciones.filter((opcion: { id: string; }) => opcion.id !== id);
+    storedOpciones = storedOpciones.filter((opcion: { _id: string; }) => opcion._id !== id);
     this.saveOpcionesToLocalStorage(storedOpciones);
     this.opcionesSubject.next(storedOpciones);
 

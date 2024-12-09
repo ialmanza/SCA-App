@@ -37,7 +37,7 @@ export class DecisionService {
 
    deleteDecision(id: string) {
     let storedDecisiones = this.getDecisionesFromLocalStorage();
-    storedDecisiones = storedDecisiones.filter((decision: { id: string; }) => decision.id !== id);
+    storedDecisiones = storedDecisiones.filter((decision: { _id: string; }) => decision._id !== id);
     this.saveDecisionesToLocalStorage(storedDecisiones);
     this.decisionesSubject.next(storedDecisiones);
 
@@ -65,7 +65,7 @@ export class DecisionService {
 
   updateDecision(updatedDecision: Decision) {
     let storedDecisiones = this.getDecisionesFromLocalStorage();
-    const index = storedDecisiones.findIndex(decision => decision.id === updatedDecision.id);
+    const index = storedDecisiones.findIndex(decision => decision._id === updatedDecision._id);
     if (index !== -1) {
       storedDecisiones[index] = updatedDecision;
         this.saveDecisionesToLocalStorage(storedDecisiones);
@@ -110,7 +110,7 @@ export class DecisionService {
 
   eliminarDecision(id: string) {
       this.checkDecisionesSubject.next(
-          this.checkDecisionesSubject.value.filter(d => d.id !== id)
+          this.checkDecisionesSubject.value.filter(d => d._id !== id)
       );
   }
 }

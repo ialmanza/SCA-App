@@ -19,7 +19,12 @@ export class OpcionesDBService {
   }
 
   createItem(item: any): Observable<any> {
-    return this.http.post('https://sca-omega.vercel.app/api/opcion/create/', item);
+    const payload = {
+          descripcion: item.descripcion,
+          cod_area: item.cod_area
+        };
+    return this.http.post('https://sca-omega.vercel.app/api/opcion/create/', payload);
+
   }
 
   updateItem(id: number, item: any): Observable<any> {

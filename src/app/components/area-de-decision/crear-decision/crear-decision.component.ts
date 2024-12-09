@@ -46,7 +46,6 @@ rotuloValue: any;
         description: descripcion.value
 
       }).subscribe(() => {
-        console.log(typeof area.value, area.value, typeof this.rotuloValue, this.rotuloValue, typeof descripcion.value, descripcion.value);
         area.value = '';
         this.rotuloValue = '';
         descripcion.value = '';

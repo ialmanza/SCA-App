@@ -14,6 +14,9 @@ import { PosiblesAlternativasComponent } from "../../posibles-alternativas/posib
 import { ModoDeComparacionComponent } from "../../modo-de-comparacion/modo-de-comparacion.component";
 import { TablaDeComparacionComponent } from "../../tabla-de-comparacion/tabla-de-comparacion.component";
 import { DecisionesDBService } from '../../../services/_Decisiones/decisiones-db.service';
+import { catchError, EMPTY, switchMap } from 'rxjs';
+import { OpcionesDBService } from '../../../services/_Opciones/opciones-db.service';
+import { DialogAnimationsExampleDialog } from '../eliminar-decision-modal/eliminar-decision.component';
 
 
 interface CustomNode extends d3.SimulationNodeDatum {
@@ -24,7 +27,7 @@ interface CustomNode extends d3.SimulationNodeDatum {
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, CommonModule, CrearDecisionComponent, ListarDecisionesComponent,
            GrafoComponent, PosiblesAlternativasComponent, ModoDeComparacionComponent, TablaDeComparacionComponent],
-  providers: [DecisionService, OpcionService, DecisionesDBService],
+  providers: [DecisionService, OpcionService, DecisionesDBService, OpcionesDBService],
   templateUrl: './decisiones-form.component.html',
   styleUrl: './decisiones-form.component.css'
 })
@@ -45,10 +48,12 @@ export class DecisionesFormComponent {
   vinculos: string[] = [];
   selectedArea1: Decision | null = null;
   selectedArea2: Decision | null = null;
+  updatingDecisions: { [key: number]: boolean } = {};
 
 
 
-  constructor( private decisionService: DecisionService, private opcionService: OpcionService, public dialog: MatDialog, private decisionesDBService: DecisionesDBService) {
+  constructor( private decisionService: DecisionService, private opcionService: OpcionService, public dialog: MatDialog, private decisionesDBService: DecisionesDBService
+               , private opcionesDBService: OpcionesDBService) {
     this.decisiones = [];
     this.opciones = [];
   }
@@ -64,9 +69,13 @@ export class DecisionesFormComponent {
       this.decisiones = decisiones.map(decision => ({ ...decision, seleccionado: false }));
     });
 
-    this.opcionService.getOpciones().subscribe((opciones: Opcion[]) => {
+    // this.opcionService.getOpciones().subscribe((opciones: Opcion[]) => {
+    //   this.opciones = opciones;
+    // });
+    this.opcionesDBService.getItems().subscribe((opciones: Opcion[]) => {
       this.opciones = opciones;
-    });
+    })
+
 
     this.eliminarVinculos();
 
@@ -113,7 +122,7 @@ export class DecisionesFormComponent {
 
     const id = Date.now().toString();
       this.decisionService.addDecision({
-        id: id,
+        _id: id,
         area: area.value,
         rotulo: this.rotuloValue,
         description: descripcion.value
@@ -126,22 +135,46 @@ export class DecisionesFormComponent {
   }
 
   deleteDecision(decisiones : Decision) {
-      this.decisionService.deleteDecision(decisiones.id);
-      this.decisionService.getDecisiones().subscribe((decisiones : Decision[]) => {
-        this.decisiones = decisiones.map(decision => ({ ...decision, seleccionado: false }));
-      })
-      this.cerrarModalEliminarDecision();
 
+      this.decisionesDBService.deleteItem(decisiones.id!)
+      .pipe(
+        catchError(error => {
+          console.error('Error al eliminar la decisión:', error);
+          return EMPTY;
+        }),
+        switchMap(() => this.decisionesDBService.getItems())
+      )
+      .subscribe({
+        next: (decisiones: Decision[]) => {
+          this.decisiones = decisiones.map(decision => ({ ...decision, seleccionado: false }));
+          this.cerrarModalEliminarDecision();
+        },
+        error: (error) => {
+          console.error('Error al obtener las decisiones actualizadas:', error);
+        }
+      });
   }
 
   updateDecision(updatedDecision: Decision) {
-    this.decisionService.updateDecision(updatedDecision);
-    this.decisionService.getDecisiones().subscribe((decisiones : Decision[]) => {
-      this.decisiones = decisiones.map(decision => ({ ...decision, seleccionado: false }));
-    })
+    this.decisionesDBService.updateItem(updatedDecision.id!, updatedDecision)
+      .pipe(
+        catchError(error => {
+          console.error('Error al actualizar la decisión:', error);
+          return EMPTY;
+        }),
+        switchMap(() => this.decisionesDBService.getItems())
+      )
+      .subscribe({
+        next: (decisiones: Decision[]) => {
+          this.decisiones = decisiones.map(decision => ({ ...decision, seleccionado: false }));
+          this.cerrarModal();
+          this.cerrarModalEditarDecision();
+        },
+        error: (error: any) => {
+          console.error('Error al obtener las decisiones actualizadas:', error);
+        }
+      });
 
-    this.cerrarModal();
-    this.cerrarModalEditarDecision();
 
   }
 
@@ -169,14 +202,35 @@ export class DecisionesFormComponent {
   }
 
   onCheckboxChange(decision: Decision, event: any): void {
-    if (event.target.checked) {
-        this.areasSeleccionadas.push(decision);
-        this.decisionService.agregarDecision(decision); // Notifica al servicio para agregar una decisión
-    } else {
-        this.areasSeleccionadas = this.areasSeleccionadas.filter(d => d.id !== decision.id);
-        this.decisionService.eliminarDecision(decision.id); // Notifica al servicio para eliminar una decisión
-    }
-}
+    const checkbox = event.target as HTMLInputElement;
+    const isChecked = checkbox.checked;
+    const decisionId = decision.id!;
+
+    this.updatingDecisions[decisionId] = true;
+
+    this.decisionesDBService.updateImportantStatus(decisionId, isChecked)
+      .pipe(
+        catchError(error => {
+          console.error('Error al actualizar el estado de importancia:', error);
+          checkbox.checked = !isChecked;
+          return EMPTY;
+        }),
+        switchMap(() => this.decisionesDBService.getItems())
+      )
+      .subscribe({
+        next: (decisiones: Decision[]) => {
+          this.decisiones = decisiones.map(d => ({
+            ...d,
+            seleccionado: false
+          }));
+          delete this.updatingDecisions[decisionId];
+        },
+        error: (error) => {
+          console.error('Error al obtener las decisiones actualizadas:', error);
+          delete this.updatingDecisions[decisionId];
+        }
+      });
+  }
 
   //CRUD PARA LAS OPCIONES DENTRO DE LAS DECISIONES
 
@@ -187,9 +241,9 @@ export class DecisionesFormComponent {
     }
 
     const nuevaOpcion: Opcion = {
-      id: Date.now().toString(),
+      _id: Date.now().toString(),
       descripcion: this.nuevaDescripcion,
-      cod_area: this.decisionSeleccionada!.id
+      cod_area: this.decisionSeleccionada!._id
     };
 
 
@@ -205,12 +259,25 @@ export class DecisionesFormComponent {
   }
 
   eliminarOpcion(id: string) {
-    this.opcionService.deleteOpcion(id);
-    this.opcionService.getOpciones().subscribe((opcionesActualizadas) => {
-      this.opciones = opcionesActualizadas;
-    });
+    // this.opcionService.deleteOpcion(id);
+    // this.opcionService.getOpciones().subscribe((opcionesActualizadas) => {
+    //   this.opciones = opcionesActualizadas;
+    // });
+
   }
 
+  deleteOpcion(opcion: Opcion) {
+
+        this.opcionesDBService.deleteItem(opcion.id!).subscribe({
+          next: () => {
+            console.log(`Opción con id ${opcion.id} eliminada correctamente`);
+            // Aquí puedes refrescar tu lista si es necesario
+          },
+          error: (err) => {
+            console.error(`Error eliminando la opción con id ${opcion.id}:`, err);
+          },
+        });
+  }
 
   abrirModal(decision: Decision) {
     this.decisionSeleccionada = decision;
@@ -241,6 +308,13 @@ export class DecisionesFormComponent {
   cerrarModalEliminarDecision() {
     this.modalEliminarDecisionAbierto = false;
     this.nuevaDescripcion = '';
+  }
+
+  getImportantStatusArea(){
+    this.decisionesDBService.getImportantStatus().subscribe((decisionesActualizadas) => {
+      this.areasSeleccionadas = decisionesActualizadas;
+    })
+    this.avanzarPaso();
   }
 
 }

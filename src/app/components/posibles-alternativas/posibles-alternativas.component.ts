@@ -76,7 +76,7 @@ export class PosiblesAlternativasComponent implements OnInit {
 
     const currentArea = areas[currentIndex];
     const areaDecisions = this.getDecisionsByArea(currentArea);
-    const areaOptions = this.getOpcionesPorArea(areaDecisions[0].id);
+    const areaOptions = this.getOpcionesPorArea(areaDecisions[0]._id);
     const isLastArea = currentIndex === areas.length - 1;
 
     const node: DecisionNode = {

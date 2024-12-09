@@ -19,7 +19,7 @@ export class DecisionComponent {
 
   deleteDecision(decisiones : Decision) {
     if(confirm('Está seguro que desea borrar esta área de decisión?')) {
-      this.decisionService.deleteDecision(decisiones.id);
+      this.decisionService.deleteDecision(decisiones._id);
     }
   }
 

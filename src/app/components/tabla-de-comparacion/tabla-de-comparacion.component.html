@@ -17,17 +17,17 @@
           <td class="opciones-column">{{ opcion.descripcion }}</td>
           <td *ngFor="let mode of modes"
               class="area-cell"
-              (click)="startEditing(opcion.id, mode.id)">
+              (click)="startEditing(opcion._id, mode.id)">
             <div class="cell-content">
-              <ng-container *ngIf="!getCellState(opcion.id, mode.id).isEditing">
-                <span [class.default-text]="getCellState(opcion.id, mode.id).value === 'NA'">
-                  {{ getCellState(opcion.id, mode.id).value }}
+              <ng-container *ngIf="!getCellState(opcion._id, mode.id).isEditing">
+                <span [class.default-text]="getCellState(opcion._id, mode.id).value === 'NA'">
+                  {{ getCellState(opcion._id, mode.id).value }}
                 </span>
               </ng-container>
-              <input *ngIf="getCellState(opcion.id, mode.id).isEditing"
-                     [value]="getCellState(opcion.id, mode.id).value"
-                     (blur)="finishEditing(opcion.id, mode.id, $event)"
-                     (keydown)="handleKeyDown($event, opcion.id, mode.id)"
+              <input *ngIf="getCellState(opcion._id, mode.id).isEditing"
+                     [value]="getCellState(opcion._id, mode.id).value"
+                     (blur)="finishEditing(opcion._id, mode.id, $event)"
+                     (keydown)="handleKeyDown($event, opcion._id, mode.id)"
                      (click)="$event.stopPropagation()"
                      autoFocus>
             </div>
