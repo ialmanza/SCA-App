@@ -1,0 +1,55 @@
+
+  <div class="p-4 border border-gray-300 rounded-lg shadow-md bg-white mb-4">
+
+    <h3 class="text-lg font-bold mb-2">Crear conexión entre áreas</h3>
+    <div class="flex gap-4 items-center">
+      <select
+        [(ngModel)]="selectedArea1"
+        class="p-2 border border-gray-300 rounded w-1/2"
+        [disabled]="areas.length === 0"
+      >
+        <option *ngFor="let area of areas" [ngValue]="area">{{ area.area }}</option>
+      </select>
+      <select
+        [(ngModel)]="selectedArea2"
+        class="p-2 border border-gray-300 rounded w-1/2"
+        [disabled]="areas.length === 0"
+      >
+        <option *ngFor="let area of areas" [ngValue]="area">{{ area.area }}</option>
+      </select>
+      <button
+        (click)="crearVinculo()"
+        class="py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700"
+        [disabled]="!selectedArea1 || !selectedArea2 || selectedArea1 === selectedArea2"
+      >
+        Crear vínculo
+      </button>
+    </div>
+  </div>
+
+  <div class="p-4 border border-gray-300 rounded-lg shadow-md bg-white">
+    <h3 class="text-lg font-bold mb-2">Vínculos creados</h3>
+
+    <div class="content-wrapper">
+      <div class="vinculos-list">
+        <div *ngIf="vinculos.length === 0" class="text-gray-500">
+          No hay vínculos creados aún.
+        </div>
+        <!-- <ul *ngIf="vinculos.length > 0" class="list-disc pl-5">
+          <li *ngFor="let vinculo of vinculos" class="mb-2">
+            <span class="font-bold">{{ vinculo.split(' - ')[0] }}</span> -
+            <span>{{ vinculo.split(' - ')[1] }}</span>
+          </li>
+        </ul> -->
+        <ul *ngIf="vinculos.length > 0">
+          <li *ngFor="let vinculo of vinculos">
+            {{ vinculo }}
+          </li>
+        </ul>
+      </div>
+      <div class="grafo-container">
+        <app-grafo></app-grafo>
+      </div>
+    </div>
+  </div>
+

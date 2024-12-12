@@ -3,11 +3,11 @@
 
   <div *ngIf="pasoActual === 1">
     <!-- Paso 1: Formulario para generar área de desarrollo -->
-    <div class="flex flex-col items-center gap-6">
+    <div>
       <h2 class="text-2xl font-bold text-center text-gray-900">Generar áreas de decisiones</h2>
 
-      <div class="w-full max-w-md bg-white shadow-md rounded-lg p-6">
-        <form (submit)="addDecision( nombre_area, descripcion)" class="space-y-4">
+      <!-- <div class="w-full max-w-md bg-white shadow-md rounded-lg p-6"> -->
+        <!-- <form (submit)="addDecision( nombre_area, descripcion)" class="space-y-4">
           <div class="form-group">
             <label for="rotulo" class="block text-sm font-medium text-gray-700">Complete código:</label>
             <input
@@ -36,8 +36,9 @@
             <button type="submit" class="w-full py-2 px-4 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500">Añadir</button>
             <button type="button" class="w-full py-2 px-4 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">Cancelar</button>
           </div>
-        </form>
-      </div>
+        </form> -->
+        <app-crear-decision></app-crear-decision>
+      <!-- </div> -->
 
       <button class="mt-4 w-full max-w-md py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500" (click)="avanzarPaso()">Continuar</button>
     </div>
@@ -45,7 +46,7 @@
 
   <div *ngIf="pasoActual === 2">
     <!-- Paso 2: Tabla de decisiones -->
-    <div class="overflow-x-auto mt-6">
+    <!-- <div class="overflow-x-auto mt-6">
       <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
         <thead class="bg-gray-200">
           <tr>
@@ -72,7 +73,7 @@
                   </svg>
                 </button>
 
-                <!-- Modal para modificar -->
+
               <div *ngIf="modalAbierto" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
                 <div class="bg-white p-4 rounded shadow-lg">
                   <h2 class="text-xl font-bold mb-4">Editar Decisión</h2>
@@ -93,7 +94,7 @@
                 </div>
               </div>
 
-              <!-- Modal para eliminar la desición -->
+
               <div *ngIf="modalEliminarDecisionAbierto" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
                 <div class="bg-white p-4 rounded shadow-lg">
                   <h2 class="text-xl font-bold mb-4">Eliminar</h2>
@@ -113,8 +114,9 @@
           </tr>
         </tbody>
       </table>
-    </div>
+    </div> -->
 
+    <app-tabla-decisiones></app-tabla-decisiones>
     <div class="flex justify-between mt-6">
       <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
       <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
@@ -124,7 +126,7 @@
 
   <div *ngIf="pasoActual === 3">
     <br>
-    <div class="p-4 border border-gray-300 rounded-lg shadow-md bg-white mb-4">
+    <!-- <div class="p-4 border border-gray-300 rounded-lg shadow-md bg-white mb-4">
 
       <h3 class="text-lg font-bold mb-2">Crear conexión entre áreas</h3>
       <div class="flex gap-4 items-center">
@@ -162,7 +164,8 @@
           </div>
           <ul *ngIf="vinculos.length > 0" class="list-disc pl-5">
             <li *ngFor="let vinculo of vinculos" class="mb-2">
-              {{ vinculo }}
+              <span class="font-bold">{{ vinculo.split(' - ')[0] }}</span> -
+              <span>{{ vinculo.split(' - ')[1] }}</span>
             </li>
           </ul>
         </div>
@@ -170,7 +173,9 @@
           <app-grafo></app-grafo>
         </div>
       </div>
-    </div>
+    </div> -->
+
+    <app-vinculos></app-vinculos>
     <div class="flex justify-between mt-6">
       <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
       <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
@@ -181,7 +186,7 @@
   <div *ngIf="pasoActual === 4">
     <!-- Paso 5: Elección de áreas que pasan a la siguiente fase -->
 
-    <div class="overflow-x-auto mt-6">
+    <!-- <div class="overflow-x-auto mt-6">
       <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
         <thead class="bg-gray-200">
           <tr>
@@ -193,8 +198,7 @@
           <tr *ngFor="let decision of decisiones" class="border-b hover:bg-gray-100">
             <td class="py-3 px-4 text-left text-gray-700">{{ decision.area }}</td>
             <td class="py-3 px-4 text-center">
-              <!-- <input type="checkbox" [(ngModel)]="decision.id" (change)="guardarSeleccion(decision)"> -->
-              <!-- <input type="checkbox" (change)="onCheckboxChange(decision, $event)"> -->
+
               <input
               type="checkbox"
               [disabled]="updatingDecisions[decision.id!]"
@@ -208,8 +212,9 @@
           </tr>
         </tbody>
       </table>
-    </div>
+    </div> -->
 
+    <app-decision-check></app-decision-check>
 
     <div class="flex justify-between mt-6">
       <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
@@ -247,7 +252,7 @@
 
                <!-- Aquí se muestran las opciones relacionadas al área -->
                <ul>
-                <li *ngFor="let opcion of getOpcionesPorArea(decision._id)">
+                <li *ngFor="let opcion of getOpcionesPorArea(decision.id!)">
                   <span>{{opcion.descripcion}}</span>
                   <button class="p-1 text-red-500 hover:text-red-700" (click)="deleteOpcion(opcion)">
                     Eliminar

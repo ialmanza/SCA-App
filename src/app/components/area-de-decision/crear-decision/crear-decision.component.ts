@@ -17,7 +17,7 @@ import { DecisionesDBService } from '../../../services/_Decisiones/decisiones-db
 export class CrearDecisionComponent {
 rotuloValue: any;
 
-  constructor(private decisionService: DecisionService, private decisionesDBService: DecisionesDBService) {}
+  constructor( private decisionesDBService: DecisionesDBService) {}
 
   addDecision( area:HTMLInputElement, descripcion:HTMLTextAreaElement) {
     const rotuloPattern = /^[A-Z]{3}_[A-Z]{3}$/;

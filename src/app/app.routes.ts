@@ -11,6 +11,8 @@ import { GrafoComponent } from './components/grafo/grafo.component';
 import { PosiblesAlternativasComponent } from './components/posibles-alternativas/posibles-alternativas.component';
 import { ModoDeComparacionComponent } from './components/modo-de-comparacion/modo-de-comparacion.component';
 import { TablaDeComparacionComponent } from './components/tabla-de-comparacion/tabla-de-comparacion.component';
+import { TablaDecisionesComponent } from './components/area-de-decision/tabla-decisiones/tabla-decisiones.component';
+import { VinculosComponent } from './components/vinculos/vinculos.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'layout', pathMatch: 'full' },
@@ -26,4 +28,6 @@ export const routes: Routes = [
   { path: 'posibles-alternativas', component: PosiblesAlternativasComponent },
   { path: 'modo-de-comparacion', component: ModoDeComparacionComponent },
   { path: 'tabla-de-comparacion', component: TablaDeComparacionComponent },
+  { path: 'tabla-decisiones', component: TablaDecisionesComponent },
+  { path: 'vinculos', component: VinculosComponent },
 ];

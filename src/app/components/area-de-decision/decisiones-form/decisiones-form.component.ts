@@ -17,17 +17,19 @@ import { DecisionesDBService } from '../../../services/_Decisiones/decisiones-db
 import { catchError, EMPTY, switchMap } from 'rxjs';
 import { OpcionesDBService } from '../../../services/_Opciones/opciones-db.service';
 import { DialogAnimationsExampleDialog } from '../eliminar-decision-modal/eliminar-decision.component';
+import { TablaDecisionesComponent } from "../tabla-decisiones/tabla-decisiones.component";
+import { DecisionCheckComponent } from "../decision-check/decision-check.component";
+import { VinculodbService } from '../../../services/_Vinculos/vinculodb.service';
+import { VinculosComponent } from "../../vinculos/vinculos.component";
 
 
-interface CustomNode extends d3.SimulationNodeDatum {
-  id: string;
-}
+
 @Component({
   selector: 'app-decisiones-form',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, CommonModule, CrearDecisionComponent, ListarDecisionesComponent,
-           GrafoComponent, PosiblesAlternativasComponent, ModoDeComparacionComponent, TablaDeComparacionComponent],
-  providers: [DecisionService, OpcionService, DecisionesDBService, OpcionesDBService],
+    GrafoComponent, PosiblesAlternativasComponent, ModoDeComparacionComponent, TablaDeComparacionComponent, TablaDecisionesComponent, DecisionCheckComponent, VinculosComponent],
+  providers: [DecisionService, OpcionService, DecisionesDBService, OpcionesDBService, VinculodbService],
   templateUrl: './decisiones-form.component.html',
   styleUrl: './decisiones-form.component.css'
 })
@@ -53,7 +55,7 @@ export class DecisionesFormComponent {
 
 
   constructor( private decisionService: DecisionService, private opcionService: OpcionService, public dialog: MatDialog, private decisionesDBService: DecisionesDBService
-               , private opcionesDBService: OpcionesDBService) {
+               , private opcionesDBService: OpcionesDBService, private vinculodbService: VinculodbService) {
     this.decisiones = [];
     this.opciones = [];
   }
@@ -75,15 +77,13 @@ export class DecisionesFormComponent {
     this.opcionesDBService.getItems().subscribe((opciones: Opcion[]) => {
       this.opciones = opciones;
     })
-
-
     this.eliminarVinculos();
 
-    this.decisionService.obtenerVinculos().subscribe((vinculos: string[]) => {
+    this.vinculodbService.getItems().subscribe((vinculos: string[]) => {
       this.vinculos = vinculos;
     });
-
   }
+
 
   eliminarVinculos(): void {
     this.vinculos = [];
@@ -91,11 +91,16 @@ export class DecisionesFormComponent {
 
   crearVinculo(): void {
     if (this.selectedArea1 && this.selectedArea2 && this.selectedArea1 !== this.selectedArea2) {
-      const nuevoVinculo = `${this.selectedArea1.area} - ${this.selectedArea2.area}`;
-      this.decisionService.crearVinculo(nuevoVinculo);
+      // const nuevoVinculo = `${this.selectedArea1.area} - ${this.selectedArea2.area}`;
+      const area_id = this.selectedArea1.id!;
+      const related_area_id = this.selectedArea2.id!;
+      //this.decisionService.crearVinculo(nuevoVinculo);
+      this.vinculodbService.createItem(area_id, related_area_id).subscribe(() => {
+        this.selectedArea1 = null;
+        this.selectedArea2 = null;
+      });
 
-      this.selectedArea1 = null;
-      this.selectedArea2 = null;
+
     } else {
       console.error('Áreas no válidas para crear un vínculo.');
     }
@@ -197,8 +202,9 @@ export class DecisionesFormComponent {
     }
   }
 
-  getOpcionesPorArea(areaId: string) {
-    return this.opciones.filter(opcion => opcion.cod_area === areaId);  // Filtrar opciones por área de decisión
+  getOpcionesPorArea(areaId: number) {
+    return this.opciones.filter(opcion => opcion.cod_area.toString() === areaId.toString());  // Filtrar opciones por área de decisión
+
   }
 
   onCheckboxChange(decision: Decision, event: any): void {
@@ -243,16 +249,23 @@ export class DecisionesFormComponent {
     const nuevaOpcion: Opcion = {
       _id: Date.now().toString(),
       descripcion: this.nuevaDescripcion,
-      cod_area: this.decisionSeleccionada!._id
+      cod_area: this.decisionSeleccionada?.id?.toString() ?? ''
     };
 
 
-    this.opcionService.addOpcion(nuevaOpcion);
-
-
-    this.opcionService.getOpciones().subscribe((opcionesActualizadas) => {
-      this.opciones = opcionesActualizadas;
+    //this.opcionService.addOpcion(nuevaOpcion);
+    this.opcionesDBService.createItem(nuevaOpcion).subscribe(()=>{
+      console.log(nuevaOpcion.cod_area);
+      console.log(typeof nuevaOpcion.cod_area);
+      this.opcionesDBService.getItems().subscribe((opcionesActualizadas) => {
+        this.opciones = opcionesActualizadas;
+      });
     });
+
+    // this.opcionService.getOpciones().subscribe((opcionesActualizadas) => {
+    //   this.opciones = opcionesActualizadas;
+    // });
+
 
 
     this.cerrarModal();
@@ -317,4 +330,8 @@ export class DecisionesFormComponent {
     this.avanzarPaso();
   }
 
+  avanzarYrecargarpagina() { //No Usar
+    this.avanzarPaso();
+    window.location.reload(); //REACARGA LA PAGINA
+  }
 }

@@ -19,6 +19,8 @@ export class OpcionesDBService {
   }
 
   createItem(item: any): Observable<any> {
+    console.log(item, 'item en servicio');
+    console.log('creando area en el servicio', item.cod_area);
     const payload = {
           descripcion: item.descripcion,
           cod_area: item.cod_area
