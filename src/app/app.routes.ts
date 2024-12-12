@@ -13,9 +13,10 @@ import { ModoDeComparacionComponent } from './components/modo-de-comparacion/mod
 import { TablaDeComparacionComponent } from './components/tabla-de-comparacion/tabla-de-comparacion.component';
 import { TablaDecisionesComponent } from './components/area-de-decision/tabla-decisiones/tabla-decisiones.component';
 import { VinculosComponent } from './components/vinculos/vinculos.component';
+import { DecisionCheckComponent } from './components/area-de-decision/decision-check/decision-check.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'layout', pathMatch: 'full' },
+  { path: '', redirectTo: 'crear-decision', pathMatch: 'full' },
   { path: 'decisiones', component: DecisionComponent },
   { path: 'crear-decision', component: CrearDecisionComponent },
   { path: 'listar-decisiones', component: ListarDecisionesComponent },
@@ -30,4 +31,5 @@ export const routes: Routes = [
   { path: 'tabla-de-comparacion', component: TablaDeComparacionComponent },
   { path: 'tabla-decisiones', component: TablaDecisionesComponent },
   { path: 'vinculos', component: VinculosComponent },
+  { path: 'decision-check', component: DecisionCheckComponent },
 ];

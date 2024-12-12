@@ -9,7 +9,7 @@ import { DecisionesDBService } from '../../../services/_Decisiones/decisiones-db
 @Component({
   selector: 'app-crear-decision',
   standalone: true,
-  imports: [ ReactiveFormsModule, FormsModule, CommonModule],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule],
   providers: [DecisionService,  DecisionesDBService],
   templateUrl: './crear-decision.component.html',
   styleUrl: './crear-decision.component.css'
