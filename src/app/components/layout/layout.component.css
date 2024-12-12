@@ -1,71 +1,7 @@
-/* Estructura general */
-.layout {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  justify-content: space-between;
+.layout{
+  background-image: radial-gradient(at 69.95430202902814% 33.86310423457377%, hsla(0, 0%, 100%, 1) 0%, hsla(0, 0%, 100%, 0) 100%), radial-gradient(at 70.39424813011198% 35.49869294791379%, hsla(26.739130434782602, 82.14285714285717%, 78.03921568627452%, 1) 0%, hsla(26.739130434782602, 82.14285714285717%, 78.03921568627452%, 0) 100%), radial-gradient(at 10.406783876016657% 29.669714678837387%, hsla(56.619718309859145, 100%, 86.07843137254902%, 1) 0%, hsla(56.619718309859145, 100%, 86.07843137254902%, 0) 100%), radial-gradient(at 45.23916471216345% 28.18693148026572%, hsla(0, 0%, 100%, 1) 0%, hsla(0, 0%, 100%, 0) 100%), radial-gradient(at 79.36993304501685% 98.88190424646486%, hsla(26.739130434782602, 82.14285714285717%, 78.03921568627452%, 1) 0%, hsla(26.739130434782602, 82.14285714285717%, 78.03921568627452%, 0) 100%), radial-gradient(at 14.703887363427759% 35.559075609590465%, hsla(56.619718309859145, 100%, 86.07843137254902%, 1) 0%, hsla(56.619718309859145, 100%, 86.07843137254902%, 0) 100%), radial-gradient(at 56.94500940031742% 28.49361448904395%, hsla(0, 0%, 100%, 1) 0%, hsla(0, 0%, 100%, 0) 100%);
+   height: 100vh;
 }
-
-.navbar {
-  background-color: #333;
-  color: white;
-  padding: 15px;
+  .content{
+  margin: 100px;
 }
-
-.navbar ul {
-  list-style-type: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-}
-
-.navbar ul li {
-  margin-right: 20px;
-}
-
-.navbar ul li a {
-  color: white;
-  text-decoration: none;
-  font-size: 18px;
-}
-
-.navbar ul li a:hover {
-  text-decoration: underline;
-}
-
-/* Contenido Principal */
-/* .content {
-  flex-grow: 1;
-  padding: 20px;
-  overflow: auto;
-} */
-
-.content {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  padding: 20px;
-  overflow: auto;
-}
-
-
-/* Footer */
-.footer {
-  /* background-color: #333; */
-  color: white;
-  text-align: center;
-  padding: 10px 0;
-}
-
-p{
-  text-decoration: none;
-  color:black;
-  border-radius: 5px;
-  padding: 10px 15px;
-}
-
-p:hover{
-  color:blue;
-}
-
