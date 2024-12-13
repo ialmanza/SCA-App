@@ -1,27 +1,24 @@
 
 <div class="sm:mx-auto sm:w-full sm:max-w-sm">
-
-  <h2 class="text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">Generar Area de desarrollo </h2>
 </div>
-
   <div class="container p-4">
     <div class="row">
-      <div class="col-md-9 mx-auto">
+      <div class="con">
         <div class="card">
-          <div class="card-body">
-            <form (submit)="addDecision( nombre_area, descripcion)">
+          <div class="card-body form">
+            <form (submit)="addDecision( nombre_area, descripcion)" >
               <div class="form-group p-2">
 
                 <div class="mb-3">
-                  <label for="rotulo">Complete código:</label>
+                  <label for="rotulo">Ingresar un código válido:</label>
                   <input
                   type="text"
                   name="rotulo"
                   id="rotulo"
                   placeholder="ABC_DEF"
                   pattern="^[A-Z]{3}_[A-Z]{3}$"
-                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3"
                   required
+                  class="input-custom"
                   [(ngModel)]="rotuloValue"
                   #rotulo="ngModel"
                 />
@@ -31,20 +28,20 @@
                 </div>
 
                 <div>
-                  <label for="nombre_area" class="block text-sm font-medium text-gray-700">Complete nombre del área:</label>
-                  <input type="text" name="nombre_area" id="nombre_area" placeholder="Nombre" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3" required="" #nombre_area>
+                  <label for="nombre_area" >Complete nombre del área:</label>
+                  <input type="text" name="nombre_area" id="nombre_area" placeholder="Nombre" class="input-custom" required="" #nombre_area>
                 </div>
 
                 <div>
-                  <label for="descripcion" class="block text-sm font-medium text-gray-700">Complete descripción:</label>
-                  <textarea type="text" name="descripcion" id="descripcion" placeholder="Descripción" class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500 mb-3" required="" rows="4" #descripcion></textarea>
+                  <label for="descripcion">Complete descripción:</label>
+                  <textarea type="text" name="descripcion" id="descripcion" placeholder="Descripción del área creada" class="input-custom" required="" rows="4" #descripcion></textarea>
                 </div>
 
                 <div>
-                  <button type="submit"  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                  <button type="submit"  class="btn añade">
                     Añadir
                   </button>
-                  <button type="submit"  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500">
+                  <button type="submit"  class="btn cancela">
                     Cancelar
                   </button>
                 </div>

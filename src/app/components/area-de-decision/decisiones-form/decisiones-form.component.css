@@ -10,6 +10,8 @@
   min-width: 200px;
 }
 
+
+
 .grafo-container {
   flex: 1;
   max-width: 400px;
@@ -36,7 +38,6 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #f3f4f6;
 }
 
 .card-container {
@@ -196,14 +197,36 @@
   display: flex;
   justify-content: center;
 }
-
+h2{
+  font-family: "Montserrat", sans-serif;
+  font-size: 4vh;
+  font-style: normal;
+  text-align: center
+;}
 .skills-list {
   display: flex;
   list-style: none;
   padding: 0;
   margin: 0;
 }
+.continuar{
+  width: 50%;
+  height: 50px;
+background-color: #29C7D9;
+color: whitesmoke;
+font-family: "Poppins", sans-serif;
+border-radius: 8px;
+display: inline-block;
+display: block;
+margin: 0 auto;
+}
 
+.continuar:hover{
+  background-color: #3832a3;
+
+  transform: scale(1.1); /* Agranda el botón en un 10% */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Añade un sombreado atractivo */
+}
 @media (min-width: 768px) {
   .col {
     flex: 1;
