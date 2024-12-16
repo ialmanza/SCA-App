@@ -1,5 +1,5 @@
 
-<div class="decision-tree-container">
+<div class="decision-tree-container" *ngIf="decisionTree.length">
   <div class="area-titles">
     <ng-container *ngFor="let area of getUniqueAreas()">
       <div class="area-title">{{ area }}</div>
