@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ComparisonMode } from '../../models/comparacion';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ComparacionModeService } from '../../services/_Comparacion/comparacion-mode.service';
 import { Subscription } from 'rxjs';
@@ -9,7 +9,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-modo-de-comparacion',
   standalone: true,
-  imports: [ ReactiveFormsModule, CommonModule ],
+  imports: [ ReactiveFormsModule, CommonModule, FormsModule ],
   providers: [ ComparacionModeService ],
   templateUrl: './modo-de-comparacion.component.html',
   styleUrl: './modo-de-comparacion.component.css'
@@ -20,6 +20,13 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
   isEditing = false;
   currentEditId: string | null = null;
   private subscriptions: Subscription = new Subscription();
+  emojiOptions = [
+    { value: '😀', label: 'Sonrisa' },
+    { value: '😢', label: 'Triste' },
+    { value: '🔥', label: 'Fuego' },
+    { value: '🚀', label: 'Cohete' },
+    { value: '🌟', label: 'Estrella' },
+  ];
 
   constructor(
     private fb: FormBuilder,
@@ -28,7 +35,8 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
     this.comparisonForm = this.fb.group({
       order: ['', [Validators.required, Validators.min(1)]],
       comparisonArea: ['', [Validators.required]],
-      label: ['', [Validators.required]]
+      label: ['', [Validators.required]],
+      symbol: ['',[Validators.required]],
     });
   }
 
@@ -49,6 +57,20 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
         console.error('Error loading comparison modes:', error);
       }
     });
+    this.subscriptions.add(subscription);
+  }
+
+  updateEmoji(mode: ComparisonMode): void {
+    const subscription = this.comparacionDbService
+      .updateItem(mode._id!, { emoji: mode.symbol }) // Actualiza solo el emoji
+      .subscribe({
+        next: () => {
+          console.log(`Emoji actualizado para el modo: ${mode.id}`);
+        },
+        error: (error) => {
+          console.error('Error updating emoji:', error);
+        },
+      });
     this.subscriptions.add(subscription);
   }
 
@@ -90,7 +112,8 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
     this.comparisonForm.patchValue({
       order: mode.order,
       comparisonArea: mode.comparisonArea,
-      label: mode.label
+      label: mode.label,
+      emoji: mode.symbol,
     });
   }
 

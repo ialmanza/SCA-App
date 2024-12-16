@@ -45,6 +45,19 @@
         </div>
       </div>
 
+      <div class="form-group">
+        <label for="symbol">Emoji</label>
+        <select
+          id="symbol"
+          formControlName="symbol"
+          class="form-control"
+        >
+          <option *ngFor="let emoji of emojiOptions" [value]="emoji.value">
+            {{ emoji.value }}
+          </option>
+        </select>
+      </div>
+
       <div class="button-group">
         <button type="submit" class="btn btn-primary" [disabled]="comparisonForm.invalid">
           {{ isEditing ? 'Actualizar' : 'Agregar' }}
@@ -63,6 +76,7 @@
               <th>Orden</th>
               <th>Área</th>
               <th>Rótulo</th>
+              <th>Emoji</th>
               <th>Acciones</th>
             </tr>
           </thead>
@@ -71,6 +85,14 @@
               <td>{{ mode.order }}</td>
               <td>{{ mode.comparisonArea }}</td>
               <td>{{ mode.label }}</td>
+              <td>{{ mode.symbol }}</td>
+              <td>
+                <select class="form-select" [(ngModel)]="mode.symbol" (change)="updateEmoji(mode)">
+                  <option *ngFor="let emoji of emojiOptions" [value]="emoji.value">
+                    {{ emoji.value }}
+                  </option>
+                </select>
+              </td>
               <td>
                 <button class="btn btn-sm btn-info me-2" (click)="editMode(mode)">
                   Editar
@@ -81,7 +103,7 @@
               </td>
             </tr>
             <tr *ngIf="comparisonModes.length === 0">
-              <td colspan="4" class="text-center">No hay modos de comparación registrados</td>
+              <td colspan="5" class="text-center">No hay modos de comparación registrados</td>
             </tr>
           </tbody>
         </table>
