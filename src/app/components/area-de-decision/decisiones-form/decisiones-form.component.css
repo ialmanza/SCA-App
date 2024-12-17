@@ -37,7 +37,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
 }
 
 .card-container {
@@ -161,11 +160,11 @@
   background-color: #0056b3;
 }
 
-
-.container {
-  flex-direction: column;
-  padding: 2px;
+.alto{
+  margin-top:25%;
 }
+
+
 
 .col {
   flex: 1 1 100%;
@@ -245,4 +244,8 @@ margin: 0 auto;
 .pagination-container {
   padding: 15px;
   margin-top: 10px;
+}
+
+th{
+  font-size: 2vh;
 }
