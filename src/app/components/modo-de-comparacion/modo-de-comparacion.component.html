@@ -44,6 +44,23 @@
           El rótulo es requerido
         </div>
       </div>
+<<<<<<< HEAD
+=======
+
+      <div class="form-group">
+        <label for="symbol">Emoji</label>
+        <select
+          id="symbol"
+          formControlName="symbol"
+          class="form-control"
+        >
+          <option *ngFor="let emoji of emojiOptions" [value]="emoji.value">
+            {{ emoji.value }}
+          </option>
+        </select>
+      </div>
+
+>>>>>>> origin/master
       <div class="button-group">
         <button type="submit" class="btn btn-primary" [disabled]="comparisonForm.invalid">
           {{ isEditing ? 'Actualizar' : 'Agregar' }}
@@ -64,10 +81,18 @@
         <table class="table table-hover">
           <thead>
             <tr>
+<<<<<<< HEAD
               <th scope="col">Orden</th>
               <th scope="col">Área</th>
               <th scope="col">Rótulo</th>
               <th scope="col">Acciones</th>
+=======
+              <th>Orden</th>
+              <th>Área</th>
+              <th>Rótulo</th>
+              <th>Emoji</th>
+              <th>Acciones</th>
+>>>>>>> origin/master
             </tr>
           </thead>
           <tbody>
@@ -75,8 +100,21 @@
               <td class="text-center">{{ mode.order }}</td>
               <td>{{ mode.comparisonArea }}</td>
               <td>{{ mode.label }}</td>
+<<<<<<< HEAD
               <td class="text-center">
                 <button class="mod" (click)="editMode(mode)">
+=======
+              <td>{{ mode.symbol }}</td>
+              <td>
+                <select class="form-select" [(ngModel)]="mode.symbol" (change)="updateEmoji(mode)">
+                  <option *ngFor="let emoji of emojiOptions" [value]="emoji.value">
+                    {{ emoji.value }}
+                  </option>
+                </select>
+              </td>
+              <td>
+                <button class="btn btn-sm btn-info me-2" (click)="editMode(mode)">
+>>>>>>> origin/master
                   Editar
                 </button>
                 <button class="elim" (click)="deleteMode(mode.id)">
@@ -85,7 +123,7 @@
               </td>
             </tr>
             <tr *ngIf="comparisonModes.length === 0">
-              <td colspan="4" class="text-center">No hay modos de comparación registrados</td>
+              <td colspan="5" class="text-center">No hay modos de comparación registrados</td>
             </tr>
           </tbody>
         </table>

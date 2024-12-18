@@ -35,9 +35,9 @@ export class PosiblesAlternativasComponent implements OnInit {
   uniqueAreas: string[] = [];
 
   constructor(
-    private decisionService: DecisionesDBService,
     private opcionService: OpcionesDBService,
-    private selectedPathsService: SelectedPathsService
+    private selectedPathsService: SelectedPathsService,
+    private decisionService: DecisionesDBService
   ) {}
 
   ngOnInit(): void {
@@ -57,89 +57,53 @@ export class PosiblesAlternativasComponent implements OnInit {
   }
 
   loadDecisionsAndOptions(): void {
-    this.decisionService.getItems().subscribe(decisions => {
-      this.decisions = decisions;
-      this.opcionService.getItems().subscribe(opciones => {
-        this.opciones = opciones;
-        this.buildDecisionTree();
-      });
-    });
+    this.decisionService.getImportantStatus().subscribe(
+      importantAreas => {
+        if (importantAreas.length === 0) {
+          console.warn('No hay áreas importantes');
+          return;
+        }
+
+        this.uniqueAreas = importantAreas.map(area => area.area);
+
+        forkJoin({
+          decisions: this.decisionService.getItems(),
+          opciones: this.opcionService.getItems()
+        }).subscribe(
+          ({ decisions, opciones }) => {
+            this.decisions = decisions;
+            this.opciones = opciones;
+            this.buildDecisionTree();
+          },
+          error => {
+            console.error('Error al cargar datos:', error);
+          }
+        );
+      },
+      error => {
+        console.error('Error al cargar áreas importantes:', error);
+      }
+    );
   }
 
   getUniqueAreas(): string[] {
+    const areas: string[] = [];
     this.decisionService.getImportantStatus().subscribe(
-          importantAreas => {
-
-            if (importantAreas.length === 0) {
-              console.warn('No hay áreas importantes');
-              return;
-            }
-            this.uniqueAreas = importantAreas.map(area => area.nombre || area.area);
-          });
-          (error: any) => {
-                  console.error('Error al cargar áreas importantes:', error);
-                }
+      importantAreas => {
+        if (importantAreas.length === 0) {
+          console.warn('No hay áreas importantes');
+          return;
+        }
+        areas.push(...importantAreas.map(area => area.area));
+        this.uniqueAreas = areas;
+      },
+      error => {
+        console.error('Error al cargar áreas importantes:', error);
+      }
+    );
     return this.uniqueAreas;
   }
 
-
-
-  // cargarVinculos(): void {
-  //   this.vinculodbService.getItems().subscribe((response: any) => {
-  //     // Asegúrate de acceder a la propiedad 'vinculos' del response
-  //     this.vinculos = response.vinculos || [];
-  //   }, error => {
-  //     console.error('Error al cargar vínculos', error);
-  //     this.vinculos = [];
-  //   });
-  // }
-
-  // loadDecisionsAndOptions(): void {
-  //   this.decisionService.getImportantStatus().subscribe(
-  //     importantAreas => {
-  //       console.log('Important Areas:', importantAreas);
-
-
-  //       if (importantAreas.length === 0) {
-  //         console.warn('No hay áreas importantes');
-  //         return;
-  //       }
-
-
-  //       this.uniqueAreas = importantAreas.map(area => area.nombre || area.area);
-
-
-  //       forkJoin({
-  //         decisions: this.decisionService.getItems(),
-  //         opciones: this.opcionService.getItems()
-  //       }).subscribe(
-  //         ({ decisions, opciones }) => {
-  //           console.log('Decisions:', decisions);
-  //           console.log('Opciones:', opciones);
-
-
-  //           if (decisions.length === 0 || opciones.length === 0) {
-  //             console.warn('No hay decisiones u opciones');
-  //             return;
-  //           }
-
-
-  //           this.decisions = decisions;
-  //           this.opciones = opciones;
-
-
-  //           this.buildDecisionTree();
-  //         },
-  //         error => {
-  //           console.error('Error al cargar datos:', error);
-  //         }
-  //       );
-  //     },
-  //     error => {
-  //       console.error('Error al cargar áreas importantes:', error);
-  //     }
-  //   );
-  // }
 
   buildDecisionTree(): void {
     const areas = this.getUniqueAreas();
@@ -153,7 +117,12 @@ export class PosiblesAlternativasComponent implements OnInit {
 
     const currentArea = areas[currentIndex];
     const areaDecisions = this.getDecisionsByArea(currentArea);
-    const areaOptions = this.getOpcionesPorArea(areaDecisions[0].id?.toString() ?? '');
+
+    if (areaDecisions.length === 0) {
+      return [];
+    }
+
+    const areaOptions = this.getOpcionesPorArea(areaDecisions[0].id!.toString());
     const isLastArea = currentIndex === areas.length - 1;
 
     const node: DecisionNode = {
@@ -172,16 +141,12 @@ export class PosiblesAlternativasComponent implements OnInit {
     return [node];
   }
 
-  // getUniqueAreas(): string[] {
-  //   return Array.from(new Set(this.decisions.map(d => d.area)));
-  // }
-
   getDecisionsByArea(area: string): Decision[] {
-    return this.decisions.filter(d => d.area.toString() === area.toString());
+    return this.decisions.filter(d => d.area === area);
   }
 
   getOpcionesPorArea(areaId: string): Opcion[] {
-    return this.opciones.filter(opcion => opcion.cod_area === areaId);
+    return this.opciones.filter(opcion => opcion.cod_area.toString() === areaId);
   }
 
   generateHexCode(text: string): string {

@@ -16,7 +16,7 @@ import { VinculosComponent } from './components/vinculos/vinculos.component';
 import { DecisionCheckComponent } from './components/area-de-decision/decision-check/decision-check.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'crear-decision', pathMatch: 'full' },
+  { path: '', redirectTo: 'decisiones-form', pathMatch: 'full' },
   { path: 'decisiones', component: DecisionComponent },
   { path: 'crear-decision', component: CrearDecisionComponent },
   { path: 'listar-decisiones', component: ListarDecisionesComponent },

@@ -3,4 +3,6 @@ export interface ComparisonMode {
   order: number;
   comparisonArea: string;
   label: string;
+  symbol: string;
+  _id?: number;
 }
