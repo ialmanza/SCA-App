@@ -10,11 +10,7 @@ import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-modo-de-comparacion',
   standalone: true,
-<<<<<<< HEAD
-  imports: [ ReactiveFormsModule, CommonModule],
-=======
   imports: [ ReactiveFormsModule, CommonModule, FormsModule ],
->>>>>>> origin/master
   providers: [ ComparacionModeService ],
   templateUrl: './modo-de-comparacion.component.html',
   styleUrl: './modo-de-comparacion.component.css'
@@ -45,6 +41,7 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
       symbol: ['',[Validators.required]],
     });
   }
+
 
  
   ngOnInit(): void {
@@ -112,21 +109,15 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
       }
     }
   }
-
   editMode(mode: ComparisonMode): void {
     this.isEditing = true;
-    this.modoedicion = true;
     this.currentEditId = mode.id;
-    setTimeout(() => {
-      this.modoedicion = false; // Desactivar el resaltado después de 3 segundos
-    }, 1000);
     this.comparisonForm.patchValue({
       order: mode.order,
       comparisonArea: mode.comparisonArea,
       label: mode.label,
       emoji: mode.symbol,
     });
-
   }
 
 
