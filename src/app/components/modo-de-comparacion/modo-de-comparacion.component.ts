@@ -6,10 +6,11 @@ import { CommonModule } from '@angular/common';
 import { ComparacionModeService } from '../../services/_Comparacion/comparacion-mode.service';
 import { Subscription } from 'rxjs';
 
+
 @Component({
   selector: 'app-modo-de-comparacion',
   standalone: true,
-  imports: [ ReactiveFormsModule, CommonModule ],
+  imports: [ ReactiveFormsModule, CommonModule],
   providers: [ ComparacionModeService ],
   templateUrl: './modo-de-comparacion.component.html',
   styleUrl: './modo-de-comparacion.component.css'
@@ -18,6 +19,7 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
   comparisonModes: ComparisonMode[] = [];
   comparisonForm: FormGroup;
   isEditing = false;
+  modoedicion = false;
   currentEditId: string | null = null;
   private subscriptions: Subscription = new Subscription();
 
@@ -32,6 +34,7 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
     });
   }
 
+ 
   ngOnInit(): void {
     this.loadComparisonModes();
   }
@@ -86,13 +89,19 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
 
   editMode(mode: ComparisonMode): void {
     this.isEditing = true;
+    this.modoedicion = true;
     this.currentEditId = mode.id;
+    setTimeout(() => {
+      this.modoedicion = false; // Desactivar el resaltado después de 3 segundos
+    }, 1000);
     this.comparisonForm.patchValue({
       order: mode.order,
       comparisonArea: mode.comparisonArea,
       label: mode.label
     });
+
   }
+
 
   deleteMode(id: string): void {
     if (confirm('¿Está seguro de eliminar este modo de comparación?')) {

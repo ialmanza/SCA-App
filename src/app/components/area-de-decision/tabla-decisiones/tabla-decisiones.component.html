@@ -36,7 +36,7 @@
               <h2 class="text-xl font-bold mb-4">Editar área de decisión</h2>
 
               <label for="descripcion" class="block mb-2">Complete el código:</label>
-              <input id="rotulo" type="text" [(ngModel)]="decisionSeleccionada!.rotulo" class="border p-2 w-full mb-4" placeholder="{{ decisionSeleccionada?.rotulo || 'Escribe el código' }}">
+                <input id="rotulo" type="text" [(ngModel)]="decisionSeleccionada!.rotulo" class="border p-2 w-full mb-4 focus:border-orange-500 focus:outline-none" placeholder="{{ decisionSeleccionada?.rotulo || 'Escribe el código' }}">
 
               <label for="descripcion" class="block mb-2">Nombre del área</label>
               <input id="rotulo" type="text" [(ngModel)]="decisionSeleccionada!.area" class="border p-2 w-full mb-4" placeholder="{{ decisionSeleccionada?.area || 'Escribe el código' }}">
@@ -45,8 +45,8 @@
               <textarea id="descripcion" type="text" [(ngModel)]="decisionSeleccionada!.description" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-600 focus:border-indigo-600" required="" rows="4" placeholder="{{ decisionSeleccionada?.description || 'Escribe la descripción' }}"></textarea>
 
               <div class="flex justify-center">
-                <button (click)="cerrarModal()" class="elim bot p-2 bg-gray-300 hover:bg-gray-400 rounded">Cancelar</button>
-                <button (click)="updateDecision(decisionSeleccionada!)" class="mod p-2 bg-blue-500 text-white hover:bg-blue-700 rounded">Guardar</button>
+                <button (click)="cerrarModal()" class="elim bot">Cancelar</button>
+                <button (click)="updateDecision(decisionSeleccionada!)" class="mod">Guardar</button>
               </div>
             </div>
           </div>
