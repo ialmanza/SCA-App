@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
+import { ComparisonMode } from '../../models/comparacion';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +10,11 @@ export class ComparacionModeService {
   private apiUrl = 'https://sca-omega.vercel.app/api/comparaciones/';
 
   constructor(private http: HttpClient) { }
+
+  // Método específico para obtener los modos de comparación
+  getComparisonModes(): Observable<ComparisonMode[]> {
+    return this.http.get<ComparisonMode[]>(this.apiUrl);
+  }
 
   getItems(): Observable<any[]> {
     return this.http.get<any[]>(this.apiUrl);

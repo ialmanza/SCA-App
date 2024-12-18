@@ -18,6 +18,20 @@
       </div>
 
       <div class="form-group">
+        <label for="peso">Peso</label>
+        <input
+          type="number"
+          id="peso"
+          formControlName="peso"
+          class="form-control"
+          [class.is-invalid]="comparisonForm.get('peso')?.invalid && comparisonForm.get('peso')?.touched"
+        >
+        <div class="invalid-feedback" *ngIf="comparisonForm.get('peso')?.errors?.['required'] && comparisonForm.get('peso')?.touched">
+          El peso es requerido
+        </div>
+      </div>
+
+      <div class="form-group">
         <label for="comparisonArea">Área</label>
         <input
           type="text"
@@ -74,6 +88,7 @@
           <thead>
             <tr>
               <th>Orden</th>
+              <th>Peso</th>
               <th>Área</th>
               <th>Rótulo</th>
               <th>Emoji</th>
@@ -83,6 +98,7 @@
           <tbody>
             <tr *ngFor="let mode of comparisonModes">
               <td>{{ mode.order }}</td>
+              <td>{{ mode.peso }}</td>
               <td>{{ mode.comparisonArea }}</td>
               <td>{{ mode.label }}</td>
               <td>{{ mode.symbol }}</td>
