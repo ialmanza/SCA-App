@@ -1,74 +1,94 @@
-import { Component } from '@angular/core';
-import { Observable} from 'rxjs';
+
+import { Component, OnInit } from '@angular/core';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ComparisonMode } from '../../models/comparacion';
 import { Opcion } from '../../models/opcion';
-import { ComparisonModeService } from '../../services/comparision-mode.service';
-import { OpcionService } from '../../services/opcion.service';
+import { OpcionesDBService } from '../../services/_Opciones/opciones-db.service';
 import { CommonModule } from '@angular/common';
+import { ComparacionModeService } from '../../services/_Comparacion/comparacion-mode.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 interface CellState {
-  isEditing: boolean;
-  value: string;
+  value: number;
+}
+
+interface TableState {
+  [key: string]: CellState;
 }
 
 @Component({
   selector: 'app-tabla-de-comparacion',
   standalone: true,
-  imports: [ CommonModule ],
+  imports: [CommonModule, FontAwesomeModule],
+  providers: [OpcionesDBService],
   templateUrl: './tabla-de-comparacion.component.html',
   styleUrl: './tabla-de-comparacion.component.css'
 })
-export class TablaDeComparacionComponent {
+export class TablaDeComparacionComponent implements OnInit {
+  faPlus = faPlus;
+  faMinus = faMinus;
   opciones$: Observable<Opcion[]>;
   comparisonModes$: Observable<ComparisonMode[]>;
-  cellStates: Map<string, CellState> = new Map();
+  tableState: TableState = {};
+  opciones: Opcion[] = [];
 
   constructor(
-    private opcionService: OpcionService,
-    private comparisonModeService: ComparisonModeService
+    private opcionService: OpcionesDBService,
+    private comparisonModeService: ComparacionModeService
   ) {
-    this.opciones$ = this.opcionService.getOpciones();
+    this.opciones$ = this.opcionService.getItems();
     this.comparisonModes$ = this.comparisonModeService.getComparisonModes().pipe(
       map(modes => modes.sort((a, b) => a.order - b.order))
     );
+    this.opcionService.getItems().subscribe((opciones: Opcion[]) => {
+      this.opciones = opciones;
+    });
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    // Inicializar el estado si es necesario
+  }
 
   getCellKey(opcionId: string, modeId: string): string {
-    return `${opcionId}-${modeId}`;
+    return `${opcionId}_${modeId}`;
   }
 
-  getCellState(opcionId: string, modeId: string): CellState {
+  getCellValue(opcionId: string, modeId: string): number {
     const key = this.getCellKey(opcionId, modeId);
-    if (!this.cellStates.has(key)) {
-      this.cellStates.set(key, { isEditing: false, value: 'NA' });
+    return this.tableState[key]?.value || 0;
+  }
+
+  increment(opcionId: string, modeId: string, event: Event): void {
+    event.stopPropagation();
+    const key = this.getCellKey(opcionId, modeId);
+
+    if (!this.tableState[key]) {
+      this.tableState[key] = { value: 0 };
     }
-    return this.cellStates.get(key)!;
+
+    this.tableState[key].value++;
+
+    // Aquí puedes agregar la lógica para guardar en el backend
+    console.log(`Incrementado celda ${key} a: ${this.tableState[key].value}`);
   }
 
-  startEditing(opcionId: string, modeId: string): void {
-    const cellState = this.getCellState(opcionId, modeId);
-    cellState.isEditing = true;
-  }
+  decrement(opcionId: string, modeId: string, event: Event): void {
+    event.stopPropagation();
+    const key = this.getCellKey(opcionId, modeId);
 
-  finishEditing(opcionId: string, modeId: string, event: any): void {
-    const cellState = this.getCellState(opcionId, modeId);
-    cellState.isEditing = false;
-    cellState.value = event.target.value || 'NA';
-    // logica para el back cuando lo tenga juan
-  }
-
-  handleKeyDown(event: KeyboardEvent, opcionId: string, modeId: string): void {
-    if (event.key === 'Enter') {
-      this.finishEditing(opcionId, modeId, event);
+    if (!this.tableState[key]) {
+      this.tableState[key] = { value: 0 };
     }
+
+    this.tableState[key].value--;
+
+    // Aquí puedes agregar la lógica para guardar en el backend
+    console.log(`Decrementado celda ${key} a: ${this.tableState[key].value}`);
   }
 
   trackByFn(index: number, item: any): any {
     return item.id;
   }
 }
-
-

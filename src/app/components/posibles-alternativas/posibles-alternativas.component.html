@@ -18,7 +18,7 @@
                 <div class="connector-line" *ngIf="option.children"></div>
               </div>
               <div class="children-container" *ngIf="option.children">
-                <ng-container *ngTemplateOutlet="recursiveTree; context: { $implicit: option.children, parentPath: [option.text] }">
+                <ng-container *ngTemplateOutlet="recursiveTree; context: { $implicit: option.children, parentPath: [option.id] }">
                 </ng-container>
               </div>
             </div>

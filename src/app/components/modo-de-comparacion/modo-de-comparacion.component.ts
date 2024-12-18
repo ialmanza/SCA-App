@@ -36,6 +36,7 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
   ) {
     this.comparisonForm = this.fb.group({
       order: ['', [Validators.required, Validators.min(1)]],
+      peso: ['', [Validators.required]],
       comparisonArea: ['', [Validators.required]],
       label: ['', [Validators.required]],
       symbol: ['',[Validators.required]],
@@ -66,7 +67,7 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
 
   updateEmoji(mode: ComparisonMode): void {
     const subscription = this.comparacionDbService
-      .updateItem(mode._id!, { emoji: mode.symbol }) // Actualiza solo el emoji
+      .updateItem(Number(mode.id), { emoji: mode.symbol }) // Actualiza solo el emoji
       .subscribe({
         next: () => {
           console.log(`Emoji actualizado para el modo: ${mode.id}`);
@@ -114,6 +115,7 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
     this.currentEditId = mode.id;
     this.comparisonForm.patchValue({
       order: mode.order,
+      peso: mode.peso,
       comparisonArea: mode.comparisonArea,
       label: mode.label,
       emoji: mode.symbol,

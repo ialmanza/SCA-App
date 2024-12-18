@@ -43,5 +43,13 @@ export class OpcionesDBService {
     return this.http.delete<void>(`${'https://sca-omega.vercel.app/api/opcion/delete'}/${id}`, { headers: header });
   }
 
+  updateComparacionValue(opcionId: string, modeId: string, value: string): Observable<any> {
+    const payload = {
+      opcionId: opcionId,
+      modeId: modeId,
+      value: value
+    };
+    return this.http.post('https://sca-omega.vercel.app/api/comparacion/update-value', payload);
+  }
 }
 

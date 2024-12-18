@@ -13,6 +13,7 @@ interface DecisionNode {
   options: {
     selected: boolean;
     text: string;
+    id: string;
     children?: DecisionNode[];
     isLastChild?: boolean;
     isLastArea?: boolean;
@@ -33,6 +34,7 @@ export class PosiblesAlternativasComponent implements OnInit {
   opciones: Opcion[] = [];
   decisionTree: DecisionNode[] = [];
   uniqueAreas: string[] = [];
+  path: any[] = [];
 
   constructor(
     private opcionService: OpcionesDBService,
@@ -42,17 +44,48 @@ export class PosiblesAlternativasComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadDecisionsAndOptions();
+    this.selectedPathsService.getPathsFromBackend().subscribe(
+      paths => {
+        console.log('Paths obtenidos:', paths);
+        this.path = paths;
+      },
+      error => {
+        console.error('Error obteniendo paths:', error);
+      }
+    );
   }
+
+  // onOptionSelected(option: any, path: string[]) {
+  //   const hexCode = this.generateHexCode(option.text);
+
+  //   if (option.selected) {
+  //     this.selectedPathsService.addPath(hexCode, path);
+  //     this.selectedPathsService.addPathToBackend(hexCode, path);
+  //     console.log(hexCode, "added", path);
+  //   } else {
+  //     this.selectedPathsService.removePath(hexCode);
+  //     console.log(hexCode, "removed", path);
+  //   }
+  // }
 
   onOptionSelected(option: any, path: string[]) {
     const hexCode = this.generateHexCode(option.text);
 
     if (option.selected) {
-      this.selectedPathsService.addPath(hexCode, path);
-      console.log(hexCode, "added", path);
+      // Convierte los paths a números si es necesario
+      const numericPaths = path.map(p => parseInt(p, 10));
+
+      this.selectedPathsService.addPath(hexCode, numericPaths.map(String));
+      this.selectedPathsService.addPathToBackend(hexCode, numericPaths.map(String)).subscribe(
+        response => {
+          console.log('Alternativa creada exitosamente:', response);
+        },
+        error => {
+          console.error('Error creando alternativa:', error);
+        }
+      );
     } else {
       this.selectedPathsService.removePath(hexCode);
-      console.log(hexCode, "removed", path);
     }
   }
 
@@ -129,12 +162,13 @@ export class PosiblesAlternativasComponent implements OnInit {
       areaTitle: currentArea,
       options: areaOptions.map((option, index) => ({
         text: option.descripcion,
+        id: option.id!.toString(),
         selected: false,
         children: isLastArea
           ? undefined
           : this.buildTreeRecursive(areas, currentIndex + 1),
         isLastChild: index === areaOptions.length - 1,
-        isLastArea: isLastArea
+        isLastArea: isLastArea,
       }))
     };
 
