@@ -15,20 +15,6 @@
       </div>
 
       <div class="form-group">
-        <label for="peso">Peso</label>
-        <input
-          type="number"
-          id="peso"
-          formControlName="peso"
-          class="form-control"
-          [class.is-invalid]="comparisonForm.get('peso')?.invalid && comparisonForm.get('peso')?.touched"
-        >
-        <div class="invalid-feedback" *ngIf="comparisonForm.get('peso')?.errors?.['required'] && comparisonForm.get('peso')?.touched">
-          El peso es requerido
-        </div>
-      </div>
-
-      <div class="form-group">
         <label for="comparisonArea">Área</label>
         <input type="text" id="comparisonArea" formControlName="comparisonArea" class="form-control"
           [class.is-invalid]="comparisonForm.get('comparisonArea')?.invalid && comparisonForm.get('comparisonArea')?.touched">
@@ -38,6 +24,12 @@
         </div>
       </div>
 
+
+
+
+
+
+      
       <div class="form-group">
         <label for="label">Rótulo</label>
         <input type="text" id="label" formControlName="label" class="form-control"
@@ -77,29 +69,15 @@
         <table class="table table-hover">
           <thead>
             <tr>
-<<<<<<< HEAD
               <th scope="col">Orden</th>
               <th scope="col">Área</th>
               <th scope="col">Rótulo</th>
               <th scope="col">Acciones</th>
-=======
-              <th>Orden</th>
-              <th>Peso</th>
-              <th>Área</th>
-              <th>Rótulo</th>
-              <th>Emoji</th>
-              <th>Acciones</th>
->>>>>>> 0b9ff03bcd2046a160e9c6fe7e314d6fbb8d26a1
             </tr>
           </thead>
           <tbody>
             <tr *ngFor="let mode of comparisonModes">
-<<<<<<< HEAD
               <td class="text-center">{{ mode.order }}</td>
-=======
-              <td>{{ mode.order }}</td>
-              <td>{{ mode.peso }}</td>
->>>>>>> 0b9ff03bcd2046a160e9c6fe7e314d6fbb8d26a1
               <td>{{ mode.comparisonArea }}</td>
               <td>{{ mode.label }}</td>
               <td>{{ mode.symbol }}</td>
