@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { ComparacionModeService } from '../../services/_Comparacion/comparacion-mode.service';
 import { Subscription } from 'rxjs';
 
+
 @Component({
   selector: 'app-modo-de-comparacion',
   standalone: true,
@@ -18,6 +19,7 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
   comparisonModes: ComparisonMode[] = [];
   comparisonForm: FormGroup;
   isEditing = false;
+  modoedicion = false;
   currentEditId: string | null = null;
   private subscriptions: Subscription = new Subscription();
   emojiOptions = [
@@ -41,6 +43,8 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
     });
   }
 
+
+ 
   ngOnInit(): void {
     this.loadComparisonModes();
   }
@@ -106,7 +110,6 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
       }
     }
   }
-
   editMode(mode: ComparisonMode): void {
     this.isEditing = true;
     this.currentEditId = mode.id;
@@ -118,6 +121,7 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
       emoji: mode.symbol,
     });
   }
+
 
   deleteMode(id: string): void {
     if (confirm('¿Está seguro de eliminar este modo de comparación?')) {

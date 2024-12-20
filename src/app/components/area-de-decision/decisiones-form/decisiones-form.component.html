@@ -2,12 +2,16 @@
 <div class="container mx-auto px-4 py-6">
 
   <div *ngIf="pasoActual === 1">
+    <div class="titulo-container">
+      <h1>Modo de modelado</h1>
+    </div>
     <!-- Paso 1: Formulario para generar área de desarrollo -->
-    <div>
-      <h2 class="text-2xl font-bold text-center text-gray-900">Generar áreas de decisiones</h2>
+    <div class="alto">
+
+      <h2>Generar áreas de decisiones</h2>
 
       <!-- <div class="w-full max-w-md bg-white shadow-md rounded-lg p-6"> -->
-        <!-- <form (submit)="addDecision( nombre_area, descripcion)" class="space-y-4">
+      <!-- <form (submit)="addDecision( nombre_area, descripcion)" class="space-y-4">
           <div class="form-group">
             <label for="rotulo" class="block text-sm font-medium text-gray-700">Complete código:</label>
             <input
@@ -37,14 +41,17 @@
             <button type="button" class="w-full py-2 px-4 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500">Cancelar</button>
           </div>
         </form> -->
-        <app-crear-decision></app-crear-decision>
+      <app-crear-decision></app-crear-decision>
       <!-- </div> -->
 
-      <button class="mt-4 w-full max-w-md py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500" (click)="avanzarPaso()">Continuar</button>
+      <button class="continuar" (click)="avanzarPaso()">Continuar</button>
     </div>
   </div>
 
   <div *ngIf="pasoActual === 2">
+    <div class="titulo-container">
+      <h1>Modo de modelado</h1>
+    </div>
     <!-- Paso 2: Tabla de decisiones -->
     <!-- <div class="overflow-x-auto mt-6">
       <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden">
@@ -76,7 +83,7 @@
 
               <div *ngIf="modalAbierto" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
                 <div class="bg-white p-4 rounded shadow-lg">
-                  <h2 class="text-xl font-bold mb-4">Editar Decisión</h2>
+                  <h2 class="text-xl  mb-4">Editar Decisión</h2>
 
                   <label for="descripcion" class="block mb-2">Complete el código:</label>
                   <input id="rotulo" type="text" [(ngModel)]="decisionSeleccionada!.rotulo" class="border p-2 w-full mb-4" placeholder="{{ decisionSeleccionada?.rotulo || 'Escribe el código' }}">
@@ -97,7 +104,7 @@
 
               <div *ngIf="modalEliminarDecisionAbierto" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
                 <div class="bg-white p-4 rounded shadow-lg">
-                  <h2 class="text-xl font-bold mb-4">Eliminar</h2>
+                  <h2 class="text-xl  mb-4">Eliminar</h2>
 
                   <label for="descripcion" class="block mb-2">Está seguro de eliminar esta descripción?</label>
 
@@ -118,17 +125,21 @@
 
     <app-tabla-decisiones></app-tabla-decisiones>
     <div class="flex justify-between mt-6">
-      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
-      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
+      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+        (click)="retrocederPaso()">Atrás</button>
+      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        (click)="avanzarPaso()">Continuar</button>
     </div>
   </div>
 
+  <div style="margin-top: 0;">
+    <div *ngIf="pasoActual === 3">
+      <div class="titulo-container ">
+        <h1>Modo de modelado</h1>
+      </div>
+      <!-- <div class="p-4 border border-gray-300 rounded-lg shadow-md bg-white mb-4">
 
-  <div *ngIf="pasoActual === 3">
-    <br>
-    <!-- <div class="p-4 border border-gray-300 rounded-lg shadow-md bg-white mb-4">
-
-      <h3 class="text-lg font-bold mb-2">Crear conexión entre áreas</h3>
+      <h3 class="text-lg  mb-2">Crear conexión entre áreas</h3>
       <div class="flex gap-4 items-center">
         <select
           [(ngModel)]="selectedArea1"
@@ -155,7 +166,7 @@
     </div>
 
     <div class="p-4 border border-gray-300 rounded-lg shadow-md bg-white">
-      <h3 class="text-lg font-bold mb-2">Vínculos creados</h3>
+      <h3 class="text-lg  mb-2">Vínculos creados</h3>
 
       <div class="content-wrapper">
         <div class="vinculos-list">
@@ -175,15 +186,20 @@
       </div>
     </div> -->
 
-    <app-vinculos></app-vinculos>
-    <div class="flex justify-between mt-6">
-      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
-      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
+      <app-vinculos></app-vinculos>
+      <div class="flex justify-between">
+        <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+          (click)="retrocederPaso()">Atrás</button>
+        <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+          (click)="avanzarPaso()">Continuar</button>
+      </div>
     </div>
+
   </div>
-
-
   <div *ngIf="pasoActual === 4">
+    <div class="titulo-container diseño">
+      <h1>Modo de diseño</h1>
+    </div>
     <!-- Paso 5: Elección de áreas que pasan a la siguiente fase -->
 
     <!-- <div class="overflow-x-auto mt-6">
@@ -217,119 +233,139 @@
     <app-decision-check></app-decision-check>
 
     <div class="flex justify-between mt-6">
-      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
-      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
+      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+        (click)="retrocederPaso()">Atrás</button>
+      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        (click)="avanzarPaso()">Continuar</button>
     </div>
 
   </div>
 
   <div *ngIf="pasoActual === 5">
+    <div class="titulo-container diseño">
+      <h1>Modo de diseño</h1>
+    </div>
     <!-- Paso 4: Muestra los grafos conectados -->
     <app-grafo></app-grafo>
     <div class="flex justify-between mt-6">
-      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
-      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="getImportantStatusArea()">Continuar</button>
+      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+        (click)="retrocederPaso()">Atrás</button>
+      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        (click)="getImportantStatusArea()">Continuar</button>
     </div>
 
   </div>
 
   <div *ngIf="pasoActual === 6">
+    <div class="titulo-container diseño">
+      <h1>Modo de diseño</h1>
+    </div>
     <!--Paso 6:Aquí van las opciones de desarrollo-->
     <div class="overflow-x-auto overflow-y-auto mt-6">
-      <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden" >
-        <thead class="bg-gray-200" style="position: sticky; top: 0;">
+      <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden" style="margin: auto;">
+        <thead class="bg-orange-100" style="position: sticky; top: 0;">
           <tr>
-            <th class="py-3 px-4 text-left text-gray-700">Área de decisión</th>
-            <th class="py-3 px-4 text-left text-gray-700">Opciones de decisión</th>
-            <th class="py-3 px-4 text-left text-gray-700">Rótulo</th>
-            <th class="py-3 px-4 text-left text-gray-700">Acciones</th>
+            <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">Área de decisión</th>
+            <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">Opciones de decisión</th>
+            <th class="py-4 px-6 text-left text-gray-700 font-semibold text-sm">Rótulo</th>
+            <th class="py-4 px-6 text-center text-gray-700 font-semibold text-sm">Editar</th>
+            <th class="py-4 px-6 text-center text-gray-700 font-semibold text-sm">Eliminar</th>
           </tr>
         </thead>
         <tbody>
           <tr *ngFor="let decision of areasSeleccionadas" class="border-b hover:bg-gray-100">
-            <td class="py-3 px-4">{{decision.area}}</td>
-            <td class="py-3 px-4">
-
-               <!-- Aquí se muestran las opciones relacionadas al área -->
-               <ul>
-                <li *ngFor="let opcion of getOpcionesPorArea(decision.id!)">
+            <td class="py-4 px-6 text-sm text-gray-800">{{decision.area}}</td>
+            <td class="py-4 px-6 text-sm text-gray-800">
+              <ul class="space-y-2">
+                <li *ngFor="let opcion of getOpcionesPorArea(decision.id!)" class="flex justify-between  border border-yellow-200  rounded-md p-2 items-center">
                   <span>{{opcion.descripcion}}</span>
-                  <button class="p-1 text-red-500 hover:text-red-700" (click)="deleteOpcion(opcion)">
+                  <button class="text-red-500 hover:text-red-700 font-semibold text-xs" (click)="deleteOpcion(opcion)">
                     Eliminar
-                </button>
+                  </button>
                 </li>
               </ul>
-              <button class="p-1 text-blue-500 hover:text-blue-700" (click)="abrirModal(decision)">
+              <button class="mt-2 text-green-500 hover:text-green-800 font-semibold text-sm" (click)="abrirModal(decision)">
                 Agregar Opción
-            </button>
-
-            <!-- Modal para ingresar la descripción -->
-              <div *ngIf="modalAbierto" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-                <div class="bg-white p-4 rounded shadow-lg">
-                  <h2 class="text-xl font-bold mb-4">Agregar Descripción de la Opción</h2>
-
-                  <label for="descripcion" class="block mb-2">Descripción:</label>
-                  <input id="descripcion" type="text" [(ngModel)]="nuevaDescripcion" class="border p-2 w-full mb-4" placeholder="Escribe la descripción">
-
-                  <div class="flex justify-end">
-                    <button (click)="cerrarModal()" class="mr-2 p-2 bg-gray-300 hover:bg-gray-400 rounded">Cancelar</button>
-                    <button (click)="agregarOpcion()" class="p-2 bg-blue-500 text-white hover:bg-blue-700 rounded">Guardar</button>
-                  </div>
-                </div>
-              </div>
+              </button>
             </td>
-            <td class="py-3 px-4">{{decision.rotulo}}</td>
-
-            <td class="py-3 px-4">
-              <div class="flex space-x-2">
-                <button class="p-2 bg-green-500 text-white rounded-lg hover:bg-green-600" (click)="abrirModalEditarDecision(decision)" >
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon">
-                    <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
-                    <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
-                  </svg>
-                </button>
-                <button class="p-2 bg-red-500 text-white rounded-lg hover:bg-red-600" (click)="abrirModalEliminarDecision(decision)">
-                  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon">
-                    <path fill-rule="evenodd" d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z" clip-rule="evenodd" />
-                  </svg>
-                </button>
-
-                <!-- Modal para editar la descripción -->
-              <div *ngIf="modalEditarDecisionAbierto" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-                <div class="bg-white p-4 rounded shadow-lg">
-                  <h2 class="text-xl font-bold mb-4">Editar Decisión</h2>
-
-                  <label for="descripcion" class="block mb-2">Complete el código:</label>
-                  <input id="rotulo" type="text" [(ngModel)]="decisionSeleccionada!.rotulo" class="border p-2 w-full mb-4" placeholder="{{ decisionSeleccionada?.rotulo || 'Escribe el código' }}">
-
-                  <label for="descripcion" class="block mb-2">Nombre del área</label>
-                  <input id="rotulo" type="text" [(ngModel)]="decisionSeleccionada!.area" class="border p-2 w-full mb-4" placeholder="{{ decisionSeleccionada?.area || 'Escribe el código' }}">
-
-
-                  <div class="flex justify-end">
-                    <button (click)="cerrarModalEditarDecision()" class="mr-2 p-2 bg-gray-300 hover:bg-gray-400 rounded">Cancelar</button>
-                    <button (click)="updateDecision(decisionSeleccionada!)" class="p-2 bg-blue-500 text-white hover:bg-blue-700 rounded">Guardar</button>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Modal para eliminar la desición -->
-              <div *ngIf="modalEliminarDecisionAbierto" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-                <div class="bg-white p-4 rounded shadow-lg">
-                  <h2 class="text-xl font-bold mb-4">Eliminar</h2>
-
-                  <label for="descripcion" class="block mb-2">Está seguro de eliminar esta desición?</label>
-
-
-                  <div class="flex justify-end">
-                    <button (click)="cerrarModalEliminarDecision()" class="mr-2 p-2 bg-gray-300 hover:bg-gray-400 rounded">Cancelar</button>
-                    <button (click)="deleteDecision(decisionSeleccionada!)" class="p-2 bg-blue-500 text-white hover:bg-blue-700 rounded">Aceptar</button>
-                  </div>
-                </div>
-              </div>
-              </div>
+            <td class="py-4 px-6 text-sm text-gray-800">{{decision.rotulo}}</td>
+            <td class="py-4 px-6 text-center">
+              <button class="mod"  (click)="abrirModalEditarDecision(decision)">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon">
+                  <path
+                    d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+                  <path
+                    d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+                </svg>
+              </button>
+            </td>
+            <td class="py-4 px-6 text-center">
+              <button class="elim" (click)="abrirModalEliminarDecision(decision)">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon" >
+                  <path fill-rule="evenodd"
+                    d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
+                    clip-rule="evenodd" />
+                </svg>
+              </button>
             </td>
           </tr>
+              <!-- Modal para ingresar la descripción -->
+              <div *ngIf="modalAbierto"
+                class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                <div class="modalabierto bg-white p-4 rounded shadow-lg">
+                  <h2 class="text-xl text-center font-bold mb-4">Agregar descripción de la nueva opción</h2>
+
+                  <label for="descripcion" class="block mb-2">Opción nueva:</label>
+                  <input id="descripcion" type="text" [(ngModel)]="nuevaDescripcion" class="border p-2 w-full mb-4"
+                    placeholder="Escribe la descripción">
+
+                  <div class="flex  justify-center mt-1">
+                    <button (click)="cerrarModal()" class= "elim bot">Cancelar</button>
+                    <button (click)="agregarOpcion()" class="mod">Guardar</button>
+                  </div>
+                </div>
+              </div>
+
+
+                <!-- Modal para editar la descripción -->
+                <div *ngIf="modalEditarDecisionAbierto"
+                  class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                  <div class=" modalabierto bg-white p-4 rounded shadow-lg">
+                    <h2 class="text-xl text-center font-bold mb-4">Editar área de decisión</h2>
+
+                    <label for="descripcion" class="block mb-2">Complete el código:</label>
+                    <input id="rotulo" type="text" [(ngModel)]="decisionSeleccionada!.rotulo"
+                      class="border p-2 w-full mb-4"
+                      placeholder="{{ decisionSeleccionada?.rotulo || 'Escribe el código como ABC-DEF' }}">
+
+                    <label for="descripcion" class=" block mb-2">Nombre del área:</label>
+                    <input id="rotulo" type="text" [(ngModel)]="decisionSeleccionada!.area"
+                      class="border p-2 w-full mb-4"
+                      placeholder="{{ decisionSeleccionada?.area || 'Escribe el código' }}">
+
+
+                    <div class="flex  justify-center mt-1">
+                      <button (click)="cerrarModalEditarDecision()" class= "elim bot">Cancelar</button>
+                      <button (click)="updateDecision(decisionSeleccionada!)" class="mod">Guardar</button>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Modal para eliminar la desición -->
+                <div *ngIf="modalEliminarDecisionAbierto"
+                  class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                  <div class="bg-white p-4 rounded shadow-lg">
+                    <h2 class="text-xl text-center font-bold mb-4">Eliminar</h2>
+
+                    <label for="descripcion" class="block  mb-2">¿Está seguro de eliminar esta área de decisión?</label>
+
+
+                    <div class="flex justify-center mt-1">
+                      <button (click)="cerrarModalEliminarDecision()" class= "elim bot">Cancelar</button>
+                      <button (click)="deleteDecision(decisionSeleccionada!)" class="mod">Aceptar</button>
+                    </div>
+                  </div>
+                </div>
         </tbody>
       </table>
 
@@ -337,77 +373,105 @@
     </div>
 
     <div class="flex justify-between mt-6">
-      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
-      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
+      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+        (click)="retrocederPaso()">Atrás</button>
+      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        (click)="avanzarPaso()">Continuar</button>
     </div>
 
   </div>
 
+
+
+
+
+
   <div *ngIf="pasoActual === 7">
-      <!-- Paso 7: Posibles alternativas -->
+    <div class=" comparacion">
+      <h1>Modo de comparación</h1>
+    </div>
+    <app-posibles-alternativas></app-posibles-alternativas>
 
-      <app-posibles-alternativas></app-posibles-alternativas>
 
-
-      <div class="flex justify-between mt-6">
-        <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
-        <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
-      </div>
-
+    <div class="flex justify-between mt-6">
+      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+        (click)="retrocederPaso()">Atrás</button>
+      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        (click)="avanzarPaso()">Continuar</button>
     </div>
 
-    <div *ngIf="pasoActual === 8">
-      <!-- Paso 8: Próximo paso -->
+  </div>
 
-     <app-modo-de-comparacion></app-modo-de-comparacion>
+  <div *ngIf="pasoActual === 8">
+    <!-- Paso 8: Próximo paso -->
+    <div class=" comparacion">
+      <h1>Modo de comparación</h1>
+    </div>
+    <app-modo-de-comparacion></app-modo-de-comparacion>
 
 
-      <div class="flex justify-between mt-6">
-        <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
-        <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
-      </div>
-
+    <div class="flex justify-between mt-6">
+      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+        (click)="retrocederPaso()">Atrás</button>
+      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        (click)="avanzarPaso()">Continuar</button>
     </div>
 
-    <div *ngIf="pasoActual === 9">
-      <!-- Paso 9: Próximo paso -->
+  </div>
 
-     <app-tabla-de-comparacion></app-tabla-de-comparacion>
+  <div *ngIf="pasoActual === 9">
+    <!-- Paso 9: Próximo paso -->
+    <div class=" comparacion">
+      <h1>Modo de comparación</h1>
+    </div>
+    <app-tabla-de-comparacion></app-tabla-de-comparacion>
 
-      <div class="flex justify-between mt-6">
-        <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
-        <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
-      </div>
-
+    <div class="flex justify-between mt-6">
+      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+        (click)="retrocederPaso()">Atrás</button>
+      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        (click)="avanzarPaso()">Continuar</button>
     </div>
 
-    <div *ngIf="pasoActual === 10">
-      <!-- Paso 10: Próximo paso -->
+  </div>
 
+  <div *ngIf="pasoActual === 10">
+    <!-- Paso 10: Próximo paso -->
+    <div class=" comparacion">
+      <h1>Modo de comparación</h1>
+    </div>
       <app-puntuaciones-minimas></app-puntuaciones-minimas>
 
-      <div class="flex justify-between mt-6">
-        <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
-        <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
-      </div>
-
+    <div class="flex justify-between mt-6">
+      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+        (click)="retrocederPaso()">Atrás</button>
+      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        (click)="avanzarPaso()">Continuar</button>
     </div>
 
-    <div *ngIf="pasoActual === 11">
-      <!-- Paso 11: Próximo paso -->
+  </div>
 
+  <div *ngIf="pasoActual === 11">
+    <!-- Paso 11: Próximo paso -->
+    <div class=" selección">
+      <h1>Modo de Selección</h1>
+    </div>
       <app-tabla-de-seleccion></app-tabla-de-seleccion>
 
-      <div class="flex justify-between mt-6">
-        <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
-        <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
-      </div>
-
+    <div class="flex justify-between mt-6">
+      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
+        (click)="retrocederPaso()">Atrás</button>
+      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        (click)="avanzarPaso()">Continuar</button>
     </div>
+
+  </div>
 
     <div *ngIf="pasoActual === 12">
       <!-- Paso 12: Próximo paso -->
-
+      <div class=" selección">
+        <h1>Modo de Selección</h1>
+      </div>
      <h2><strong>Ultimo paso</strong></h2>
 
 
@@ -416,7 +480,7 @@
         <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
       </div>
 
-    </div>
+  </div>
 
     <div *ngIf="pasoActual === 13">
       <!-- Paso 12: Próximo paso -->

@@ -10,6 +10,49 @@
   min-width: 200px;
 }
 
+
+.comparacion{
+  background-color: #5099c4;
+  text-align: center;  /* Centra el título */
+  padding: 30px;  /* Espaciado interno */
+  border-radius: 10px;  /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  /* Sombra suave */
+  margin: 0 auto 30px auto; /* Arriba: 0, Laterales: auto, Abajo: 30px */
+  position: relative;  /* Posicionamiento relativo para efectos */  
+  width: 100vh;
+
+}
+.comparacion h1{
+  color: #f5eee2;  /* Color del texto en amarillo dorado */
+  font-size: 2.5rem;  /* Tamaño grande del texto */
+  font-family: 'Arial', sans-serif;  /* Fuente moderna */
+  text-transform: uppercase;  /* Letras en mayúsculas */
+  letter-spacing: 2px;  /* Espaciado entre letras */
+  margin: 0;  /* Elimina margen por defecto */
+  position: relative;
+  z-index: 1;  /* Asegura que el texto quede encima de otros elementos */
+}
+.selección{
+  background-color: #9566b4;
+  text-align: center;  /* Centra el título */
+  padding: 30px;  /* Espaciado interno */
+  border-radius: 10px;  /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  /* Sombra suave */
+  margin: 0 auto 30px auto; /* Arriba: 0, Laterales: auto, Abajo: 30px */
+  position: relative;  /* Posicionamiento relativo para efectos */  
+  width: 100vh;
+
+}
+.selección h1{
+  color: #f5eee2;  /* Color del texto en amarillo dorado */
+  font-size: 2.5rem;  /* Tamaño grande del texto */
+  font-family: 'Arial', sans-serif;  /* Fuente moderna */
+  text-transform: uppercase;  /* Letras en mayúsculas */
+  letter-spacing: 2px;  /* Espaciado entre letras */
+  margin: 0;  /* Elimina margen por defecto */
+  position: relative;
+  z-index: 1;  /* Asegura que el texto quede encima de otros elementos */
+}
 .grafo-container {
   flex: 1;
   max-width: 400px;
@@ -33,10 +76,11 @@
 
  .container {
   display: flex;
+  flex-direction: column;
+  width: 100%;
   justify-content: center;
   align-items: center;
-  height: 100vh;
-  background-color: #f3f4f6;
+  overflow-x: hidden;
 }
 
 .card-container {
@@ -160,11 +204,12 @@
   background-color: #0056b3;
 }
 
-
-.container {
-  flex-direction: column;
-  padding: 2px;
+.alto{
+  margin-top:5%;
+  width: 50vw;
 }
+
+
 
 .col {
   flex: 1 1 100%;
@@ -184,18 +229,26 @@
 .table {
   width: 80%;
   border-collapse: collapse;
-  margin: 0 auto;
+  margin: auto;
 }
 
 .table th, .table td {
   border: 1px solid #ddd;
   padding: 8px;
+  text-align: center;
 }
 
 .header-actions {
   display: flex;
   justify-content: center;
 }
+h2{
+    font-size: 3vh;
+    text-align: center;
+    font-family: "Poppins", sans-serif;
+
+}
+
 
 .skills-list {
   display: flex;
@@ -203,7 +256,25 @@
   padding: 0;
   margin: 0;
 }
+.continuar{
+  width: 50%;
+  height: 50px;
+  background-color: #3832a3;
+color: whitesmoke;
+font-family: "Poppins", sans-serif;
+border-radius: 8px;
+display: inline-block;
+display: block;
+margin: 0 auto;
+font-size: 2.5vh;
+}
 
+.continuar:hover{
+  background-color: #1e1b57;
+
+  transform: scale(1.1); /* Agranda el botón en un 10% */
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); /* Añade un sombreado atractivo */
+}
 @media (min-width: 768px) {
   .col {
     flex: 1;
@@ -222,4 +293,88 @@
 .pagination-container {
   padding: 15px;
   margin-top: 10px;
+}
+
+th{
+  font-size: 2vh;
+}
+td, button{
+  font-size: 1.7vh;
+}
+.mod{
+  background-color: rgba(0, 128, 0, 0.808);
+  color: aliceblue;
+  border-radius: 10px;
+  padding: 0.5em;
+}
+.mod:hover{
+background-color: rgb(1, 94, 1);
+}
+.elim{
+  background-color: rgba(192, 3, 3, 0.829);
+color: aliceblue;
+  border-radius: 10px;
+  padding: 0.5em;
+}
+.elim:hover{
+  background-color: rgb(150, 0, 0);
+}
+.icon {
+  width: 24px;
+  height: 24px;
+}
+.modalabierto{
+  width: 50%;
+  padding: 10px;
+  border: 1px solid #a3880f;
+  font-size: 2vh; 
+}
+input:focus, textarea:focus{
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 118, 5, 0.5);
+}
+.bot{
+
+  margin-right: 50px;
+}
+label{
+  font-size: 1.9vh;
+}
+.titulo-container {
+  background-color: #e65817;  /* Fondo claro */
+  text-align: center;  /* Centra el título */
+  padding: 30px;  /* Espaciado interno */
+  border-radius: 10px;  /* Bordes redondeados */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);  /* Sombra suave */
+  margin: 0 auto 30px auto; /* Arriba: 0, Laterales: auto, Abajo: 30px */
+  position: relative;  /* Posicionamiento relativo para efectos */  
+  width: 100vh;
+}
+.diseño{
+  background-color: #279f23cb;  /* Fondo claro */
+  color: white;
+
+}
+.titulo-container h1 {
+  color: #f5eee2;  /* Color del texto en amarillo dorado */
+  font-size: 2.5rem;  /* Tamaño grande del texto */
+  font-family: 'Arial', sans-serif;  /* Fuente moderna */
+  text-transform: uppercase;  /* Letras en mayúsculas */
+  letter-spacing: 2px;  /* Espaciado entre letras */
+  margin: 0;  /* Elimina margen por defecto */
+  position: relative;
+  z-index: 1;  /* Asegura que el texto quede encima de otros elementos */
+}
+
+.titulo-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #ff5f6d, #ffc3a0);  /* Gradiente de color */
+  opacity: 0.1;  /* Sombra suave */
+  border-radius: 10px;  /* Bordes redondeados */
+  z-index: 0;  /* Coloca el gradiente debajo del texto */
 }

@@ -1,5 +1,4 @@
 
-
 .form-container {
   max-width: 400px;
   width: 100%;
@@ -15,7 +14,6 @@
 }
 .form-header h1 {
   font-size: 24px;
-  font-weight: bold;
 }
 .form-group {
   margin-bottom: 15px;
@@ -32,8 +30,8 @@
 }
 .form-group input:focus {
   outline: none;
-  border-color: #007bff;
-  box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  /* border-color: #d11f1f; */
+  box-shadow: 0 0 5px rgba(255, 118, 5, 0.5);
 }
 .form-group .checkbox {
   display: flex;
@@ -50,7 +48,7 @@
   padding: 10px;
   background-color: #007bff;
   border: none;
-  border-radius: 5px;
+  border-radius: 10px;
   cursor: pointer;
   font-size: 16px;
 }
@@ -69,8 +67,61 @@
   text-decoration: underline;
 }
 
+/* estilo mica */
 .btn {
-  border-radius: 5px; /* Redondea las esquinas de los botones */
+  border-radius: 10px; /* Redondea las esquinas de los botones */
   transition: border-color 0.3s, box-shadow 0.3s;
-
+  width: 100%;
+  margin: 5px;
+  font-size: 2vh;
+  color: aliceblue;
  }
+.añade{
+  background-color: rgba(0, 128, 0, 0.808);
+  font-family: "Poppins", sans-serif;
+
+}
+.añade:hover{
+  background-color: #20460f;
+
+}
+.cancela{
+  background-color: rgba(192, 3, 3, 0.829);
+  font-family: "Poppins", sans-serif;
+
+}
+.cancela:hover{
+  background-color: #6b291a;
+
+}
+
+ .card-body{
+background-color:#F2F2F2;
+box-shadow: 0 0 5px rgba(2, 0, 0, 0.5);
+border-radius: 10px;
+ }
+
+ .container{
+  border-radius: 10px;
+ }
+
+.input-custom {
+  background-color: #f9fafb; /* bg-gray-50 */
+  border: 1px solid #d1d5db; /* border-gray-300 */
+  color: #111827; /* text-gray-900 */
+  border-radius: 0.5rem; /* rounded-lg */
+  width: 100%; /* w-full */ 
+  padding: 0.625rem; /* p-2.5 */
+  display: block; /* block */
+  margin-bottom: 0.75rem; /* mb-3 */
+  transition: border-color 0.2s, box-shadow 0.2s; /* para focus */
+
+}
+.input-custom::placeholder {
+  color: #0000009d; /* dark:placeholder-gray-400 */
+}
+
+textarea:focus{
+  box-shadow: 0 0 5px rgba(255, 174, 0, 0.493);
+
+}

@@ -1,5 +1,4 @@
-<br><br><br><br>
-<div class="container mx-auto px-4 py-6">
+<div class="flex">
 
   <div class="grid grid-cols-1 gap-6">
     <!-- Tarjeta de Crear Conexión -->
@@ -11,35 +10,37 @@
         </svg>
       </div>
 
-      <div class="space-y-4">
-        <div class="grid grid-cols-2 gap-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Área Origen</label>
-            <select
-              [(ngModel)]="selectedArea1"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
-              [disabled]="areas.length === 0"
-            >
-              <option *ngFor="let area of areas" [ngValue]="area">{{ area.area }}</option>
-            </select>
+          <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Área Origen</label>
+                <select
+                  [(ngModel)]="selectedArea1"
+                  class="custom-select"
+                  [disabled]="areas.length === 0"
+                >
+                <option *ngFor="let area of areas" [ngValue]="area" class="custom-select-option">{{ area.area }}</option>
+              </select>
+
+
           </div>
 
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Área Destino</label>
             <select
-              [(ngModel)]="selectedArea2"
-              class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+              [(ngModel)]="selectedArea2" 
+              class="custom-select"
               [disabled]="areas.length === 0"
             >
-              <option *ngFor="let area of areas" [ngValue]="area">{{ area.area }}</option>
-            </select>
+            <option *ngFor="let area of areas" [ngValue]="area" class="custom-select-option">{{ area.area }}</option>
+          </select>
           </div>
         </div>
 
         <div class="flex justify-end">
           <button
             (click)="crearVinculo()"
-            class="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+            class="px-6 py-2  text-white rounded-md bg-green-500 hover:bg-green-800 focus:ring-2 focus:ring-green-800 focus:ring-offset-2 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
             [disabled]="!selectedArea1 || !selectedArea2 || selectedArea1 === selectedArea2"
           >
             Crear Vínculo
@@ -53,10 +54,11 @@
     <div class="bg-white shadow-xl rounded-2xl border border-gray-200 p-6">
       <div class="flex items-center justify-between mb-4">
         <h3 class="text-xl font-semibold text-gray-800">Vínculos Creados</h3>
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
         </svg>
       </div>
+    
 
       <div class="grid grid-cols-2 gap-6">
         <div class="space-y-4">
@@ -67,16 +69,17 @@
           <ul *ngIf="vinculos.length > 0" class="space-y-2">
             <li
               *ngFor="let vinculo of vinculos"
-              class="bg-blue-50 p-3 rounded-lg shadow-sm border border-blue-100 flex items-center justify-between"
+              class="bg-yellow-50  p-3 rounded-lg shadow-sm border border-yellow-200 flex items-center justify-between"
             >
-              <span class="text-sm text-gray-700">{{ vinculo }}</span>
-              <button class="text-red-500 hover:text-red-700">
+              <span class="text-base text-gray-700"  >{{ vinculo }}</span>
+              <button class="text-red-500 hover:text-red-900 ">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
                 </svg>
               </button>
             </li>
           </ul>
+          
         </div>
 
         <div class="border-l border-gray-200 pl-4">

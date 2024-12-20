@@ -1,9 +1,12 @@
 /* Estructura general */
+/* Estructura general */
 .layout {
   display: flex;
   flex-direction: column;
   height: 100vh;
   justify-content: space-between;
+  background: -webkit-linear-gradient(185deg, #ffffff,#fef4f0,#fde9e1,#fbd2c3);background: linear-gradient(185deg, #ffffff,#fef4f0,#fde9e1,#fbd2c3);
+
 }
 
 .navbar {
@@ -42,11 +45,11 @@
 
 .content {
   position: fixed;
-  top: 0;
-  left: 0;
   width: 100%;
-  padding: 20px;
-  overflow: auto;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: 100%;
+
 }
 
 
