@@ -33,7 +33,7 @@
           <!-- Modal para modificar -->
           <div *ngIf="modalAbierto" class="fixed inset-0 flex items-center justify-center fondo">
             <div class=" modalabierto bg-white rounded">
-              <h2 class="text-xl font-bold mb-4">Editar área de decisión</h2>
+              <h2 class="text-xl mb-4">Editar área de decisión</h2>
 
               <label for="descripcion" class="block mb-2">Complete el código:</label>
                 <input id="rotulo" type="text" [(ngModel)]="decisionSeleccionada!.rotulo" class="border p-2 w-full mb-4 focus:border-orange-500 focus:outline-none" placeholder="{{ decisionSeleccionada?.rotulo || 'Escribe el código' }}">
@@ -54,7 +54,7 @@
           <!-- Modal para eliminar la desición -->
           <div *ngIf="modalEliminarDecisionAbierto" class="fixed inset-0 flex items-center justify-center fondo">
             <div class="bg-white p-4 rounded shadow-lg" style="width: 40%; ">
-              <h2 class="text-xl font-bold mb-4">Eliminar decisión</h2>
+              <h2 class="text-xl mb-4">Eliminar decisión</h2>
 
               <label for="descripcion" class="block mb-4">¿Está seguro de eliminar esta área de decisión?</label>
 

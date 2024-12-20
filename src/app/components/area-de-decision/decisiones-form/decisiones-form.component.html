@@ -83,7 +83,7 @@
 
               <div *ngIf="modalAbierto" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
                 <div class="bg-white p-4 rounded shadow-lg">
-                  <h2 class="text-xl font-bold mb-4">Editar Decisión</h2>
+                  <h2 class="text-xl  mb-4">Editar Decisión</h2>
 
                   <label for="descripcion" class="block mb-2">Complete el código:</label>
                   <input id="rotulo" type="text" [(ngModel)]="decisionSeleccionada!.rotulo" class="border p-2 w-full mb-4" placeholder="{{ decisionSeleccionada?.rotulo || 'Escribe el código' }}">
@@ -104,7 +104,7 @@
 
               <div *ngIf="modalEliminarDecisionAbierto" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
                 <div class="bg-white p-4 rounded shadow-lg">
-                  <h2 class="text-xl font-bold mb-4">Eliminar</h2>
+                  <h2 class="text-xl  mb-4">Eliminar</h2>
 
                   <label for="descripcion" class="block mb-2">Está seguro de eliminar esta descripción?</label>
 
@@ -139,7 +139,7 @@
       </div>
       <!-- <div class="p-4 border border-gray-300 rounded-lg shadow-md bg-white mb-4">
 
-      <h3 class="text-lg font-bold mb-2">Crear conexión entre áreas</h3>
+      <h3 class="text-lg  mb-2">Crear conexión entre áreas</h3>
       <div class="flex gap-4 items-center">
         <select
           [(ngModel)]="selectedArea1"
@@ -166,7 +166,7 @@
     </div>
 
     <div class="p-4 border border-gray-300 rounded-lg shadow-md bg-white">
-      <h3 class="text-lg font-bold mb-2">Vínculos creados</h3>
+      <h3 class="text-lg  mb-2">Vínculos creados</h3>
 
       <div class="content-wrapper">
         <div class="vinculos-list">
@@ -437,7 +437,9 @@
 
   <div *ngIf="pasoActual === 10">
     <!-- Paso 10: Próximo paso -->
-
+    <div class=" comparacion">
+      <h1>Modo de comparación</h1>
+    </div>
       <app-puntuaciones-minimas></app-puntuaciones-minimas>
 
     <div class="flex justify-between mt-6">
@@ -451,7 +453,9 @@
 
   <div *ngIf="pasoActual === 11">
     <!-- Paso 11: Próximo paso -->
-
+    <div class=" selección">
+      <h1>Modo de Selección</h1>
+    </div>
       <app-tabla-de-seleccion></app-tabla-de-seleccion>
 
     <div class="flex justify-between mt-6">
@@ -465,7 +469,9 @@
 
     <div *ngIf="pasoActual === 12">
       <!-- Paso 12: Próximo paso -->
-
+      <div class=" selección">
+        <h1>Modo de Selección</h1>
+      </div>
      <h2><strong>Ultimo paso</strong></h2>
 
 

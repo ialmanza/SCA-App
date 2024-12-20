@@ -66,3 +66,6 @@ input:focus, textarea:focus{
   /* border-color: #d11f1f; */
   box-shadow: 0 0 5px rgba(255, 118, 5, 0.5);
 }
+th{
+  font-style: normal;
+}
