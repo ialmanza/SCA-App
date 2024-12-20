@@ -7,6 +7,7 @@ import {DecisionesDBService} from '../../services/_Decisiones/decisiones-db.serv
 import {OpcionesDBService} from '../../services/_Opciones/opciones-db.service';
 import { SelectedPathsService } from '../../services/selected-path.service';
 import { forkJoin } from 'rxjs';
+import { ChangeDetectorRef } from '@angular/core';
 
 interface DecisionNode {
   areaTitle: string;
@@ -14,6 +15,7 @@ interface DecisionNode {
     selected: boolean;
     text: string;
     id: string;
+    hexCode?: string;
     children?: DecisionNode[];
     isLastChild?: boolean;
     isLastArea?: boolean;
@@ -34,20 +36,28 @@ export class PosiblesAlternativasComponent implements OnInit {
   opciones: Opcion[] = [];
   decisionTree: DecisionNode[] = [];
   uniqueAreas: string[] = [];
-  path: any[] = [];
+  paths: any[] = [];
+  contador: number = 0;
+  updatingOptions: { [key: string]: boolean } = {};
 
   constructor(
     private opcionService: OpcionesDBService,
     private selectedPathsService: SelectedPathsService,
-    private decisionService: DecisionesDBService
+    private decisionService: DecisionesDBService,
+    private changeDetectorRef: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
     this.loadDecisionsAndOptions();
+    this.loadExistingPaths();
+  }
+
+  loadExistingPaths(): void {
     this.selectedPathsService.getPathsFromBackend().subscribe(
       paths => {
         console.log('Paths obtenidos:', paths);
-        this.path = paths;
+        this.paths = paths;
+        this.updateTreeSelections();
       },
       error => {
         console.error('Error obteniendo paths:', error);
@@ -55,6 +65,23 @@ export class PosiblesAlternativasComponent implements OnInit {
     );
   }
 
+  updateTreeSelections(): void {
+    // Recorre el árbol y actualiza las selecciones basadas en los paths existentes
+    const updateNode = (node: DecisionNode, paths: any[]) => {
+      node.options.forEach(option => {
+        const matchingPath = this.paths.find(p => p.hexCode === option.hexCode);
+        if (matchingPath) {
+          option.selected = true;
+        }
+        if (option.children) {
+          option.children.forEach(child => updateNode(child, paths));
+        }
+      });
+    };
+
+    this.decisionTree.forEach(node => updateNode(node, this.paths));
+    this.changeDetectorRef.detectChanges();
+  }
   // onOptionSelected(option: any, path: string[]) {
   //   const hexCode = this.generateHexCode(option.text);
 
@@ -68,24 +95,45 @@ export class PosiblesAlternativasComponent implements OnInit {
   //   }
   // }
 
-  onOptionSelected(option: any, path: string[]) {
-    const hexCode = this.generateHexCode(option.text);
+  onOptionSelected(option: any, path: string[]): void {
+    const hexCode = option.hexCode;
+    this.updatingOptions[hexCode] = true;
 
     if (option.selected) {
-      // Convierte los paths a números si es necesario
       const numericPaths = path.map(p => parseInt(p, 10));
-
-      this.selectedPathsService.addPath(hexCode, numericPaths.map(String));
-      this.selectedPathsService.addPathToBackend(hexCode, numericPaths.map(String)).subscribe(
-        response => {
-          console.log('Alternativa creada exitosamente:', response);
-        },
-        error => {
-          console.error('Error creando alternativa:', error);
-        }
-      );
+      this.selectedPathsService.addPathToBackend(hexCode, numericPaths.map(String))
+        .subscribe({
+          next: (response) => {
+            console.log('Alternativa creada exitosamente:', response);
+            this.loadExistingPaths(); // Recargar los paths después de añadir
+          },
+          error: (error) => {
+            console.error('Error creando alternativa:', error);
+            option.selected = false; // Revertir la selección en caso de error
+            this.changeDetectorRef.detectChanges();
+          },
+          complete: () => {
+            delete this.updatingOptions[hexCode];
+            this.changeDetectorRef.detectChanges();
+          }
+        });
     } else {
-      this.selectedPathsService.removePath(hexCode);
+      this.selectedPathsService.deletePathFromBackend(option.id,hexCode)
+        .subscribe({
+          next: (response) => {
+            console.log('Alternativa eliminada exitosamente:', response);
+            this.loadExistingPaths(); // Recargar los paths después de eliminar
+          },
+          error: (error) => {
+            console.error('Error eliminando alternativa:', error);
+            option.selected = true; // Revertir la selección en caso de error
+            this.changeDetectorRef.detectChanges();
+          },
+          complete: () => {
+            delete this.updatingOptions[hexCode];
+            this.changeDetectorRef.detectChanges();
+          }
+        });
     }
   }
 
@@ -172,6 +220,11 @@ export class PosiblesAlternativasComponent implements OnInit {
       }))
     };
 
+    // Genera un código único para cada opción.
+    node.options.forEach(option => {
+      option['hexCode'] = this.generateHexCode(option.text);
+    });
+
     return [node];
   }
 
@@ -184,7 +237,8 @@ export class PosiblesAlternativasComponent implements OnInit {
   }
 
   generateHexCode(text: string): string {
-    const hash = text.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    return `#${hash.toString(16).padStart(6, '0')}`;
+    let cont = this.contador;
+    this.contador += 1;
+    return `#${cont}`;
   }
 }

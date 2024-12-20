@@ -1,5 +1,5 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ComparisonMode } from '../../models/comparacion';
 import { Opcion } from '../../models/opcion';
@@ -34,7 +34,8 @@ export class TablaDeComparacionComponent implements OnInit {
   constructor(
     private opcionService: OpcionesDBService,
     private comparisonModeService: ComparacionModeService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+
   ) {
     this.opciones$ = this.opcionService.getItems();
     this.comparisonModes$ = this.comparisonModeService.getComparisonModes().pipe(

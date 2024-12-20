@@ -1,11 +1,12 @@
 import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ComparisonMode } from '../../models/comparacion';
 import { Opcion } from '../../models/opcion';
 import { OpcionesDBService } from '../../services/_Opciones/opciones-db.service';
 import { CommonModule } from '@angular/common';
 import { ComparacionModeService } from '../../services/_Comparacion/comparacion-mode.service';
+import { ComparisonCellService } from '../../services/_ComparisonCell/comparison-cell.service';
 
 interface CellState {
   value: number;
@@ -30,7 +31,8 @@ export class TablaDeSeleccionComponent {
   constructor(
     private opcionService: OpcionesDBService,
     private comparisonModeService: ComparacionModeService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private comparisonCellService: ComparisonCellService
   ) {
     this.opciones$ = this.opcionService.getItems();
     this.comparisonModes$ = this.comparisonModeService.getComparisonModes().pipe(
@@ -44,7 +46,46 @@ export class TablaDeSeleccionComponent {
   }
 
   ngOnInit(): void {
-    this.initializeCellStates();
+    //this.initializeCellStates();
+    this.loadCellsFromBackend();
+  }
+
+  trackByFn(index: number, item: any): number {
+    return index; // or item.id, or any other unique identifier
+  }
+
+  private loadCellsFromBackend(): void {
+    forkJoin({
+      cells: this.comparisonCellService.getCells(),
+      opciones: this.opciones$,
+      modes: this.comparisonModes$
+    }).subscribe(({ cells, opciones, modes }) => {
+      // Inicializar el mapa de estados con los valores del backend
+      cells.forEach(cell => {
+        const key = this.getCellKey(cell.opcionId, cell.modeId);
+        this.cellStates.set(key, {
+          value: cell.value,
+          opcionId: cell.opcionId,
+          modeId: cell.modeId
+        });
+      });
+
+      // Inicializar celdas faltantes con valor 0
+      opciones.forEach(opcion => {
+        modes.forEach(mode => {
+          const key = this.getCellKey(opcion.id!, mode.id);
+          if (!this.cellStates.has(key)) {
+            this.cellStates.set(key, {
+              value: 0,
+              opcionId: opcion.id!,
+              modeId: mode.id
+            });
+          }
+        });
+      });
+
+      this.cdr.detectChanges();
+    });
   }
 
   private initializeCellStates(): void {
@@ -76,62 +117,124 @@ export class TablaDeSeleccionComponent {
     return this.cellStates.get(key)?.value || 0;
   }
 
+  // increment(opcionId: number, modeId: string, event: Event): void {
+  //   event.stopPropagation();
+  //   console.log('Datos recibidos en increment:', {
+  //     opcionId,
+  //     modeId,
+  //     opcionCompleta: this.opciones.find(o => o.id === opcionId)
+  //   });
+
+  //   const key = this.getCellKey(opcionId, modeId);
+
+  //   if (!this.cellStates.has(key)) {
+  //     this.cellStates.set(key, {
+  //       value: 0,
+  //       opcionId,
+  //       modeId
+  //     });
+  //   }
+
+  //   const currentState = this.cellStates.get(key)!;
+  //   const newValue = currentState.value + 1;
+
+  //   this.cellStates.set(key, {
+  //     ...currentState,
+  //     value: newValue
+  //   });
+
+  //   this.cdr.detectChanges();
+  //   console.log(`Incrementado celda ${key} a: ${newValue}`);
+  // }
+
+  // decrement(opcionId: number, modeId: string, event: Event): void {
+  //   event.stopPropagation();
+  //   const key = this.getCellKey(opcionId, modeId);
+
+  //   if (!this.cellStates.has(key)) {
+  //     this.cellStates.set(key, {
+  //       value: 0,
+  //       opcionId,
+  //       modeId
+  //     });
+  //   }
+
+  //   const currentState = this.cellStates.get(key)!;
+  //   const newValue = currentState.value - 1;
+
+  //   this.cellStates.set(key, {
+  //     ...currentState,
+  //     value: newValue
+  //   });
+
+  //   this.cdr.detectChanges();
+  //   console.log(`Decrementado celda ${key} a: ${newValue}`);
+  // }
+
+  // trackByFn(index: number, item: any): any {
+  //   return item.id;
+  // }
+
   increment(opcionId: number, modeId: string, event: Event): void {
     event.stopPropagation();
-    console.log('Datos recibidos en increment:', {
+    const key = this.getCellKey(opcionId, modeId);
+    const currentState = this.cellStates.get(key) || {
+      value: 0,
+      opcionId,
+      modeId
+    };
+
+    const newValue = currentState.value + 1;
+    this.cellStates.set(key, { ...currentState, value: newValue });
+
+    this.comparisonCellService.updateCell({
       opcionId,
       modeId,
-      opcionCompleta: this.opciones.find(o => o.id === opcionId)
-    });
-
-    const key = this.getCellKey(opcionId, modeId);
-
-    if (!this.cellStates.has(key)) {
-      this.cellStates.set(key, {
-        value: 0,
-        opcionId,
-        modeId
-      });
-    }
-
-    const currentState = this.cellStates.get(key)!;
-    const newValue = currentState.value + 1;
-
-    this.cellStates.set(key, {
-      ...currentState,
       value: newValue
-    });
+    }).subscribe(
+      updatedCell => {
+        console.log('Celda actualizada en el backend:', updatedCell);
+      },
+      error => {
+        console.error('Error al actualizar la celda:', error);
+        // Revertir el cambio en caso de error
+        this.cellStates.set(key, currentState);
+        this.cdr.detectChanges();
+      }
+    );
 
     this.cdr.detectChanges();
-    console.log(`Incrementado celda ${key} a: ${newValue}`);
   }
 
   decrement(opcionId: number, modeId: string, event: Event): void {
     event.stopPropagation();
     const key = this.getCellKey(opcionId, modeId);
+    const currentState = this.cellStates.get(key) || {
+      value: 0,
+      opcionId,
+      modeId
+    };
 
-    if (!this.cellStates.has(key)) {
-      this.cellStates.set(key, {
-        value: 0,
-        opcionId,
-        modeId
-      });
-    }
-
-    const currentState = this.cellStates.get(key)!;
     const newValue = currentState.value - 1;
+    this.cellStates.set(key, { ...currentState, value: newValue });
 
-    this.cellStates.set(key, {
-      ...currentState,
+    this.comparisonCellService.updateCell({
+      opcionId,
+      modeId,
       value: newValue
-    });
+    }).subscribe(
+      updatedCell => {
+        console.log('Celda actualizada en el backend:', updatedCell);
+      },
+      error => {
+        console.error('Error al actualizar la celda:', error);
+        // Revertir el cambio en caso de error
+        this.cellStates.set(key, currentState);
+        this.cdr.detectChanges();
+      }
+    );
 
     this.cdr.detectChanges();
-    console.log(`Decrementado celda ${key} a: ${newValue}`);
-  }
-
-  trackByFn(index: number, item: any): any {
-    return item.id;
   }
 }
 

@@ -16,81 +16,87 @@ export class SelectedPathsService {
 
   constructor(private http: HttpClient) { }
 
-  getSelectedPaths(): Observable<PathSelection[]> {
-    return this.selectedPathsSubject.asObservable();
-  }
-
-  addPath(hexCode: string, path: string[]) {
-    const currentPaths = this.selectedPathsSubject.value;
-    const newPath: PathSelection = { hexCode, path };
-
-    const updatedPaths = [...currentPaths, newPath];
-    this.selectedPathsSubject.next(updatedPaths);
-    this.saveToLocalStorage(updatedPaths);
-  }
-
-  removePath(hexCode: string) {
-    const currentPaths = this.selectedPathsSubject.value;
-    const updatedPaths = currentPaths.filter(path => path.hexCode !== hexCode);
-    this.selectedPathsSubject.next(updatedPaths);
-    this.saveToLocalStorage(updatedPaths);
-  }
-
-  public saveToLocalStorage(paths: PathSelection[]) {
-    localStorage.setItem('selectedPaths', JSON.stringify(paths));
-  }
-
-  public loadFromLocalStorage() {
-    const stored = localStorage.getItem('selectedPaths');
-    if (stored) {
-      this.selectedPathsSubject.next(JSON.parse(stored));
+  public handlePathSelection(hexCode: string, path: string[], isSelected: boolean): void {
+    if (isSelected) {
+      // Si está seleccionado, añadir el path al backend
+      console.log('Anadiendo path service:', path);
+      this.addPathToBackend(hexCode, path).subscribe();
+    } else {
+      // Si no está seleccionado, eliminar el path del backend
+      console.log('Eliminando path service:', path);
+      //this.deletePathFromBackend(hexCode).subscribe();
     }
   }
 
-  // treeCreateOptions(item: any): Observable<any> {
-  //   const header = new HttpHeaders({
-  //     'Content-Type': 'application/json'
-  //   });
-  //   return this.http.post('https://sca-omega.vercel.app/api/alternativa/create/', item, { headers: header });
-  // }
+public addPathToBackend(hexCode: string, path: string[]): Observable<any> {
+  const payload = {
+    hexa: hexCode,
+    options: path
+  };
 
-  // public addPathToBackend(hexCode: string, path: string[]): Observable<any> {
-  //   console.log("en el servicio se envia asi",hexCode, path);
-  //   const newPath: PathSelection = { hexCode, path };
+  console.log("PAYLOAD EN servicio",payload, typeof payload.options);
+  const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-  //   const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
-  //   return this.http.post('https://sca-omega.vercel.app/api/alternativa/create/', newPath, { headers });
-  // }
-
-  public addPathToBackend(hexCode: string, path: string[]): Observable<any> {
-    const payload = {
-      hexa: hexCode,
-      options: path.map(p => parseInt(p)) // Convierte los paths a números enteros
-    };
-
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-
-    return this.http.post('https://sca-omega.vercel.app/api/alternativa/create/', payload, { headers }).pipe(
-      tap(response => {
-        console.log('Respuesta del backend al crear alternativa:', response);
-      }),
-      catchError(error => {
-        console.error('Error al crear alternativa:', error);
-        return throwError(error);
-      })
-    );
-  }
-
-  public getPathsFromBackend(): Observable<PathSelection[]> {
-    console.log("get en servicio",this.http.get<any[]>(this.apiUrl));
-    return this.http.get<any[]>(this.apiUrl);
-  }
+  return this.http.post('https://sca-omega.vercel.app/api/alternativa/create/', payload, { headers }).pipe(
+    tap(response => {
+      const currentPaths = this.selectedPathsSubject.value;
+      this.selectedPathsSubject.next([...currentPaths, { hexCode, path }]);
+      console.log('Alternativa creada:', response);
+    }),
+    catchError(error => {
+      console.error('Error al crear alternativa:', error);
+      return throwError(() => new Error(error));
+    })
+  );
 }
 
+public deletePathFromBackend(id: string, hexCode: string): Observable<any> {
+  console.log('Eliminando alternativa con hexCode:', typeof id, id);
+  console.log(`https://sca-omega.vercel.app/api/alternativa/delete/${id}/`);
+  let id_number = parseInt(id, 10);
+  console.log(typeof id_number, id_number);
+  console.log(`https://sca-omega.vercel.app/api/alternativa/delete/${id_number}/`);
+  return this.http.delete(`https://sca-omega.vercel.app/api/alternativa/delete/${id_number}/`).pipe(
+    tap(response => {
+      const currentPaths = this.selectedPathsSubject.value;
+      const updatedPaths = currentPaths.filter(p => p.hexCode !== hexCode);
+      this.selectedPathsSubject.next(updatedPaths);
+      console.log('Alternativa eliminada:', response);
+    }),
+    catchError(error => {
+      console.error('Error al eliminar alternativa:', error);
+      return throwError(() => new Error(error));
+    })
+  );
+}
 
+// public deletePathFromBackend(hexCode: string): Observable<any> {
+//   console.log('Eliminando alternativa con hexCode:', typeof hexCode, hexCode);
+//   console.log(`https://sca-omega.vercel.app/api/alternativa/delete/${hexCode}/`);
+//   return this.http.delete(`https://sca-omega.vercel.app/api/alternativa/delete/${hexCode}/`).pipe(
+//     tap(response => {
+//       const currentPaths = this.selectedPathsSubject.value;
+//       const updatedPaths = currentPaths.filter(p => p.hexCode !== hexCode);
+//       this.selectedPathsSubject.next(updatedPaths);
+//       console.log('Alternativa eliminada:', response);
+//     }),
+//     catchError(error => {
+//       console.error('Error al eliminar alternativa:', error);
+//       return throwError(() => new Error(error));
+//     })
+//   );
+// }
 
-// const payload = {
-//   descripcion: item.descripcion,
-//   cod_area: item.cod_area
-// };
+public getPathsFromBackend(): Observable<PathSelection[]> {
+  return this.http.get<PathSelection[]>(this.apiUrl).pipe(
+    tap(paths => {
+      this.selectedPathsSubject.next(paths);
+      console.log('Paths obtenidos servicio:', paths);
+    }),
+    catchError(error => {
+      console.error('Error al obtener paths:', error);
+      return throwError(() => new Error(error));
+    })
+  );
+}
+}

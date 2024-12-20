@@ -39,11 +39,21 @@
             <ng-container *ngIf="option.isLastArea; else regularOption">
               <div class="last-area-content">
                 <div class="option-name">{{ option.text }}</div>
+                <!-- <div class="option-controls">
+                  <input type="checkbox"
+                    [(ngModel)]="option.selected"
+                    (change)="onOptionSelected(option, parentPath.concat(option.id))">
+                  <div class="option-hex-code">{{ option.hexCode }}</div>
+                </div> -->
                 <div class="option-controls">
                   <input type="checkbox"
                     [(ngModel)]="option.selected"
-                    (change)="onOptionSelected(option, parentPath.concat(option.text))">
-                  <div class="option-hex-code">{{ generateHexCode(option.text) }}</div>
+                    [disabled]="updatingOptions[option.hexCode!]"
+                    (change)="onOptionSelected(option, parentPath.concat(option.id))">
+                  <div class="option-hex-code">{{ option.hexCode }}</div>
+                  <span *ngIf="updatingOptions[option.hexCode!]" class="ml-2 text-sm text-gray-500">
+                    Actualizando...
+                  </span>
                 </div>
               </div>
             </ng-container>
@@ -53,7 +63,7 @@
             </ng-template>
           </div>
           <div class="children-container" *ngIf="option.children">
-            <ng-container *ngTemplateOutlet="recursiveTree; context: { $implicit: option.children, parentPath: parentPath.concat([option.text]) }">
+            <ng-container *ngTemplateOutlet="recursiveTree; context: { $implicit: option.children, parentPath: parentPath.concat([option.id]) }">
             </ng-container>
           </div>
         </div>
