@@ -1,0 +1,101 @@
+.comparison-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  margin: 20px 0;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.comparison-table th,
+.comparison-table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.comparison-table thead th {
+  background-color: #f8f9fa;
+  font-weight: 600;
+}
+
+.comparison-table thead th.opciones-column {
+  background-color: #fff;
+  width: 30%;
+  min-width: 200px;
+}
+
+.comparison-table thead .areas-header {
+  text-align: center;
+  border-bottom: none;
+  background-color: #f1f3f5;
+  font-size: 1.1em;
+  padding: 15px;
+}
+
+.comparison-table thead .label-headers th {
+  text-align: center;
+  padding: 12px 8px;
+  font-weight: 500;
+  border-top: none;
+  width: calc(70% / var(--column-count, 4));
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.comparison-table tbody td.opciones-column {
+  background-color: #fff;
+  font-weight: 500;
+}
+
+.comparison-table tbody td.area-cell {
+  text-align: center;
+  padding: 8px;
+  min-width: 120px;
+  background-color: #fff;
+}
+
+.counter-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px;
+  border-radius: 4px;
+  background-color: #f8f9fa;
+}
+
+.counter-btn {
+  background: none;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+}
+
+.counter-btn:hover {
+  background-color: #e9ecef;
+}
+
+.counter-btn.decrease {
+  color: #dc3545;
+}
+
+.counter-btn.increase {
+  color: #28a745;
+}
+
+.counter-value {
+  font-size: 1.1em;
+  font-weight: 500;
+  min-width: 40px;
+  text-align: center;
+}
+
+tr:nth-child(even) td.area-cell {
+  background-color: #fcfcfc;
+}
+
+tr:hover td.area-cell {
+  background-color: #f8f9fa;
+}

@@ -384,7 +384,7 @@
     <div *ngIf="pasoActual === 10">
       <!-- Paso 10: Próximo paso -->
 
-     <h2><strong>Cuenta par armar la próxima tabla </strong></h2>
+      <app-puntuaciones-minimas></app-puntuaciones-minimas>
 
       <div class="flex justify-between mt-6">
         <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
@@ -396,7 +396,7 @@
     <div *ngIf="pasoActual === 11">
       <!-- Paso 11: Próximo paso -->
 
-     <h2><strong>Aquí iría lo que declaras como el mínimo servible</strong></h2>
+      <app-tabla-de-seleccion></app-tabla-de-seleccion>
 
       <div class="flex justify-between mt-6">
         <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
@@ -408,7 +408,8 @@
     <div *ngIf="pasoActual === 12">
       <!-- Paso 12: Próximo paso -->
 
-     <h2><strong>Próximo paso</strong></h2>
+     <h2><strong>Ultimo paso</strong></h2>
+
 
       <div class="flex justify-between mt-6">
         <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
@@ -417,5 +418,15 @@
 
     </div>
 
+    <div *ngIf="pasoActual === 13">
+      <!-- Paso 12: Próximo paso -->
 
+     <h2><strong>Próximo paso</strong></h2>
+
+     <div class="flex justify-between mt-6">
+      <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700" (click)="retrocederPaso()">Atrás</button>
+      <button class="py-2 px-4 bg-blue-600 text-white rounded-lg hover:bg-blue-700" (click)="avanzarPaso()">Continuar</button>
+    </div>
+
+  </div>
 </div>

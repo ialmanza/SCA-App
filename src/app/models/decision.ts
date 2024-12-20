@@ -8,4 +8,5 @@ export interface Decision {
   opciones?: Opcion[];
   is_important?: boolean;
   id?: number;
+  puntuacion?: number;
 }

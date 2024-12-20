@@ -1,0 +1,65 @@
+.areas-container {
+  padding: 20px;
+
+  .table-container {
+    position: relative;
+    min-height: 200px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .areas-table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th, td {
+      padding: 16px;
+      text-align: left;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+    }
+
+    th {
+      background-color: #f5f5f5;
+      font-weight: 500;
+      color: rgba(0, 0, 0, 0.87);
+    }
+
+    td {
+      mat-form-field {
+        width: 100px;
+      }
+    }
+  }
+
+  .loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+  }
+
+  .messages {
+    margin-top: 16px;
+
+    .error-message {
+      color: #f44336;
+      padding: 8px;
+      border-radius: 4px;
+      background-color: rgba(244, 67, 54, 0.1);
+    }
+
+    .success-message {
+      color: #4caf50;
+      padding: 8px;
+      border-radius: 4px;
+      background-color: rgba(76, 175, 80, 0.1);
+    }
+  }
+}

@@ -6,8 +6,6 @@ import { Opcion } from '../../models/opcion';
 import { OpcionesDBService } from '../../services/_Opciones/opciones-db.service';
 import { CommonModule } from '@angular/common';
 import { ComparacionModeService } from '../../services/_Comparacion/comparacion-mode.service';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 
 interface CellState {
   value: number;
@@ -15,17 +13,15 @@ interface CellState {
   modeId: string;
 }
 
+
 @Component({
-  selector: 'app-tabla-de-comparacion',
+  selector: 'app-tabla-de-seleccion',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule],
-  providers: [OpcionesDBService],
-  templateUrl: './tabla-de-comparacion.component.html',
-  styleUrl: './tabla-de-comparacion.component.css'
+  imports: [ CommonModule],
+  templateUrl: './tabla-de-seleccion.component.html',
+  styleUrl: './tabla-de-seleccion.component.css'
 })
-export class TablaDeComparacionComponent implements OnInit {
-  faPlus = faPlus;
-  faMinus = faMinus;
+export class TablaDeSeleccionComponent {
   opciones$: Observable<Opcion[]>;
   comparisonModes$: Observable<ComparisonMode[]>;
   cellStates: Map<string, CellState> = new Map();
@@ -138,3 +134,4 @@ export class TablaDeComparacionComponent implements OnInit {
     return item.id;
   }
 }
+

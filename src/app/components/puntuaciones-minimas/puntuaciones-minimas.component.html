@@ -1,0 +1,41 @@
+<div class="areas-container">
+  <div class="table-container mat-elevation-z8">
+    <form [formGroup]="areasForm">
+      <table class="areas-table">
+        <thead>
+          <tr>
+            <th>Áreas Importantes</th>
+            <th>Puntuaciones Mínimas</th>
+          </tr>
+        </thead>
+        <tbody formArrayName="areas">
+          <tr *ngFor="let area of areasFormArray.controls; let i = index" [formGroupName]="i">
+            <td>{{ area.get('area')?.value }}</td>
+            <td>
+              <mat-form-field appearance="outline">
+                <input matInput
+                       type="number"
+                       formControlName="puntuacion"
+                       min="0"
+                       (blur)="updatePuntuacion(i)">
+              </mat-form-field>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </form>
+
+    <div class="loading-overlay" *ngIf="loading">
+      <mat-spinner diameter="40"></mat-spinner>
+    </div>
+  </div>
+
+  <div class="messages">
+    <mat-error *ngIf="error" class="error-message">
+      {{ error }}
+    </mat-error>
+    <div *ngIf="successMessage" class="success-message">
+      {{ successMessage }}
+    </div>
+  </div>
+</div>

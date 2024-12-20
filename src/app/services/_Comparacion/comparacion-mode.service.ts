@@ -38,5 +38,24 @@ export class ComparacionModeService {
     return this.http.delete<void>(`${'https://sca-omega.vercel.app/api/comparacion/delete'}/${id}`, { headers: header });
   }
 
+  updatePuntuacionMinima(id: number, puntuacion: number): Observable<any> {
+    const header = new HttpHeaders({
+      'Content-Type': 'application/json'
+    });
+
+    const updateData = {
+      puntuacion_minima: puntuacion
+    };
+
+    console.log("url",`${'https://sca-omega.vercel.app/api/comparacion/update/'}${id}/`);
+
+    console.log("updateData",typeof updateData, updateData);
+    return this.http.patch(
+      `${'https://sca-omega.vercel.app/api/comparacion/update/'}${id}/`,
+      updateData,
+      { headers: header }
+    );
+  }
+
 }
 

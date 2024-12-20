@@ -21,6 +21,8 @@ import { TablaDecisionesComponent } from "../tabla-decisiones/tabla-decisiones.c
 import { DecisionCheckComponent } from "../decision-check/decision-check.component";
 import { VinculodbService } from '../../../services/_Vinculos/vinculodb.service';
 import { VinculosComponent } from "../../vinculos/vinculos.component";
+import { PuntuacionesMinimasComponent } from "../../puntuaciones-minimas/puntuaciones-minimas.component";
+import { TablaDeSeleccionComponent } from "../../tabla-de-seleccion/tabla-de-seleccion.component";
 
 
 
@@ -28,7 +30,7 @@ import { VinculosComponent } from "../../vinculos/vinculos.component";
   selector: 'app-decisiones-form',
   standalone: true,
   imports: [FormsModule, ReactiveFormsModule, CommonModule, CrearDecisionComponent, ListarDecisionesComponent,
-    GrafoComponent, PosiblesAlternativasComponent, ModoDeComparacionComponent, TablaDeComparacionComponent, TablaDecisionesComponent, DecisionCheckComponent, VinculosComponent],
+    GrafoComponent, PosiblesAlternativasComponent, ModoDeComparacionComponent, TablaDeComparacionComponent, TablaDecisionesComponent, DecisionCheckComponent, VinculosComponent, PuntuacionesMinimasComponent, TablaDeSeleccionComponent],
   providers: [DecisionService, OpcionService, DecisionesDBService, OpcionesDBService, VinculodbService],
   templateUrl: './decisiones-form.component.html',
   styleUrl: './decisiones-form.component.css'
