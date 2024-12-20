@@ -7,11 +7,5 @@ import { routes } from './app.routes';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 
 export const appConfig: ApplicationConfig = {
-<<<<<<< HEAD
-  providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideHttpClient(),
-    importProvidersFrom([SweetAlert2Module.forRoot()])
-  ]
-=======
   providers: [provideZoneChangeDetection({ eventCoalescing: true }), provideRouter(routes), provideHttpClient(), provideAnimationsAsync()]
->>>>>>> c901ca18d608b0b2b4daf4179a6d796e16937987
 };
