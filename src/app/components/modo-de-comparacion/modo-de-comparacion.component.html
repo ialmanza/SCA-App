@@ -1,5 +1,4 @@
 <div class="comparison-mode-container">
-  <h2 class="title">Modos de Comparación</h2>
 
   <div class="content-wrapper">
     <form [formGroup]="comparisonForm" [ngClass]="{'table-resaltada': modoedicion}" (ngSubmit)="onSubmit()"
@@ -72,6 +71,8 @@
               <th scope="col">Orden</th>
               <th scope="col">Área</th>
               <th scope="col">Rótulo</th>
+              <th scope="col">Parámetro</th>
+              <th scope="col">Selección:</th>
               <th scope="col">Acciones</th>
             </tr>
           </thead>
@@ -89,7 +90,7 @@
                 </select>
               </td>
               <td>
-                <button class="btn btn-sm btn-info me-2" (click)="editMode(mode)">
+                <button class="mod" (click)="editMode(mode)">
                   Editar
                 </button>
                 <button class="elim" (click)="deleteMode(mode.id)">

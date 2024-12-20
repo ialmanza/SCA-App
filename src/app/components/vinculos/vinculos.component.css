@@ -1,5 +1,7 @@
+html{
+  height: 100vh;
 
-
+}
 .container {
   display: flex;
   align-items: center;
@@ -32,7 +34,7 @@ label{
 .custom-select:focus {
   outline: none; 
   min-width: 2px; 
-  border-color: #ec9f10; 
+  border-color: #ecb910c2; 
 }
 .custom-select-option {
   background-color: #ff99000c; 
