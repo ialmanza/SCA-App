@@ -17,24 +17,11 @@
         <tr *ngFor="let opcion of opciones$ | async; trackBy: trackByFn">
           <td class="opciones-column">{{ opcion.descripcion }}</td>
           <td *ngFor="let mode of modes" class="area-cell">
-              <div class="counter-container">
-                  <button
-                      class="counter-btn decrease"
-                      (click)="decrement(opcion.id!, mode.id, $event)"
-                      [attr.data-cell-id]="getCellKey(opcion.id!, mode.id)">
-                      <fa-icon [icon]="faMinus"></fa-icon>
-                  </button>
-                  <span class="counter-value">{{ getCellValue(opcion.id!, mode.id) }}</span>
-                  <button
-                      class="counter-btn increase"
-                      (click)="increment(opcion.id!, mode.id, $event)"
-                      [attr.data-cell-id]="getCellKey(opcion.id!, mode.id)">
-                      <fa-icon [icon]="faPlus"></fa-icon>
-                  </button>
-              </div>
+              <p>{{ mode.symbol }}</p>
           </td>
       </tr>
       </ng-container>
     </tbody>
   </table>
 </ng-container>
+

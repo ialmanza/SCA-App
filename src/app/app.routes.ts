@@ -14,6 +14,8 @@ import { TablaDeComparacionComponent } from './components/tabla-de-comparacion/t
 import { TablaDecisionesComponent } from './components/area-de-decision/tabla-decisiones/tabla-decisiones.component';
 import { VinculosComponent } from './components/vinculos/vinculos.component';
 import { DecisionCheckComponent } from './components/area-de-decision/decision-check/decision-check.component';
+import { PuntuacionesMinimasComponent } from './components/puntuaciones-minimas/puntuaciones-minimas.component';
+import { TablaDeSeleccionComponent } from './components/tabla-de-seleccion/tabla-de-seleccion.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'decisiones-form', pathMatch: 'full' },
@@ -32,4 +34,6 @@ export const routes: Routes = [
   { path: 'tabla-decisiones', component: TablaDecisionesComponent },
   { path: 'vinculos', component: VinculosComponent },
   { path: 'decision-check', component: DecisionCheckComponent },
+  { path: 'puntuaciones-minimas', component: PuntuacionesMinimasComponent },
+  { path: 'tabla-de-seleccion', component: TablaDeSeleccionComponent },
 ];
