@@ -17,7 +17,7 @@
 
 .area-title {
   padding: 0.5rem 1rem;
-  background-color:#def3ff;
+  background-color:#c1f9bc;
   border-radius: 4px;
   min-width: 150px;
   text-align: center;
@@ -92,7 +92,7 @@
   padding: 0.5rem 1rem;
   margin: 0.25rem 0;
   width: 100%;
-  background-color: #def3ff;
+  background-color:#c4c6c474;
 }
 
 .decision-tree {
