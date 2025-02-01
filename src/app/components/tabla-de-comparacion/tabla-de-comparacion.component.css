@@ -183,3 +183,51 @@ tr:nth-child(even) td.area-cell {
 tr:hover td.area-cell {
   background-color: #f8f9fa;
 }
+
+
+.actions-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.actions-container button {
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.actions-container .save-button {
+  background-color: #4caf50; /* Verde para indicar acción positiva */
+  color: #ffffff;
+}
+
+.actions-container .save-button:hover {
+  background-color: #45a049;
+  transform: translateY(-2px);
+}
+
+.actions-container .save-button:disabled {
+  background-color: #a5d6a7; /* Verde claro deshabilitado */
+  cursor: not-allowed;
+}
+
+.actions-container .reset-button {
+  background-color: #f44336; /* Rojo para acción de reinicio */
+  color: #ffffff;
+}
+
+.actions-container .reset-button:hover {
+  background-color: #e53935;
+  transform: translateY(-2px);
+}
+
+.actions-container .reset-button:disabled {
+  background-color: #ef9a9a; /* Rojo claro deshabilitado */
+  cursor: not-allowed;
+}

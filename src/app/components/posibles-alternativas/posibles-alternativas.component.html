@@ -1,7 +1,7 @@
 
-<div class="decision-tree-container" *ngIf="decisionTree.length">
+<div class="decision-tree-container" *ngIf="!isLoading && decisionTree.length">
   <div class="area-titles">
-    <ng-container *ngFor="let area of getUniqueAreas()">
+    <ng-container *ngFor="let area of uniqueAreas$ | async">
       <div class="area-title">{{ area }}</div>
     </ng-container>
     <div class="area-title">Opciones</div>
@@ -71,3 +71,7 @@
     </div>
   </ng-container>
 </ng-template>
+
+<div *ngIf="isLoading" class="loading-container">
+  Cargando...
+</div>

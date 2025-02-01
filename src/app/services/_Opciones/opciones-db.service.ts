@@ -6,7 +6,7 @@ import { Observable, map } from 'rxjs';
   providedIn: 'root'
 })
 export class OpcionesDBService {
-  private apiUrl = 'https://sca-omega.vercel.app/api/opciones/';
+  private apiUrl = 'https://sca-v2b1.onrender.com/api/opciones/';
 
   constructor(private http: HttpClient) { }
 
@@ -15,7 +15,7 @@ export class OpcionesDBService {
   }
 
   getItem(id: number): Observable<any> { //id del area
-    return this.http.get(`${'https://sca-omega.vercel.app/api/opciones/'}/${id}`); //devuelve todas las opciones de esa area
+    return this.http.get(`${'https://sca-v2b1.onrender.com/api/opciones/'}/${id}`); //devuelve todas las opciones de esa area
   }
 
   createItem(item: any): Observable<any> {
@@ -25,7 +25,7 @@ export class OpcionesDBService {
           descripcion: item.descripcion,
           cod_area: item.cod_area
         };
-    return this.http.post('https://sca-omega.vercel.app/api/opcion/create/', payload);
+    return this.http.post('https://sca-v2b1.onrender.com/api/opcion/create/', payload);
 
   }
 
@@ -33,14 +33,14 @@ export class OpcionesDBService {
     const header = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    return this.http.put(`${'https://sca-omega.vercel.app/api/opcion/update'}/${id}`, item, { headers: header });
+    return this.http.put(`${'https://sca-v2b1.onrender.com/api/opcion/update'}/${id}`, item, { headers: header });
   }
 
   deleteItem(id: number): Observable<void> {
     const header = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    return this.http.delete<void>(`${'https://sca-omega.vercel.app/api/opcion/delete'}/${id}`, { headers: header });
+    return this.http.delete<void>(`${'https://sca-v2b1.onrender.com/api/opcion/delete'}/${id}`, { headers: header });
   }
 
   updateComparacionValue(opcionId: string, modeId: string, value: string): Observable<any> {
@@ -49,7 +49,7 @@ export class OpcionesDBService {
       modeId: modeId,
       value: value
     };
-    return this.http.post('https://sca-omega.vercel.app/api/comparacion/update-value', payload);
+    return this.http.post('https://sca-v2b1.onrender.com/api/comparacion/update-value', payload);
   }
 }
 

@@ -66,8 +66,10 @@ export class VinculosComponent {
     }
   }
 
-  eliminarVinculos(): void {
-    this.vinculos = [];
+  eliminarVinculo (vinculo: string): void {
+    this.vinculodbService.deleteItem(vinculo).subscribe(() => {
+      this.cargarVinculos();
+    })
   }
 
 }

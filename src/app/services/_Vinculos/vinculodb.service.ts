@@ -6,7 +6,7 @@ import { Observable} from 'rxjs';
   providedIn: 'root'
 })
 export class VinculodbService {
-  private apiUrl = 'https://sca-omega.vercel.app/api/areas/vinculos/';
+  private apiUrl = 'https://sca-v2b1.onrender.com/api/areas/vinculos/';
 
   constructor(private http: HttpClient) { }
 
@@ -19,7 +19,7 @@ export class VinculodbService {
           "area_id": item1,
           "related_area_id": item2
         };
-    return this.http.post('https://sca-omega.vercel.app/api/areas/vinculo/', payload);
+    return this.http.post('https://sca-v2b1.onrender.com/api/areas/vinculo/', payload);
 
   }
 
@@ -29,8 +29,8 @@ export class VinculodbService {
     });
     console.log(item, 'item en servicio');
     console.log(typeof id, id);
-    console.log(`${'https://sca-omega.vercel.app/api/area/update'}/${id}/`);
-    return this.http.put(`${'https://sca-omega.vercel.app/api/area/update'}/${id}/`, item, { headers: header });
+    console.log(`${'https://sca-v2b1.onrender.com/api/area/update'}/${id}/`);
+    return this.http.put(`${'https://sca-v2b1.onrender.com/api/area/update'}/${id}/`, item, { headers: header });
   }
 
   deleteItem(item: any): Observable<void> {
@@ -41,7 +41,7 @@ export class VinculodbService {
       "area_id": item.area_id,
       "realated_area_id": item.realated_area_id
     };
-    return this.http.delete<void>(`${'https://sca-omega.vercel.app/api/area/vinculo'}/${payload}/`, { headers: header });
+    return this.http.delete<void>(`${'https://sca-v2b1.onrender.com/api/area/vinculo'}/${payload}/`, { headers: header });
   }
 
 }

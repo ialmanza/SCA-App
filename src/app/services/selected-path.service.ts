@@ -12,7 +12,7 @@ interface PathSelection {
 })
 export class SelectedPathsService {
   private selectedPathsSubject = new BehaviorSubject<PathSelection[]>([]);
-  private apiUrl = 'https://sca-omega.vercel.app/api/alternativas/'
+  private apiUrl = 'https://sca-v2b1.onrender.com/api/alternativas/'
 
   constructor(private http: HttpClient) { }
 
@@ -37,7 +37,7 @@ public addPathToBackend(hexCode: string, path: string[]): Observable<any> {
   console.log("PAYLOAD EN servicio",payload, typeof payload.options);
   const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-  return this.http.post('https://sca-omega.vercel.app/api/alternativa/create/', payload, { headers }).pipe(
+  return this.http.post('https://sca-v2b1.onrender.com/api/alternativa/create/', payload, { headers }).pipe(
     tap(response => {
       const currentPaths = this.selectedPathsSubject.value;
       this.selectedPathsSubject.next([...currentPaths, { hexCode, path }]);
@@ -52,11 +52,11 @@ public addPathToBackend(hexCode: string, path: string[]): Observable<any> {
 
 public deletePathFromBackend(id: string, hexCode: string): Observable<any> {
   console.log('Eliminando alternativa con hexCode:', typeof id, id);
-  console.log(`https://sca-omega.vercel.app/api/alternativa/delete/${id}/`);
+  console.log(`https://sca-v2b1.onrender.com/api/alternativa/delete/${id}/`);
   let id_number = parseInt(id, 10);
   console.log(typeof id_number, id_number);
-  console.log(`https://sca-omega.vercel.app/api/alternativa/delete/${id_number}/`);
-  return this.http.delete(`https://sca-omega.vercel.app/api/alternativa/delete/${id_number}/`).pipe(
+  console.log(`https://sca-v2b1.onrender.com/api/alternativa/delete/${id_number}/`);
+  return this.http.delete(`https://sca-v2b1.onrender.com/api/alternativa/delete/${hexCode}/`).pipe(
     tap(response => {
       const currentPaths = this.selectedPathsSubject.value;
       const updatedPaths = currentPaths.filter(p => p.hexCode !== hexCode);

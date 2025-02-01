@@ -8,7 +8,7 @@ import { json } from 'd3';
   providedIn: 'root'
 })
 export class DecisionesDBService {
-  private apiUrl = 'https://sca-omega.vercel.app/api/areas/';
+  private apiUrl = 'https://sca-v2b1.onrender.com/api/areas/';
 
   constructor(private http: HttpClient) { }
 
@@ -17,7 +17,7 @@ export class DecisionesDBService {
   }
 
   getItem(id: number): Observable<any> {
-    return this.http.get(`${'https://sca-omega.vercel.app/api/area/'}/${id}`);
+    return this.http.get(`${'https://sca-v2b1.onrender.com/api/area/'}/${id}`);
   }
 
   createItem(item: any): Observable<any> {
@@ -28,7 +28,7 @@ export class DecisionesDBService {
           area: item.area,
           description: item.description
         };
-    return this.http.post('https://sca-omega.vercel.app/api/area/create/', payload);
+    return this.http.post('https://sca-v2b1.onrender.com/api/area/create/', payload);
 
   }
 
@@ -38,15 +38,15 @@ export class DecisionesDBService {
     });
     console.log(item, 'item en servicio');
     console.log(typeof id, id);
-    console.log(`${'https://sca-omega.vercel.app/api/area/update'}/${id}/`);
-    return this.http.put(`${'https://sca-omega.vercel.app/api/area/update'}/${id}/`, item, { headers: header });
+    console.log(`${'https://sca-v2b1.onrender.com/api/area/update'}/${id}/`);
+    return this.http.put(`${'https://sca-v2b1.onrender.com/api/area/update'}/${id}/`, item, { headers: header });
   }
 
   deleteItem(id: number): Observable<void> {
     const header = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    return this.http.delete<void>(`${'https://sca-omega.vercel.app/api/area/delete'}/${id}/`, { headers: header });
+    return this.http.delete<void>(`${'https://sca-v2b1.onrender.com/api/area/delete'}/${id}/`, { headers: header });
   }
 
   updateImportantStatus(decisionId: number, isImportant: boolean): Observable<Decision> {
@@ -59,14 +59,14 @@ export class DecisionesDBService {
     };
 
     return this.http.patch<Decision>(
-      `https://sca-omega.vercel.app/api/area/update/${decisionId}/`,
+      `https://sca-v2b1.onrender.com/api/area/update/${decisionId}/`,
       updateData,
       { headers: header }
     );
   }
 
   getImportantStatus(): Observable<any[]> {
-    return this.http.get<any[]>(`https://sca-omega.vercel.app/api/areas/important/`);
+    return this.http.get<any[]>(`https://sca-v2b1.onrender.com/api/areas/important/`);
   }
 
 }

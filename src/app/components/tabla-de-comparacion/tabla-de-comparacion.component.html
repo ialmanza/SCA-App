@@ -38,3 +38,18 @@
     </tbody>
   </table>
 </ng-container>
+
+<div class="actions-container">
+  <button
+    class="save-button"
+    (click)="saveAllCells()"
+    [disabled]="!hasUnsavedChanges()">
+    Guardar Tabla Completa
+  </button>
+  <button
+    class="reset-button"
+    (click)="resetTable()"
+    [disabled]="!hasUnsavedChanges()">
+    Reiniciar Tabla
+  </button>
+</div>

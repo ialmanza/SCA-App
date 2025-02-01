@@ -7,7 +7,7 @@ import { ComparisonMode } from '../../models/comparacion';
   providedIn: 'root'
 })
 export class ComparacionModeService {
-  private apiUrl = 'https://sca-omega.vercel.app/api/comparaciones/';
+  private apiUrl = 'https://sca-v2b1.onrender.com/api/comparaciones/';
 
   constructor(private http: HttpClient) { }
 
@@ -21,21 +21,21 @@ export class ComparacionModeService {
   }
 
   createItem(item: any): Observable<any> {
-    return this.http.post('https://sca-omega.vercel.app/api/comparacion/create/', item);
+    return this.http.post('https://sca-v2b1.onrender.com/api/comparacion/create/', item);
   }
 
   updateItem(id: number, item: any): Observable<any> {
     const header = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    return this.http.put(`${'https://sca-omega.vercel.app/api/comparacion/update'}/${id}`, item, { headers: header });
+    return this.http.put(`${'https://sca-v2b1.onrender.com/api/comparacion/update'}/${id}`, item, { headers: header });
   }
 
   deleteItem(id: number): Observable<void> {
     const header = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    return this.http.delete<void>(`${'https://sca-omega.vercel.app/api/comparacion/delete'}/${id}`, { headers: header });
+    return this.http.delete<void>(`${'https://sca-v2b1.onrender.com/api/comparacion/delete'}/${id}`, { headers: header });
   }
 
   updatePuntuacionMinima(id: number, puntuacion: number): Observable<any> {
@@ -47,11 +47,11 @@ export class ComparacionModeService {
       puntuacion_minima: puntuacion
     };
 
-    console.log("url",`${'https://sca-omega.vercel.app/api/comparacion/update/'}${id}/`);
+    console.log("url",`${'https://sca-v2b1.onrender.com/api/comparacion/update/'}${id}/`);
 
     console.log("updateData",typeof updateData, updateData);
     return this.http.patch(
-      `${'https://sca-omega.vercel.app/api/comparacion/update/'}${id}/`,
+      `${'https://sca-v2b1.onrender.com/api/comparacion/update/'}${id}/`,
       updateData,
       { headers: header }
     );
