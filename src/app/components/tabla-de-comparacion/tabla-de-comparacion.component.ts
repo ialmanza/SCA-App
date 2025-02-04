@@ -192,21 +192,21 @@ export class TablaDeComparacionComponent implements OnInit {
     const newValue = currentState.value + 1;
     this.cellStates.set(key, { ...currentState, value: newValue });
 
-    this.comparisonCellService.updateCell({
-      opcionId,
-      modeId,
-      value: newValue
-    }).subscribe(
-      updatedCell => {
-        console.log('Celda actualizada en el backend:', updatedCell);
-      },
-      error => {
-        console.error('Error al actualizar la celda:', error);
-        // Revertir el cambio en caso de error
-        this.cellStates.set(key, currentState);
-        this.cdr.detectChanges();
-      }
-    );
+    // this.comparisonCellService.updateCell({
+    //   opcionId,
+    //   modeId,
+    //   value: newValue
+    // }).subscribe(
+    //   updatedCell => {
+    //     console.log('Celda actualizada en el backend:', updatedCell);
+    //   },
+    //   error => {
+    //     console.error('Error al actualizar la celda:', error);
+    //     // Revertir el cambio en caso de error
+    //     this.cellStates.set(key, currentState);
+    //     this.cdr.detectChanges();
+    //   }
+    // );
 
     this.cdr.detectChanges();
   }
@@ -223,21 +223,21 @@ export class TablaDeComparacionComponent implements OnInit {
     const newValue = currentState.value - 1;
     this.cellStates.set(key, { ...currentState, value: newValue });
 
-    this.comparisonCellService.updateCell({
-      opcionId,
-      modeId,
-      value: newValue
-    }).subscribe(
-      updatedCell => {
-        console.log('Celda actualizada en el backend:', updatedCell);
-      },
-      error => {
-        console.error('Error al actualizar la celda:', error);
-        // Revertir el cambio en caso de error
-        this.cellStates.set(key, currentState);
-        this.cdr.detectChanges();
-      }
-    );
+    // this.comparisonCellService.updateCell({
+    //   opcionId,
+    //   modeId,
+    //   value: newValue
+    // }).subscribe(
+    //   updatedCell => {
+    //     console.log('Celda actualizada en el backend:', updatedCell);
+    //   },
+    //   error => {
+    //     console.error('Error al actualizar la celda:', error);
+    //     // Revertir el cambio en caso de error
+    //     this.cellStates.set(key, currentState);
+    //     this.cdr.detectChanges();
+    //   }
+    // );
 
     this.cdr.detectChanges();
   }
@@ -253,6 +253,28 @@ export class TablaDeComparacionComponent implements OnInit {
     console.log('Datos a enviar:', cellsToSave);
 
     this.comparisonCellService.createCells(cellsToSave).subscribe(
+      savedCells => {
+        console.log('Todas las celdas guardadas exitosamente:', savedCells);
+        // Aquí podrías mostrar un mensaje de éxito
+      },
+      error => {
+        console.error('Error al guardar las celdas:', error);
+        // Aquí podrías mostrar un mensaje de error
+      }
+    );
+  }
+
+  editAllCells(): void {
+    // Convertir el Map de estados a un array de ComparisonCell
+    const cellsToSave: ComparisonCell[] = Array.from(this.cellStates.values()).map(state => ({
+      opcionId: state.opcionId,
+      modeId: state.modeId,
+      value: state.value
+    }));
+
+    console.log('Datos a enviar:', cellsToSave);
+
+    this.comparisonCellService.updateCells(cellsToSave).subscribe(
       savedCells => {
         console.log('Todas las celdas guardadas exitosamente:', savedCells);
         // Aquí podrías mostrar un mensaje de éxito

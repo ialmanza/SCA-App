@@ -70,33 +70,16 @@ public deletePathFromBackend(id: string, hexCode: string): Observable<any> {
   );
 }
 
-// public deletePathFromBackend(hexCode: string): Observable<any> {
-//   console.log('Eliminando alternativa con hexCode:', typeof hexCode, hexCode);
-//   console.log(`https://sca-omega.vercel.app/api/alternativa/delete/${hexCode}/`);
-//   return this.http.delete(`https://sca-omega.vercel.app/api/alternativa/delete/${hexCode}/`).pipe(
-//     tap(response => {
-//       const currentPaths = this.selectedPathsSubject.value;
-//       const updatedPaths = currentPaths.filter(p => p.hexCode !== hexCode);
-//       this.selectedPathsSubject.next(updatedPaths);
-//       console.log('Alternativa eliminada:', response);
-//     }),
-//     catchError(error => {
-//       console.error('Error al eliminar alternativa:', error);
-//       return throwError(() => new Error(error));
-//     })
-//   );
-// }
-
-public getPathsFromBackend(): Observable<PathSelection[]> {
-  return this.http.get<PathSelection[]>(this.apiUrl).pipe(
-    tap(paths => {
-      this.selectedPathsSubject.next(paths);
-      console.log('Paths obtenidos servicio:', paths);
-    }),
-    catchError(error => {
-      console.error('Error al obtener paths:', error);
-      return throwError(() => new Error(error));
-    })
-  );
-}
+  public getPathsFromBackend(): Observable<any[]> {
+    return this.http.get<PathSelection[]>(this.apiUrl).pipe(
+      tap(paths => {
+        this.selectedPathsSubject.next(paths);
+        console.log('Paths obtenidos servicio:', paths);
+      }),
+      catchError(error => {
+        console.error('Error al obtener paths:', error);
+        return throwError(() => new Error(error));
+      })
+    );
+  }
 }

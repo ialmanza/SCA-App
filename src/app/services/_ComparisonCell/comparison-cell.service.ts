@@ -9,7 +9,7 @@ import { ComparisonCell } from '../../models/comparison-cell';
   providedIn: 'root'
 })
 export class ComparisonCellService {
-  private apiUrl = 'https://sca-omega.vercel.app/api/comparison-cells/';
+  private apiUrl = 'https://sca-v2b1.onrender.com/api/comparison-cells/';
 
   constructor(private http: HttpClient) {}
 

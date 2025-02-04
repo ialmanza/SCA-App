@@ -44,7 +44,13 @@
     class="save-button"
     (click)="saveAllCells()"
     [disabled]="!hasUnsavedChanges()">
-    Guardar Tabla Completa
+    Guardar Tabla
+  </button>
+  <button
+    class="edit-button"
+    (click)="editAllCells()"
+    [disabled]="!hasUnsavedChanges()">
+    Actualizar Tabla
   </button>
   <button
     class="reset-button"

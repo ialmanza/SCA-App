@@ -207,6 +207,11 @@ tr:hover td.area-cell {
   color: #ffffff;
 }
 
+.edit-button {
+  background-color: #213fc4; /* Verde para indicaracción positiva */
+  color: #ffffff;
+}
+
 .actions-container .save-button:hover {
   background-color: #45a049;
   transform: translateY(-2px);

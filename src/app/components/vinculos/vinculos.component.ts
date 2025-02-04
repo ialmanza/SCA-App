@@ -66,10 +66,25 @@ export class VinculosComponent {
     }
   }
 
-  eliminarVinculo (vinculo: string): void {
-    this.vinculodbService.deleteItem(vinculo).subscribe(() => {
+  // eliminarVinculo (vinculo: string): void {
+  //   this.vinculodbService.deleteItem(vinculo).subscribe(() => {
+  //     this.cargarVinculos();
+  //   })
+  // }
+
+  eliminarVinculo(vinculo: string): void {
+    const [area_id, related_area_id] = vinculo.split('-');
+    if (!area_id || !related_area_id) {
+      console.error("Error: Formato de vínculo incorrecto", vinculo);
+      return;
+    }
+
+    this.vinculodbService.deleteItem(area_id, related_area_id).subscribe(() => {
       this.cargarVinculos();
-    })
+    }, error => {
+      console.error('Error al eliminar vínculo', error);
+    });
   }
+
 
 }

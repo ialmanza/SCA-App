@@ -7,6 +7,7 @@ import { OpcionesDBService } from '../../services/_Opciones/opciones-db.service'
 import { CommonModule } from '@angular/common';
 import { ComparacionModeService } from '../../services/_Comparacion/comparacion-mode.service';
 import { ComparisonCellService } from '../../services/_ComparisonCell/comparison-cell.service';
+import { SelectedPathsService } from '../../services/selected-path.service';
 
 interface CellState {
   value: number;
@@ -19,6 +20,7 @@ interface CellState {
   selector: 'app-tabla-de-seleccion',
   standalone: true,
   imports: [ CommonModule],
+  providers: [OpcionesDBService, ComparacionModeService, ComparisonCellService, SelectedPathsService],
   templateUrl: './tabla-de-seleccion.component.html',
   styleUrl: './tabla-de-seleccion.component.css'
 })
@@ -27,12 +29,14 @@ export class TablaDeSeleccionComponent {
   comparisonModes$: Observable<ComparisonMode[]>;
   cellStates: Map<string, CellState> = new Map();
   opciones: Opcion[] = [];
+  paths: string[] = [];
 
   constructor(
     private opcionService: OpcionesDBService,
     private comparisonModeService: ComparacionModeService,
     private cdr: ChangeDetectorRef,
-    private comparisonCellService: ComparisonCellService
+    private comparisonCellService: ComparisonCellService,
+    private selectedPathsService: SelectedPathsService
   ) {
     this.opciones$ = this.opcionService.getItems();
     this.comparisonModes$ = this.comparisonModeService.getComparisonModes().pipe(
@@ -48,6 +52,10 @@ export class TablaDeSeleccionComponent {
   ngOnInit(): void {
     //this.initializeCellStates();
     this.loadCellsFromBackend();
+    this.selectedPathsService.getPathsFromBackend().subscribe((path) => {
+      console.log('Paths obtenidos:', path);
+      this.paths = path.map(path => path.hexa);
+    });
   }
 
   trackByFn(index: number, item: any): number {
