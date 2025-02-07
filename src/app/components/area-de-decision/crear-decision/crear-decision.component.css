@@ -30,7 +30,6 @@
 }
 .form-group input:focus {
   outline: none;
-  /* border-color: #d11f1f; */
   box-shadow: 0 0 5px rgba(255, 118, 5, 0.5);
 }
 .form-group .checkbox {
@@ -67,9 +66,9 @@
   text-decoration: underline;
 }
 
-/* estilo mica */
+
 .btn {
-  border-radius: 10px; /* Redondea las esquinas de los botones */
+  border-radius: 10px;
   transition: border-color 0.3s, box-shadow 0.3s;
   width: 100%;
   margin: 5px;
@@ -106,22 +105,70 @@ border-radius: 10px;
  }
 
 .input-custom {
-  background-color: #f9fafb; /* bg-gray-50 */
-  border: 1px solid #d1d5db; /* border-gray-300 */
-  color: #111827; /* text-gray-900 */
-  border-radius: 0.5rem; /* rounded-lg */
-  width: 100%; /* w-full */ 
-  padding: 0.625rem; /* p-2.5 */
-  display: block; /* block */
-  margin-bottom: 0.75rem; /* mb-3 */
-  transition: border-color 0.2s, box-shadow 0.2s; /* para focus */
+  background-color: #f9fafb;
+  border: 1px solid #d1d5db;
+  color: #111827;
+  border-radius: 0.5rem;
+  width: 100%;
+  padding: 0.625rem;
+  display: block;
+  margin-bottom: 0.75rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
 
 }
 .input-custom::placeholder {
-  color: #0000009d; /* dark:placeholder-gray-400 */
+  color: #0000009d;
 }
 
 textarea:focus{
   box-shadow: 0 0 5px rgba(255, 174, 0, 0.493);
+}
 
+/* Estilos para tablets */
+@media (max-width: 1024px) {
+  .container {
+    padding: 2rem;
+  }
+
+  .card {
+    width: 90%;
+    margin: auto;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    font-size: 1rem;
+  }
+
+  .btn {
+    font-size: 1.8vh;
+  }
+}
+
+/* Estilos para móviles */
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  .card {
+    width: 100%;
+    margin: auto;
+    box-shadow: none;
+  }
+
+  .form-group label {
+    font-size: 0.9rem;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    font-size: 0.9rem;
+    padding: 0.5rem;
+  }
+
+  .btn {
+    font-size: 1.6vh;
+    padding: 0.6rem;
+  }
 }

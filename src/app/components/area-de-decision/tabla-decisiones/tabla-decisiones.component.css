@@ -16,7 +16,7 @@
 
 thead{
   --tw-bg-opacity: 1;
-    background-color: rgb(254 236 220 / var(--tw-bg-opacity)) /* #feecdc */;  
+    background-color: rgb(254 236 220 / var(--tw-bg-opacity));
 }
 .mod{
   background-color: rgba(0, 128, 0, 0.808);
@@ -47,7 +47,7 @@ color: aliceblue;
   width: 50%;
   padding: 10px;
   border: 1px solid #a3880f;
-  font-size: 2vh; 
+  font-size: 2vh;
 }
 .fondo{
   background-color: rgba(255, 227, 190, 0.1);
@@ -63,9 +63,95 @@ h2{
 }
 input:focus, textarea:focus{
   outline: none;
-  /* border-color: #d11f1f; */
   box-shadow: 0 0 5px rgba(255, 118, 5, 0.5);
 }
 th{
   font-style: normal;
+}
+
+
+@media (max-width: 1024px) {
+  .container {
+    padding: 2rem;
+  }
+
+  .overflow-x-auto {
+    overflow-x: scroll;
+  }
+
+  table {
+    min-width: 100%;
+    display: block;
+    overflow-x: auto;
+  }
+
+  th, td {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 768px) {
+  .container {
+    padding: 1rem;
+  }
+
+  table {
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+  }
+
+  thead {
+    display: none;
+  }
+
+  tbody tr {
+    display: block;
+    margin-bottom: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 10px;
+    background: white;
+  }
+
+  tbody td {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  tbody td::before {
+    content: attr(data-label);
+    font-weight: bold;
+    text-transform: uppercase;
+    color: #555;
+  }
+
+  .cen {
+    text-align: center;
+  }
+
+  .icon {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  tbody td {
+    font-size: 12px;
+    padding: 8px;
+  }
+
+  .icon {
+    width: 16px;
+    height: 16px;
+  }
 }

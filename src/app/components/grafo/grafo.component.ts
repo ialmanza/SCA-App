@@ -95,8 +95,12 @@ export class GrafoComponent implements OnInit {
   }
 
   private createGraph(data: { nodes: Node[]; links: Link[] }): void {
-    const width = 800;
-    const height = 600;
+    // const width = 800;
+     //const height = 600;
+
+     const width = document.getElementById('tree-container')?.clientWidth || 800;
+     const height = document.getElementById('tree-container')?.clientHeight || 600;
+
 
     // Crear SVG
     const svg = d3

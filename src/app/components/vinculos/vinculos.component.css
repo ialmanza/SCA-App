@@ -32,14 +32,139 @@ label{
 }
 
 .custom-select:focus {
-  outline: none; 
-  min-width: 2px; 
-  border-color: #ecb910c2; 
+  outline: none;
+  min-width: 2px;
+  border-color: #ecb910c2;
 }
 .custom-select-option {
-  background-color: #ff99000c; 
+  background-color: #ff99000c;
   color: #374151;
   padding: 0.5rem 1rem; /* Espaciado adecuado */
   border-radius: 0.25rem; /* Bordes redondeados en las opciones */
   transition: background-color 0.3s, color 0.3s; /* Transición suave en el hover */
+}
+
+
+/* Media Query para Tablets (pantallas hasta 768px) */
+@media (max-width: 768px) {
+  .grid.grid-cols-2 {
+    grid-template-columns: 1fr; /* Cambia la cuadrícula a una sola columna */
+  }
+
+  .custom-select {
+    font-size: 14px; /* Reduce el tamaño del texto en selects */
+  }
+
+  label {
+    font-size: 1.5vh; /* Ajusta el tamaño de las etiquetas */
+  }
+
+  .fuente {
+    font-size: 1.5vh; /* Ajusta el tamaño de la fuente general */
+  }
+
+  h3.text-xl {
+    font-size: 1.25rem; /* Reduce el tamaño del título */
+  }
+
+  button.px-6 {
+    padding: 0.5rem 1rem; /* Reduce el padding de los botones */
+    font-size: 14px; /* Reduce el tamaño del texto en botones */
+  }
+
+  app-grafo {
+    height: 40vh; /* Reduce la altura del gráfico */
+  }
+}
+
+/* Media Query para Móviles (pantallas hasta 480px) */
+@media (max-width: 480px) {
+  .flex {
+    flex-direction: column; /* Apila los elementos verticalmente */
+  }
+
+  .grid.grid-cols-1 {
+    gap: 4; /* Reduce el espacio entre los elementos */
+  }
+
+  .custom-select {
+    font-size: 12px; /* Reduce aún más el tamaño del texto en selects */
+  }
+
+  label {
+    font-size: 1.2vh; /* Reduce el tamaño de las etiquetas */
+  }
+
+  .fuente {
+    font-size: 1.2vh; /* Reduce el tamaño de la fuente general */
+  }
+
+  h3.text-xl {
+    font-size: 1rem; /* Reduce aún más el tamaño del título */
+  }
+
+  button.px-6 {
+    padding: 0.3rem 0.8rem; /* Reduce aún más el padding de los botones */
+    font-size: 12px; /* Reduce el tamaño del texto en botones */
+  }
+
+  app-grafo {
+    height: 30vh; /* Reduce aún más la altura del gráfico */
+  }
+}
+
+/* Media Query para Tablets (pantallas hasta 768px) */
+@media (max-width: 768px) {
+  .grid.grid-cols-2 {
+    grid-template-columns: 1fr; /* Apila los elementos en una sola columna */
+  }
+
+  ul {
+    width: 100%; /* Asegura que las listas ocupen el mismo ancho que los select */
+  }
+
+  li {
+    width: 100%; /* Ajusta cada elemento de la lista al 100% del contenedor */
+  }
+
+  app-grafo {
+    width: 100%;
+    height: 40vh; /* Reduce la altura del gráfico */
+    margin-top: 1rem; /* Agrega un margen superior */
+  }
+
+  .border-l {
+    border-left: none; /* Elimina la línea divisoria */
+    padding-left: 0;
+  }
+}
+
+/* Media Query para Móviles (pantallas hasta 480px) */
+@media (max-width: 480px) {
+  .flex {
+    flex-direction: column; /* Apila los elementos verticalmente */
+  }
+
+  .grid.grid-cols-1 {
+    gap: 4px; /* Reduce el espacio entre los elementos */
+  }
+
+  ul {
+    width: 100%; /* Asegura que las listas ocupen el mismo ancho que los select */
+  }
+
+  li {
+    width: 100%; /* Ajusta cada elemento de la lista al 100% del contenedor */
+  }
+
+  app-grafo {
+    width: 100%;
+    height: 35vh; /* Reduce aún más la altura del gráfico */
+    margin-top: 1rem; /* Espaciado entre la lista y el gráfico */
+  }
+
+  .border-l {
+    border-left: none; /* Elimina la línea divisoria */
+    padding-left: 0;
+  }
 }

@@ -378,3 +378,157 @@ label{
   border-radius: 10px;
   z-index: 0;
 }
+
+/* Tablet Styles (768px to 1023px) */
+@media screen and (max-width: 1023px) {
+  .titulo-container, .comparacion, .selección {
+    width: 90vw;
+    padding: 20px;
+  }
+
+  .titulo-container h1, .comparacion h1, .selección h1 {
+    font-size: 2rem;
+  }
+
+  .card-container {
+    width: 80%;
+  }
+
+  .contact-card, .confirmation-card {
+    width: 90%;
+  }
+
+  .alto {
+    width: 70vw;
+  }
+
+  .table {
+    width: 90%;
+  }
+
+  th {
+    font-size: 1.8vh;
+  }
+
+  td, button {
+    font-size: 1.5vh;
+  }
+}
+
+/* Mobile Styles (max-width: 767px) */
+@media screen and (max-width: 767px) {
+  .titulo-container, .comparacion, .selección {
+    width: 95vw;
+    padding: 15px;
+  }
+
+  .titulo-container h1, .comparacion h1, .selección h1 {
+    font-size: 1.5rem;
+    letter-spacing: 1px;
+  }
+
+  .card-container {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .contact-card, .confirmation-card {
+    width: 95%;
+    padding: 15px;
+  }
+
+  .alto {
+    width: 90vw;
+    margin-top: 3%;
+  }
+
+  .button-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .continuar {
+    width: 80%;
+    font-size: 2vh;
+  }
+
+  .table {
+    width: 95%;
+    overflow-x: auto;
+    display: block;
+  }
+
+  th {
+    font-size: 1.6vh;
+  }
+
+  td, button {
+    font-size: 1.4vh;
+  }
+
+  .modalabierto {
+    width: 90%;
+  }
+
+  .pagination-controls {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .pagination-buttons {
+    justify-content: center;
+  }
+
+  .icon-container {
+    margin: 0 3px;
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+
+/* Estilos base para el contenedor de la tabla */
+app-tabla-decisiones {
+  display: block;
+  width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Tablet Styles */
+@media screen and (max-width: 1023px) {
+  app-tabla-decisiones {
+    padding: 0 10px;
+  }
+
+  .content-wrapper,
+  .container,
+  .table-container {
+    width: 100%;
+    margin: 0;
+    padding: 10px;
+  }
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 767px) {
+  app-tabla-decisiones {
+    padding: 0 5px;
+    margin-bottom: 15px;
+  }
+
+  app-tabla-decisiones::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  app-tabla-decisiones::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.2);
+    border-radius: 2px;
+  }
+
+}

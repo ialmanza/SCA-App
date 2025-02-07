@@ -21,7 +21,10 @@
       <h1>Modo de modelado</h1>
     </div>
 
-    <app-tabla-decisiones></app-tabla-decisiones>
+    <div class="table-container">
+      <app-tabla-decisiones></app-tabla-decisiones>
+    </div>
+
     <div class="flex justify-between mt-6">
       <button class="py-2 px-4 bg-gray-600 text-white rounded-lg hover:bg-gray-700"
         (click)="retrocederPaso()">Atrás</button>
@@ -202,10 +205,6 @@
     </div>
 
   </div>
-
-
-
-
 
 
   <div *ngIf="pasoActual === 7">
