@@ -125,64 +125,6 @@ export class TablaDeSeleccionComponent {
     return this.cellStates.get(key)?.value || 0;
   }
 
-  // increment(opcionId: number, modeId: string, event: Event): void {
-  //   event.stopPropagation();
-  //   console.log('Datos recibidos en increment:', {
-  //     opcionId,
-  //     modeId,
-  //     opcionCompleta: this.opciones.find(o => o.id === opcionId)
-  //   });
-
-  //   const key = this.getCellKey(opcionId, modeId);
-
-  //   if (!this.cellStates.has(key)) {
-  //     this.cellStates.set(key, {
-  //       value: 0,
-  //       opcionId,
-  //       modeId
-  //     });
-  //   }
-
-  //   const currentState = this.cellStates.get(key)!;
-  //   const newValue = currentState.value + 1;
-
-  //   this.cellStates.set(key, {
-  //     ...currentState,
-  //     value: newValue
-  //   });
-
-  //   this.cdr.detectChanges();
-  //   console.log(`Incrementado celda ${key} a: ${newValue}`);
-  // }
-
-  // decrement(opcionId: number, modeId: string, event: Event): void {
-  //   event.stopPropagation();
-  //   const key = this.getCellKey(opcionId, modeId);
-
-  //   if (!this.cellStates.has(key)) {
-  //     this.cellStates.set(key, {
-  //       value: 0,
-  //       opcionId,
-  //       modeId
-  //     });
-  //   }
-
-  //   const currentState = this.cellStates.get(key)!;
-  //   const newValue = currentState.value - 1;
-
-  //   this.cellStates.set(key, {
-  //     ...currentState,
-  //     value: newValue
-  //   });
-
-  //   this.cdr.detectChanges();
-  //   console.log(`Decrementado celda ${key} a: ${newValue}`);
-  // }
-
-  // trackByFn(index: number, item: any): any {
-  //   return item.id;
-  // }
-
   increment(opcionId: number, modeId: string, event: Event): void {
     event.stopPropagation();
     const key = this.getCellKey(opcionId, modeId);

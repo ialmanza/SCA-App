@@ -1,27 +1,29 @@
 
 <ng-container *ngIf="comparisonModes$ | async as modes">
-  <table class="comparison-table" [style.--column-count]="modes.length">
-    <thead>
-      <tr>
-        <th rowspan="2" class="opciones-column">Alternativas de Decisión</th>
-        <th [attr.colspan]="modes.length" class="areas-header">Áreas de Decisión</th>
-      </tr>
-      <tr class="label-headers">
-        <th *ngFor="let mode of modes; trackBy: trackByFn">
-          {{ mode.label }}
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <ng-container *ngIf="opciones$ | async as opciones">
-        <tr *ngFor="let path of paths; trackBy: trackByFn">
-          <td class="opciones-column">{{ path }}</td>
-          <td *ngFor="let mode of modes" class="area-cell">
-              <p>{{ mode.symbol }}</p>
-          </td>
-      </tr>
-      </ng-container>
-    </tbody>
-  </table>
+  <div class = "table-container">
+    <table class="comparison-table" [style.--column-count]="modes.length">
+      <thead>
+        <tr>
+          <th rowspan="2" class="opciones-column">Alternativas de Decisión</th>
+          <th [attr.colspan]="modes.length" class="areas-header">Áreas de Decisión</th>
+        </tr>
+        <tr class="label-headers">
+          <th *ngFor="let mode of modes; trackBy: trackByFn">
+            {{ mode.label }}
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngIf="opciones$ | async as opciones">
+          <tr *ngFor="let path of paths; trackBy: trackByFn">
+            <td class="opciones-column">{{ path }}</td>
+            <td *ngFor="let mode of modes" class="area-cell">
+                <p>{{ mode.symbol }}</p>
+            </td>
+        </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
 </ng-container>
 
