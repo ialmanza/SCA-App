@@ -532,3 +532,78 @@ app-tabla-decisiones {
   }
 
 }
+
+/* Improved Responsive Design for Paso 6 */
+@media screen and (max-width: 1023px) {
+  .overflow-x-auto {
+    width: 100vw; /* Full viewport width */
+    margin: 0 auto;
+    padding: 0 10px; /* Add some padding */
+    box-sizing: border-box;
+  }
+
+  table {
+    width: 100%;
+    min-width: 320px; /* Ensure minimum width for smaller devices */
+    border-collapse: collapse;
+  }
+
+  /* Adjust table cell sizes */
+  td, th {
+    padding: 8px 4px;
+    font-size: 0.8rem;
+    word-break: break-word;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  /* Mobile-specific adjustments */
+  .overflow-x-auto {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+  }
+
+  table {
+    font-size: 0.7rem;
+  }
+
+  /* Buttons */
+  .mod, .elim, .bot {
+    padding: 6px 10px;
+    font-size: 0.7rem;
+    min-width: auto;
+    white-space: nowrap;
+  }
+
+  /* Modal adjustments */
+  .modalabierto {
+    width: 90%;
+    max-width: 90%;
+    margin: 0 auto;
+    padding: 15px;
+  }
+
+  /* Ensure inputs are fully visible */
+  input {
+    width: 100%;
+    font-size: 0.8rem;
+    padding: 8px;
+  }
+
+  /* Buttons container */
+  .flex.justify-center {
+    flex-direction: row;
+    gap: 10px;
+  }
+}
+
+/* Additional global styles for better responsiveness */
+* {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
+body {
+  overflow-x: hidden;
+  width: 100vw;
+}
