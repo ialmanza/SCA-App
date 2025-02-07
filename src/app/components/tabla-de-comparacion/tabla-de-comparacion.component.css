@@ -1,86 +1,3 @@
-/* .comparison-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  margin: 20px 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-
-  th, td {
-    border: 1px solid #ddd;
-    padding: 12px;
-    text-align: left;
-  }
-
-  thead {
-    th {
-      background-color: #f8f9fa;
-      font-weight: 600;
-
-      &.opciones-column {
-        background-color: #fff;
-        width: 30%;
-        min-width: 200px;
-      }
-    }
-
-    .areas-header {
-      text-align: center;
-      border-bottom: none;
-      background-color: #f1f3f5;
-      font-size: 1.1em;
-      padding: 15px;
-    }
-
-    .label-headers {
-      th {
-        text-align: center;
-        padding: 12px 8px;
-        font-weight: 500;
-        border-top: none;
-        width: calc(70% / var(--column-count, 4));
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-  }
-
-  tbody {
-    td {
-      &.opciones-column {
-        background-color: #fff;
-        font-weight: 500;
-      }
-
-      &.area-cell {
-        text-align: center;
-        padding: 12px 8px;
-        min-width: 120px;
-        background-color: #fff;
-
-        &:hover {
-          background-color: #f8f9fa;
-        }
-      }
-    }
-
-    tr {
-      &:nth-child(even) {
-        td.area-cell {
-          background-color: #fcfcfc;
-        }
-      }
-
-      &:hover {
-        td.area-cell {
-          background-color: #f8f9fa;
-        }
-      }
-    }
-  }
-} */
-
-
 /* tabla-de-comparacion.component.css */
 .comparison-table {
   width: 100%;
@@ -236,3 +153,71 @@ tr:hover td.area-cell {
   background-color: #ef9a9a; /* Rojo claro deshabilitado */
   cursor: not-allowed;
 }
+
+/* Estilos para tablets (pantallas menores a 1024px) */
+@media (max-width: 1024px) {
+  .comparison-table {
+    font-size: 0.9em;
+  }
+
+  .comparison-table thead .label-headers th {
+    font-size: 0.9em;
+    padding: 10px;
+  }
+
+  .comparison-table tbody td.area-cell {
+    min-width: 100px;
+    padding: 6px;
+  }
+
+  .counter-container {
+    flex-direction: column;
+    padding: 6px;
+  }
+
+  .counter-btn {
+    padding: 6px 10px;
+  }
+
+  .actions-container {
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .actions-container button {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Estilos para móviles (pantallas menores a 768px) */
+@media (max-width: 768px) {
+  .table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+  }
+
+  .comparison-table {
+    width: max-content; /* Permite que la tabla mantenga su estructura */
+    min-width: 100%;
+    font-size: 0.85em;
+  }
+
+  .comparison-table th,
+  .comparison-table td {
+    white-space: nowrap; /* Evita que el contenido se rompa en varias líneas */
+  }
+
+  .actions-container {
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .actions-container button {
+    width: 100%;
+    max-width: 300px;
+  }
+}
+

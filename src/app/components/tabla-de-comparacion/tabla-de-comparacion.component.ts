@@ -51,7 +51,6 @@ export class TablaDeComparacionComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    //this.initializeCellStates();
     this.loadCellsFromBackend();
   }
 
@@ -122,64 +121,6 @@ export class TablaDeComparacionComponent implements OnInit {
     return this.cellStates.get(key)?.value || 0;
   }
 
-  // increment(opcionId: number, modeId: string, event: Event): void {
-  //   event.stopPropagation();
-  //   console.log('Datos recibidos en increment:', {
-  //     opcionId,
-  //     modeId,
-  //     opcionCompleta: this.opciones.find(o => o.id === opcionId)
-  //   });
-
-  //   const key = this.getCellKey(opcionId, modeId);
-
-  //   if (!this.cellStates.has(key)) {
-  //     this.cellStates.set(key, {
-  //       value: 0,
-  //       opcionId,
-  //       modeId
-  //     });
-  //   }
-
-  //   const currentState = this.cellStates.get(key)!;
-  //   const newValue = currentState.value + 1;
-
-  //   this.cellStates.set(key, {
-  //     ...currentState,
-  //     value: newValue
-  //   });
-
-  //   this.cdr.detectChanges();
-  //   console.log(`Incrementado celda ${key} a: ${newValue}`);
-  // }
-
-  // decrement(opcionId: number, modeId: string, event: Event): void {
-  //   event.stopPropagation();
-  //   const key = this.getCellKey(opcionId, modeId);
-
-  //   if (!this.cellStates.has(key)) {
-  //     this.cellStates.set(key, {
-  //       value: 0,
-  //       opcionId,
-  //       modeId
-  //     });
-  //   }
-
-  //   const currentState = this.cellStates.get(key)!;
-  //   const newValue = currentState.value - 1;
-
-  //   this.cellStates.set(key, {
-  //     ...currentState,
-  //     value: newValue
-  //   });
-
-  //   this.cdr.detectChanges();
-  //   console.log(`Decrementado celda ${key} a: ${newValue}`);
-  // }
-
-  // trackByFn(index: number, item: any): any {
-  //   return item.id;
-  // }
-
   increment(opcionId: number, modeId: string, event: Event): void {
     event.stopPropagation();
     const key = this.getCellKey(opcionId, modeId);
@@ -189,26 +130,12 @@ export class TablaDeComparacionComponent implements OnInit {
       modeId
     };
 
-    const newValue = currentState.value + 1;
-    this.cellStates.set(key, { ...currentState, value: newValue });
-
-    // this.comparisonCellService.updateCell({
-    //   opcionId,
-    //   modeId,
-    //   value: newValue
-    // }).subscribe(
-    //   updatedCell => {
-    //     console.log('Celda actualizada en el backend:', updatedCell);
-    //   },
-    //   error => {
-    //     console.error('Error al actualizar la celda:', error);
-    //     // Revertir el cambio en caso de error
-    //     this.cellStates.set(key, currentState);
-    //     this.cdr.detectChanges();
-    //   }
-    // );
-
-    this.cdr.detectChanges();
+    // Validar que el valor no exceda 5
+    if (currentState.value < 5) {
+      const newValue = currentState.value + 1;
+      this.cellStates.set(key, { ...currentState, value: newValue });
+      this.cdr.detectChanges();
+    }
   }
 
   decrement(opcionId: number, modeId: string, event: Event): void {
@@ -220,26 +147,12 @@ export class TablaDeComparacionComponent implements OnInit {
       modeId
     };
 
-    const newValue = currentState.value - 1;
-    this.cellStates.set(key, { ...currentState, value: newValue });
-
-    // this.comparisonCellService.updateCell({
-    //   opcionId,
-    //   modeId,
-    //   value: newValue
-    // }).subscribe(
-    //   updatedCell => {
-    //     console.log('Celda actualizada en el backend:', updatedCell);
-    //   },
-    //   error => {
-    //     console.error('Error al actualizar la celda:', error);
-    //     // Revertir el cambio en caso de error
-    //     this.cellStates.set(key, currentState);
-    //     this.cdr.detectChanges();
-    //   }
-    // );
-
-    this.cdr.detectChanges();
+    // Validar que el valor no sea menor que 0
+    if (currentState.value > 0) {
+      const newValue = currentState.value - 1;
+      this.cellStates.set(key, { ...currentState, value: newValue });
+      this.cdr.detectChanges();
+    }
   }
 
   saveAllCells(): void {

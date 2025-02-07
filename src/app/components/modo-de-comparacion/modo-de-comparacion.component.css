@@ -264,7 +264,7 @@
 
   @media (max-width: 480px) {
     .comparison-mode-container {
-      width: 100vw;
+      width: 90vw;
       padding: 0.5rem;
     }
 
