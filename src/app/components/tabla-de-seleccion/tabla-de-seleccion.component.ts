@@ -15,6 +15,16 @@ interface CellState {
   modeId: string;
 }
 
+interface PathValues {
+  id: number;
+  hexa: string;
+  options: number[];
+  values: {
+    area: number;
+    symbol: string;
+    value: number;
+  }[];
+}
 
 @Component({
   selector: 'app-tabla-de-seleccion',
@@ -24,167 +34,55 @@ interface CellState {
   templateUrl: './tabla-de-seleccion.component.html',
   styleUrl: './tabla-de-seleccion.component.css'
 })
-export class TablaDeSeleccionComponent {
+export class TablaDeSeleccionComponent implements OnInit {
   opciones$: Observable<Opcion[]>;
   comparisonModes$: Observable<ComparisonMode[]>;
   cellStates: Map<string, CellState> = new Map();
   opciones: Opcion[] = [];
-  paths: string[] = [];
+  paths: PathValues[] = [];
+  comparisonModes: ComparisonMode[] = [];
 
   constructor(
     private opcionService: OpcionesDBService,
     private comparisonModeService: ComparacionModeService,
     private cdr: ChangeDetectorRef,
-    private comparisonCellService: ComparisonCellService,
     private selectedPathsService: SelectedPathsService
   ) {
     this.opciones$ = this.opcionService.getItems();
     this.comparisonModes$ = this.comparisonModeService.getComparisonModes().pipe(
-      map(modes => modes.sort((a, b) => a.order - b.order))
+      map(modes => modes.sort((a, b) => Number(a.order) - Number(b.order)))
     );
-
-    this.opciones$.subscribe(opciones => {
-      console.log('Opciones recibidas:', opciones);
-      this.opciones = opciones;
-    });
   }
 
   ngOnInit(): void {
-    //this.initializeCellStates();
-    this.loadCellsFromBackend();
-    this.selectedPathsService.getPathsFromBackend().subscribe((path) => {
-      console.log('Paths obtenidos:', path);
-      this.paths = path.map(path => path.hexa);
-    });
+    this.loadData();
   }
 
-  trackByFn(index: number, item: any): number {
-    return index; // or item.id, or any other unique identifier
-  }
-
-  private loadCellsFromBackend(): void {
+  private loadData(): void {
     forkJoin({
-      cells: this.comparisonCellService.getCells(),
-      opciones: this.opciones$,
+      paths: this.selectedPathsService.getPathsFromBackend(),
       modes: this.comparisonModes$
-    }).subscribe(({ cells, opciones, modes }) => {
-      // Inicializar el mapa de estados con los valores del backend
-      cells.forEach(cell => {
-        const key = this.getCellKey(cell.opcionId, cell.modeId);
-        this.cellStates.set(key, {
-          value: cell.value,
-          opcionId: cell.opcionId,
-          modeId: cell.modeId
-        });
-      });
-
-      // Inicializar celdas faltantes con valor 0
-      opciones.forEach(opcion => {
-        modes.forEach(mode => {
-          const key = this.getCellKey(opcion.id!, mode.id);
-          if (!this.cellStates.has(key)) {
-            this.cellStates.set(key, {
-              value: 0,
-              opcionId: opcion.id!,
-              modeId: mode.id
-            });
-          }
-        });
-      });
-
+    }).subscribe(({ paths, modes }) => {
+      this.paths = paths;
+      this.comparisonModes = modes;
       this.cdr.detectChanges();
     });
   }
 
-  private initializeCellStates(): void {
-    this.opciones$.subscribe(opciones => {
-      this.comparisonModes$.subscribe(modes => {
-        opciones.forEach(opcion => {
-          modes.forEach(mode => {
-            const key = this.getCellKey(opcion.id!, mode.id);
-            if (!this.cellStates.has(key)) {
-              this.cellStates.set(key, {
-                value: 0,
-                opcionId: opcion.id!,
-                modeId: mode.id
-              });
-            }
-          });
-        });
-        this.cdr.detectChanges();
-      });
-    });
+  getSymbolsForCell(path: PathValues, modeId: number): string {
+    const valueObj = path.values.find(v => v.area === modeId);
+    if (!valueObj || valueObj.value === 0) return '';
+
+    return valueObj.symbol.repeat(valueObj.value);
   }
 
-  getCellKey(opcionId: number, modeId: string): string {
-    return `${opcionId}_${modeId}`;
+  trackByFn(index: number, item: any): number {
+    return index;
   }
 
-  getCellValue(opcionId: number, modeId: string): number {
-    const key = this.getCellKey(opcionId, modeId);
-    return this.cellStates.get(key)?.value || 0;
+  // In your TablaDeSeleccionComponent class
+  parseInt(id: string): number {
+    return parseInt(id, 10);
   }
 
-  increment(opcionId: number, modeId: string, event: Event): void {
-    event.stopPropagation();
-    const key = this.getCellKey(opcionId, modeId);
-    const currentState = this.cellStates.get(key) || {
-      value: 0,
-      opcionId,
-      modeId
-    };
-
-    const newValue = currentState.value + 1;
-    this.cellStates.set(key, { ...currentState, value: newValue });
-
-    this.comparisonCellService.updateCell({
-      opcionId,
-      modeId,
-      value: newValue
-    }).subscribe(
-      updatedCell => {
-        console.log('Celda actualizada en el backend:', updatedCell);
-      },
-      error => {
-        console.error('Error al actualizar la celda:', error);
-        // Revertir el cambio en caso de error
-        this.cellStates.set(key, currentState);
-        this.cdr.detectChanges();
-      }
-    );
-
-    this.cdr.detectChanges();
-  }
-
-  decrement(opcionId: number, modeId: string, event: Event): void {
-    event.stopPropagation();
-    const key = this.getCellKey(opcionId, modeId);
-    const currentState = this.cellStates.get(key) || {
-      value: 0,
-      opcionId,
-      modeId
-    };
-
-    const newValue = currentState.value - 1;
-    this.cellStates.set(key, { ...currentState, value: newValue });
-
-    this.comparisonCellService.updateCell({
-      opcionId,
-      modeId,
-      value: newValue
-    }).subscribe(
-      updatedCell => {
-        console.log('Celda actualizada en el backend:', updatedCell);
-      },
-      error => {
-        console.error('Error al actualizar la celda:', error);
-        // Revertir el cambio en caso de error
-        this.cellStates.set(key, currentState);
-        this.cdr.detectChanges();
-      }
-    );
-
-    this.cdr.detectChanges();
-  }
 }
-

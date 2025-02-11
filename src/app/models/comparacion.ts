@@ -5,4 +5,5 @@ export interface ComparisonMode {
   comparisonArea: string;
   label: string;
   symbol: string;
+  puntuacion_minima?: number;
 }

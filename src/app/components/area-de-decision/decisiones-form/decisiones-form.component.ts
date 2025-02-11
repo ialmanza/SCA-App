@@ -91,22 +91,22 @@ export class DecisionesFormComponent {
     this.vinculos = [];
   }
 
-  crearVinculo(): void {
-    if (this.selectedArea1 && this.selectedArea2 && this.selectedArea1 !== this.selectedArea2) {
-      // const nuevoVinculo = `${this.selectedArea1.area} - ${this.selectedArea2.area}`;
-      const area_id = this.selectedArea1.id!;
-      const related_area_id = this.selectedArea2.id!;
-      //this.decisionService.crearVinculo(nuevoVinculo);
-      this.vinculodbService.createItem(area_id, related_area_id).subscribe(() => {
-        this.selectedArea1 = null;
-        this.selectedArea2 = null;
-      });
+  // crearVinculo(): void {
+  //   if (this.selectedArea1 && this.selectedArea2 && this.selectedArea1 !== this.selectedArea2) {
+  //     // const nuevoVinculo = `${this.selectedArea1.area} - ${this.selectedArea2.area}`;
+  //     const area_id = this.selectedArea1.id!;
+  //     const related_area_id = this.selectedArea2.id!;
+  //     //this.decisionService.crearVinculo(nuevoVinculo);
+  //     this.vinculodbService.createItem(area_id, related_area_id).subscribe(() => {
+  //       this.selectedArea1 = null;
+  //       this.selectedArea2 = null;
+  //     });
 
 
-    } else {
-      console.error('Áreas no válidas para crear un vínculo.');
-    }
-  }
+  //   } else {
+  //     console.error('Áreas no válidas para crear un vínculo.');
+  //   }
+  // }
 
   addDecision(area: HTMLInputElement, descripcion: HTMLTextAreaElement) {
     const rotuloPattern = /^[A-Z]{3}_[A-Z]{3}$/;
@@ -184,7 +184,7 @@ export class DecisionesFormComponent {
         }
       });
   }
-  
+
 
   avanzarPaso() {
     if (this.pasoActual < 20) {

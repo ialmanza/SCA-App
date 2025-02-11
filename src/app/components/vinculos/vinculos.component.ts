@@ -1,3 +1,4 @@
+import { map } from 'rxjs';
 import { Component } from '@angular/core';
 import { GrafoComponent } from "../grafo/grafo.component";
 import { FormsModule } from '@angular/forms';
@@ -43,13 +44,14 @@ export class VinculosComponent {
     this.vinculodbService.getItems().subscribe((response: any) => {
       // Asegúrate de acceder a la propiedad 'vinculos' del response
       this.vinculos = response.vinculos || [];
+      console.log('Vínculos cargados:', this.vinculos);
     }, error => {
       console.error('Error al cargar vínculos', error);
       this.vinculos = [];
     });
   }
 
-  crearVinculo(): void {
+  crearVinculo(): void {   //QUE FUNCIONA CORRECTAMENTE
     if (this.selectedArea1 && this.selectedArea2 && this.selectedArea1 !== this.selectedArea2) {
       const area_id = this.selectedArea1.id!;
       const related_area_id = this.selectedArea2.id!;
@@ -65,6 +67,24 @@ export class VinculosComponent {
       console.error('Áreas no válidas para crear un vínculo.');
     }
   }
+
+  // crearVinculo(): void {
+  //   if (this.selectedArea1 && this.selectedArea2 && this.selectedArea1 !== this.selectedArea2) {
+  //     const vinculoId = Date.now() + Math.floor(Math.random() * 1000);
+  //     const area_id = this.selectedArea1.id!;
+  //     const related_area_id = this.selectedArea2.id!;
+  //     this.vinculodbService.createItem(area_id, related_area_id, vinculoId).subscribe(() => {
+  //       // Recarga los vínculos después de crear uno nuevo
+  //       this.cargarVinculos();
+  //       this.selectedArea1 = null;
+  //       this.selectedArea2 = null;
+  //     }, error => {
+  //       console.error('Error al crear vínculo', error);
+  //     });
+  //   } else {
+  //     console.error('Áreas no válidas para crear un vínculo.');
+  //   }
+  // }
 
   // eliminarVinculo (vinculo: string): void {
   //   this.vinculodbService.deleteItem(vinculo).subscribe(() => {
