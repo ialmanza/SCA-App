@@ -45,7 +45,7 @@ export class VinculodbService {
     return this.http.put(`${'https://sca-v2b1.onrender.com/api/area/update'}/${id}/`, item, { headers: header });
   }
 
-  deleteItem(area_id: string, related_area_id: string): Observable<void> {
+  deleteItem(area_id: number, related_area_id: number): Observable<void> {
     const header = new HttpHeaders({
       'Content-Type': 'application/json'
     });

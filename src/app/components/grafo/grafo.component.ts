@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import * as d3 from 'd3';
 import { VinculodbService } from '../../services/_Vinculos/vinculodb.service';
 import { DecisionesDBService } from '../../services/_Decisiones/decisiones-db.service';
-import { forkJoin } from 'rxjs'; // combinar observables
+import { forkJoin } from 'rxjs';
 
 interface Node extends d3.SimulationNodeDatum {
   isSelected: boolean;
@@ -13,6 +13,12 @@ interface Node extends d3.SimulationNodeDatum {
 interface Link extends d3.SimulationLinkDatum<Node> {
   source: string | Node;
   target: string | Node;
+}
+
+interface VinculoData {
+  nombre: string;
+  area_id: number;
+  related_area_id: number;
 }
 
 @Component({
@@ -37,7 +43,12 @@ export class GrafoComponent implements OnInit {
       console.log('Vínculos:', vinculos);
       console.log('Áreas Importantes:', importantAreas);
 
-      const vinculosList = (vinculos as unknown as { vinculos: any[] }).vinculos;
+      // Extract vinculos array from response
+      const vinculosList = (vinculos as any).vinculos.map((v: any[]) => ({
+        nombre: v[0],
+        area_id: v[1],
+        related_area_id: v[2]
+      }));
 
       const graphData = this.generateGraphData(vinculosList, importantAreas);
       console.log('Datos del Grafo:', graphData);
@@ -46,42 +57,46 @@ export class GrafoComponent implements OnInit {
   }
 
   private generateGraphData(
-    vinculos: string[],
+    vinculos: VinculoData[],
     importantAreas: any[]
   ): { nodes: Node[]; links: Link[] } {
     const nodesMap = new Map<string, Node>();
     const links: Link[] = [];
 
     vinculos.forEach((vinculo) => {
-      const [source, target] = vinculo.split(' - ');
-      if (source && target) {
+      // Extract the source and target from the nombre
+      const [source, target] = vinculo.nombre.split(' - ');
 
+      if (source && target) {
+        // Add source node if it doesn't exist
         if (!nodesMap.has(source)) {
           nodesMap.set(source, {
             id: source,
             isSelected: false,
-
             isImportant: importantAreas.some(
               area => area.area === source && area.is_important
             )
           });
         }
+
+        // Add target node if it doesn't exist
         if (!nodesMap.has(target)) {
           nodesMap.set(target, {
             id: target,
             isSelected: false,
-
             isImportant: importantAreas.some(
               area => area.area === target && area.is_important
             )
           });
         }
 
+        // Add link if it doesn't exist
         const existingLink = links.find(
           link =>
-            (link.source as Node).id === source &&
-            (link.target as Node).id === target
+            (link.source === source || (typeof link.source === 'object' && link.source.id === source)) &&
+            (link.target === target || (typeof link.target === 'object' && link.target.id === target))
         );
+
         if (!existingLink) {
           links.push({ source, target });
         }
@@ -95,12 +110,8 @@ export class GrafoComponent implements OnInit {
   }
 
   private createGraph(data: { nodes: Node[]; links: Link[] }): void {
-    // const width = 800;
-     //const height = 600;
-
-     const width = document.getElementById('tree-container')?.clientWidth || 800;
-     const height = document.getElementById('tree-container')?.clientHeight || 600;
-
+    const width = document.getElementById('tree-container')?.clientWidth || 800;
+    const height = document.getElementById('tree-container')?.clientHeight || 600;
 
     // Crear SVG
     const svg = d3
@@ -130,6 +141,7 @@ export class GrafoComponent implements OnInit {
       .attr('stroke', '#999')
       .attr('stroke-width', 2);
 
+    // Dibujar nodos
     const node = svg
       .selectAll<SVGCircleElement, Node>('.node')
       .data(data.nodes)
@@ -138,15 +150,12 @@ export class GrafoComponent implements OnInit {
       .attr('class', 'node')
       .attr('r', 15)
       .attr('fill', (d) => {
-
-        if (d.isImportant) return '#ff5733'; // cambia a rojo si es importante
+        if (d.isImportant) return '#ff5733';
         return d.isSelected ? '#ff5733' : '#69b3a2';
       })
       .on('click', (event, d) => {
-
         if (!d.isImportant) {
           d.isSelected = !d.isSelected;
-
           d3.select(event.target as SVGCircleElement)
             .attr('fill', d.isSelected ? '#ff5733' : '#69b3a2');
         }
@@ -166,25 +175,22 @@ export class GrafoComponent implements OnInit {
       .append('text')
       .attr('class', 'label')
       .attr('font-size', '12px')
-      .attr('fill', (d) => d.isImportant ? '#ff0000' : '#000') // Highlight important nodes
+      .attr('fill', (d) => d.isImportant ? '#ff0000' : '#000')
       .attr('text-anchor', 'middle')
       .attr('dy', -20)
       .text((d) => d.id);
 
     // Actualizar simulación
     simulation.on('tick', () => {
-
       link
         .attr('x1', (d: Link) => ((d.source as Node).x ?? 0))
         .attr('y1', (d: Link) => ((d.source as Node).y ?? 0))
         .attr('x2', (d: Link) => ((d.target as Node).x ?? 0))
         .attr('y2', (d: Link) => ((d.target as Node).y ?? 0));
 
-
       node
         .attr('cx', (d: Node) => d.x ?? 0)
         .attr('cy', (d: Node) => d.y ?? 0);
-
 
       svg
         .selectAll<SVGTextElement, Node>('.label')
@@ -192,7 +198,6 @@ export class GrafoComponent implements OnInit {
         .attr('y', (d: Node) => (d.y ?? 0) - 20);
     });
   }
-
 
   private dragstarted(event: any, simulation: d3.Simulation<Node, Link>): void {
     if (!event.active) simulation.alphaTarget(0.3).restart();
