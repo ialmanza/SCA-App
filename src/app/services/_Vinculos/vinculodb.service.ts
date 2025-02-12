@@ -47,19 +47,22 @@ export class VinculodbService {
   }
 
   deleteItem(area_id: number, related_area_id: number): Observable<void> {
-    const header = new HttpHeaders({
+    const headers = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    console.log(area_id, related_area_id, 'item en servicio');
-    console.log(typeof area_id, area_id);
-    console.log(typeof related_area_id, related_area_id);
-    const payload = {
-      "area_id": area_id,
-      "realated_area_id": related_area_id
-    };
-    console.log (`${'https://sca-v2b1.onrender.com/api/area/vinculo'}/${payload}/`);
-    return this.http.delete<void>(`${'https://sca-v2b1.onrender.com/api/area/vinculo'}/${payload}/`, { headers: header });
-  }
 
+    const payload = {
+      area_id: area_id,
+      related_area_id: related_area_id
+    };
+
+    // Para debug
+    console.log('Payload enviado:', JSON.stringify(payload));
+
+    return this.http.delete<void>('https://sca-v2b1.onrender.com/api/areas/vinculo/', {
+      headers: headers,
+      body: payload
+    });
+}
 
 }
