@@ -15,7 +15,7 @@ export class OpcionesDBService {
   }
 
   getItem(id: number): Observable<any> { //id del area
-    return this.http.get(`${'https://sca-v2b1.onrender.com/api/opciones/'}/${id}`); //devuelve todas las opciones de esa area
+    return this.http.get(`${'https://sca-v2b1.onrender.com/api/opciones/'}/${id}/`); //devuelve todas las opciones de esa area
   }
 
   createItem(item: any): Observable<any> {
@@ -33,14 +33,14 @@ export class OpcionesDBService {
     const header = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    return this.http.put(`${'https://sca-v2b1.onrender.com/api/opcion/update'}/${id}`, item, { headers: header });
+    return this.http.put(`${'https://sca-v2b1.onrender.com/api/opcion/update'}/${id}/`, item, { headers: header });
   }
 
   deleteItem(id: number): Observable<void> {
     const header = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    return this.http.delete<void>(`${'https://sca-v2b1.onrender.com/api/opcion/delete'}/${id}`, { headers: header });
+    return this.http.delete<void>(`${'https://sca-v2b1.onrender.com/api/opcion/delete'}/${id}/`, { headers: header });
   }
 
   updateComparacionValue(opcionId: string, modeId: string, value: string): Observable<any> {

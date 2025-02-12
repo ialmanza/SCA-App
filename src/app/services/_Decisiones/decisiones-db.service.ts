@@ -17,7 +17,7 @@ export class DecisionesDBService {
   }
 
   getItem(id: number): Observable<any> {
-    return this.http.get(`${'https://sca-v2b1.onrender.com/api/area/'}/${id}`);
+    return this.http.get(`${'https://sca-v2b1.onrender.com/api/area/'}/${id}/`);
   }
 
   createItem(item: any): Observable<any> {

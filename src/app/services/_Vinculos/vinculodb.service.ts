@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { area } from 'd3';
 import { Observable} from 'rxjs';
 
 @Injectable({
@@ -50,10 +51,13 @@ export class VinculodbService {
       'Content-Type': 'application/json'
     });
     console.log(area_id, related_area_id, 'item en servicio');
+    console.log(typeof area_id, area_id);
+    console.log(typeof related_area_id, related_area_id);
     const payload = {
       "area_id": area_id,
       "realated_area_id": related_area_id
     };
+    console.log (`${'https://sca-v2b1.onrender.com/api/area/vinculo'}/${payload}/`);
     return this.http.delete<void>(`${'https://sca-v2b1.onrender.com/api/area/vinculo'}/${payload}/`, { headers: header });
   }
 

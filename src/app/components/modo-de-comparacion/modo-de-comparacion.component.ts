@@ -36,7 +36,6 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
   ) {
     this.comparisonForm = this.fb.group({
       order: ['', [Validators.required, Validators.min(1)]],
-      peso: ['', [Validators.required]],
       comparisonArea: ['', [Validators.required]],
       label: ['', [Validators.required]],
       symbol: ['',[Validators.required]],
@@ -44,7 +43,7 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
   }
 
 
- 
+
   ngOnInit(): void {
     this.loadComparisonModes();
   }
@@ -115,10 +114,9 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
     this.currentEditId = mode.id;
     this.comparisonForm.patchValue({
       order: mode.order,
-      peso: mode.peso,
       comparisonArea: mode.comparisonArea,
       label: mode.label,
-      emoji: mode.symbol,
+      symbol: mode.symbol,
     });
   }
 

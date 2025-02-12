@@ -28,14 +28,14 @@ export class ComparacionModeService {
     const header = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    return this.http.put(`${'https://sca-v2b1.onrender.com/api/comparacion/update'}/${id}`, item, { headers: header });
+    return this.http.put(`${'https://sca-v2b1.onrender.com/api/comparacion/update'}/${id}/`, item, { headers: header });
   }
 
   deleteItem(id: number): Observable<void> {
     const header = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    return this.http.delete<void>(`${'https://sca-v2b1.onrender.com/api/comparacion/delete'}/${id}`, { headers: header });
+    return this.http.delete<void>(`${'https://sca-v2b1.onrender.com/api/comparacion/delete'}/${id}/`, { headers: header });
   }
 
   updatePuntuacionMinima(id: number, puntuacion: number): Observable<any> {

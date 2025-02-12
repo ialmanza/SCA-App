@@ -66,7 +66,6 @@
               <th scope="col">Área</th>
               <th scope="col">Rótulo</th>
               <th scope="col">Parámetro</th>
-              <th scope="col">Selección:</th>
               <th scope="col">Acciones</th>
             </tr>
           </thead>
@@ -76,13 +75,7 @@
               <td>{{ mode.comparisonArea }}</td>
               <td>{{ mode.label }}</td>
               <td>{{ mode.symbol }}</td>
-              <td>
-                <select class="form-select" [(ngModel)]="mode.symbol" (change)="updateEmoji(mode)">
-                  <option *ngFor="let emoji of emojiOptions" [value]="emoji.value">
-                    {{ emoji.value }}
-                  </option>
-                </select>
-              </td>
+
               <td>
                 <button class="mod" (click)="editMode(mode)">
                   Editar
