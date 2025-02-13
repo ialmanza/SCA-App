@@ -246,9 +246,7 @@ h2{
     font-size: 3vh;
     text-align: center;
     font-family: "Poppins", sans-serif;
-
 }
-
 
 .skills-list {
   display: flex;
@@ -356,7 +354,7 @@ label{
 
 }
 .titulo-container h1 {
-  color: #f5eee2;
+  color: white;
   font-size: 2.5rem;
   font-family: 'Arial', sans-serif;
   text-transform: uppercase;

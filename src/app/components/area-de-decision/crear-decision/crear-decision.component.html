@@ -2,15 +2,18 @@
 <div class="sm:mx-auto sm:w-full sm:max-w-sm">
 </div>
   <div class="container p-4">
+
     <div class="row">
       <div class="con">
         <div class="card">
           <div class="card-body form">
             <form (submit)="addDecision( nombre_area, descripcion)" >
               <div class="form-group p-2">
-
+                <div class="resaltado">
+                  <h2>Generar áreas de decisiones</h2>
+                </div>
                 <div class="mb-3">
-                  <label for="rotulo">Ingresar un código válido:</label>
+                  <label for="rotulo">Ingresar un rótulo válido:</label>
                   <input
                   type="text"
                   name="rotulo"
@@ -25,16 +28,15 @@
                 </div>
 
                 <div>
-                  <label for="nombre_area" >Complete nombre del área:</label>
+                  <label for="nombre_area" >Complete el nombre del área:</label>
                   <input type="text" name="nombre_area" id="nombre_area" placeholder="Nombre" class="input-custom" required="" #nombre_area>
                 </div>
 
                 <div>
-                  <label for="descripcion">Complete descripción:</label>
+                  <label for="descripcion">Complete su descripción:</label>
                   <textarea type="text" name="descripcion" id="descripcion" placeholder="Descripción del área creada" class="input-custom" required="" rows="4" #descripcion></textarea>
                 </div>
-
-                <div>
+                <div class="botones">
                   <button type="submit"  class="btn añade">
                     Añadir
                   </button>
@@ -42,7 +44,6 @@
                     Cancelar
                   </button>
                 </div>
-
               </div>
             </form>
           </div>

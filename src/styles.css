@@ -1,6 +1,8 @@
 /* You can add global styles to this file, and also import other style files */
 body{
-    background: -webkit-linear-gradient(185deg, #ffffff,#fef4f0,#fde9e1,#fbd2c3);background: linear-gradient(185deg, #ffffff,#fef4f0,#fde9e1,#fbd2c3);
+    background: -webkit-linear-gradient(185deg, #ffffff, #f9f3f1, #f1e7e0, #e0d0c1);
+    background: linear-gradient(185deg, #f4f4f4, #f0e9e3, #f1e7e0, #e3d4c8);
+
     min-height: 100vh;
 }
 
