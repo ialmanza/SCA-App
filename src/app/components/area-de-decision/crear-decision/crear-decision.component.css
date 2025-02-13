@@ -1,4 +1,3 @@
-
 .form-container {
   max-width: 400px;
   width: 100%;
@@ -6,42 +5,55 @@
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
+
 .form-header {
   margin-bottom: 20px;
 }
+
 .form-header img {
   margin-right: 10px;
 }
-.form-header h1 {
-  font-size: 24px;
-}
+
+/* .form-header h1 {
+  font-size: 50px;
+} */
 .form-group {
   margin-bottom: 15px;
 }
+
 .form-group label {
   display: block;
   margin-bottom: 5px;
   color: #333;
+  font-size: 2vh;
 }
+
 .form-group input {
   width: 100%;
   padding: 10px;
   border-radius: 5px;
 }
+
 .form-group input:focus {
   outline: none;
-  box-shadow: 0 0 5px rgba(255, 118, 5, 0.5);
+  border: 2px solid rgb(255, 174, 0);
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+  /* Sombra roja suave */
 }
+
 .form-group .checkbox {
   display: flex;
   align-items: center;
 }
+
 .form-group .checkbox input {
   margin-right: 10px;
 }
+
 .form-group .checkbox label {
   margin: 0;
 }
+
 .form-button {
   width: 100%;
   padding: 10px;
@@ -49,19 +61,24 @@
   border: none;
   border-radius: 10px;
   cursor: pointer;
-  font-size: 16px;
+  /* font-size:   
+  16px; */
 }
+
 .form-button:hover {
   background-color: #0056b3;
 }
+
 .form-footer {
   margin-top: 15px;
   text-align: center;
 }
+
 .form-footer a {
   color: #007bff;
   text-decoration: none;
 }
+
 .form-footer a:hover {
   text-decoration: underline;
 }
@@ -70,43 +87,80 @@
 .btn {
   border-radius: 10px;
   transition: border-color 0.3s, box-shadow 0.3s;
-  width: 100%;
+  width: 45%; /* Se adapta pero mantiene proporción */
+  max-width: 250px; /* No crece más de 200px */
+  padding: 10px 20px;
   margin: 5px;
-  font-size: 2vh;
+  font-size: 2.2vh;
   color: aliceblue;
- }
-.añade{
-  background-color: rgba(0, 128, 0, 0.808);
+  box-shadow: 0 5px 10px rgba(0, 3, 0, 0.5);
+
+
+}
+.botones{
+  display: flex;
+  justify-content: center; 
+  align-items: center;   
+  gap: 10px;       
+}
+
+.añade {
+  background-color: rgba(48, 134, 7, 0.767);
+  text-shadow: 2px 2px 5px rgb(0, 0, 0);
   font-family: "Poppins", sans-serif;
+  color: #ffffff;
 
 }
-.añade:hover{
-  background-color: #20460f;
+.añade:hover {
+  background-color: #115a0a;
+  transform: scale(1.1);
 
 }
-.cancela{
-  background-color: rgba(192, 3, 3, 0.829);
+
+.cancela {
+  background-color: rgba(179, 16, 84, 0.952);
+  text-shadow: 2px 2px 5px rgb(0, 0, 0);
   font-family: "Poppins", sans-serif;
-
-}
-.cancela:hover{
-  background-color: #6b291a;
+  color: #ffffff;
 
 }
 
- .card-body{
-background-color:#F2F2F2;
-box-shadow: 0 0 5px rgba(2, 0, 0, 0.5);
-border-radius: 10px;
- }
+.cancela:hover {
+background-color: #660b0b;
+transform: scale(1.1);
 
- .container{
+}
+
+
+
+
+.card-body {
+  /* background-color: rgba(255, 125, 4, 0.164); */
+  box-shadow: 0 0 5px rgba(2, 0, 0, 0.5);
   border-radius: 10px;
- }
+
+}
+
+.resaltado {
+  text-align: center;
+  background-color: rgba(255, 125, 4, 0.774);
+  box-sizing: border-box;
+  padding: 10px;
+  color: rgb(255, 255, 255);
+  margin-bottom: 10px;
+  border-radius: 10px;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+
+}
+
+.container {
+  border-radius: 10px;
+}
 
 .input-custom {
-  background-color: #f9fafb;
-  border: 1px solid #d1d5db;
+  background-color: #ffffff;
+  border: 1px solid #e4a803cc;
+  font-size: 1.5vh;
   color: #111827;
   border-radius: 0.5rem;
   width: 100%;
@@ -116,12 +170,13 @@ border-radius: 10px;
   transition: border-color 0.2s, box-shadow 0.2s;
 
 }
-.input-custom::placeholder {
-  color: #0000009d;
-}
 
-textarea:focus{
-  box-shadow: 0 0 5px rgba(255, 174, 0, 0.493);
+
+textarea:focus {
+  outline: none;
+  border: 2px solid rgb(255, 174, 0);
+  box-shadow: 0 0 5px rgba(255, 0, 0, 0.5);
+  /* Sombra roja suave */
 }
 
 /* Estilos para tablets */
@@ -157,13 +212,14 @@ textarea:focus{
     box-shadow: none;
   }
 
+  /* 
   .form-group label {
-    font-size: 0.9rem;
-  }
+    font-size: 4.5vh;
+  } */
 
   .form-group input,
   .form-group textarea {
-    font-size: 0.9rem;
+    /* font-size: 6vh; */
     padding: 0.5rem;
   }
 
