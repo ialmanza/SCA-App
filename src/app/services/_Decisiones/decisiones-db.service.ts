@@ -21,8 +21,6 @@ export class DecisionesDBService {
   }
 
   createItem(item: any): Observable<any> {
-    console.log(item, 'item en servicio');
-    console.log('creando area en el servicio');
     const payload = {
           rotulo: item.rotulo,
           area: item.area,
@@ -36,9 +34,6 @@ export class DecisionesDBService {
     const header = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    console.log(item, 'item en servicio');
-    console.log(typeof id, id);
-    console.log(`${'https://sca-v2b1.onrender.com/api/area/update'}/${id}/`);
     return this.http.put(`${'https://sca-v2b1.onrender.com/api/area/update'}/${id}/`, item, { headers: header });
   }
 

@@ -40,8 +40,6 @@ export class GrafoComponent implements OnInit {
       vinculos: this.vinculoService.getItems(),
       importantAreas: this.decisionesService.getImportantStatus()
     }).subscribe(({ vinculos, importantAreas }) => {
-      console.log('Vínculos:', vinculos);
-      console.log('Áreas Importantes:', importantAreas);
 
       // Extract vinculos array from response
       const vinculosList = (vinculos as any).vinculos.map((v: any[]) => ({
@@ -51,7 +49,6 @@ export class GrafoComponent implements OnInit {
       }));
 
       const graphData = this.generateGraphData(vinculosList, importantAreas);
-      console.log('Datos del Grafo:', graphData);
       this.createGraph(graphData);
     });
   }
@@ -64,11 +61,10 @@ export class GrafoComponent implements OnInit {
     const links: Link[] = [];
 
     vinculos.forEach((vinculo) => {
-      // Extract the source and target from the nombre
       const [source, target] = vinculo.nombre.split(' - ');
 
       if (source && target) {
-        // Add source node if it doesn't exist
+
         if (!nodesMap.has(source)) {
           nodesMap.set(source, {
             id: source,
@@ -79,7 +75,6 @@ export class GrafoComponent implements OnInit {
           });
         }
 
-        // Add target node if it doesn't exist
         if (!nodesMap.has(target)) {
           nodesMap.set(target, {
             id: target,
@@ -90,7 +85,6 @@ export class GrafoComponent implements OnInit {
           });
         }
 
-        // Add link if it doesn't exist
         const existingLink = links.find(
           link =>
             (link.source === source || (typeof link.source === 'object' && link.source.id === source)) &&

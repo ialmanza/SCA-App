@@ -2,11 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
 import { DropdbService } from '../../services/_DeleteDB/dropdb.service';
 import { CommonModule } from '@angular/common';
+import { NotificationService } from '../../services/_Notification/notification.service';
+import { NotificationsComponent } from "../notifications/notifications.component";
 
 @Component({
   selector: 'app-ultimopaso',
   standalone: true,
-  imports: [ CommonModule ],
+  imports: [CommonModule, NotificationsComponent],
   templateUrl: './ultimopaso.component.html',
   styleUrls: ['./ultimopaso.component.scss'],
   animations: [
@@ -27,10 +29,23 @@ import { CommonModule } from '@angular/common';
 export class UltimopasoComponent implements OnInit  {
   showWarning = false;
   isHovering = false;
+  isMobile = window.innerWidth <= 768;
 
-  constructor(private dropservice: DropdbService) {}
 
-  ngOnInit(): void {}
+  constructor(private dropservice: DropdbService, private notificationservice: NotificationService) {
+    window.addEventListener('resize', () => {
+      this.isMobile = window.innerWidth <= 768;
+      if (this.isMobile) {
+        this.showWarning = true;
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    if (this.isMobile) {
+      this.showWarning = true;
+    }
+  }
 
   onButtonHover(): void {
     this.showWarning = true;
@@ -50,12 +65,10 @@ export class UltimopasoComponent implements OnInit  {
     if (confirm('¿Está seguro que desea eliminar el proceso? Esta acción no se puede deshacer y deberá comenzar desde cero.')) {
       this.dropservice.dropDB().subscribe({
         next: (response) => {
-          console.log('Proceso eliminado exitosamente');
-          // Aquí puedes agregar la lógica para redireccionar o mostrar un mensaje de éxito
+          this.notificationservice.show('Proceso eliminado exitosamente', 'success');
         },
         error: (error) => {
-          console.error('Error al eliminar el proceso:', error);
-          // Aquí puedes agregar la lógica para manejar el error
+          this.notificationservice.show('Error al eliminar el proceso', 'error');
         }
       });
     }

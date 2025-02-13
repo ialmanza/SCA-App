@@ -5,12 +5,14 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { ComparacionModeService } from '../../services/_Comparacion/comparacion-mode.service';
 import { Subscription } from 'rxjs';
+import { NotificationService } from '../../services/_Notification/notification.service';
+import { NotificationsComponent } from "../notifications/notifications.component";
 
 
 @Component({
   selector: 'app-modo-de-comparacion',
   standalone: true,
-  imports: [ ReactiveFormsModule, CommonModule, FormsModule ],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, NotificationsComponent],
   providers: [ ComparacionModeService ],
   templateUrl: './modo-de-comparacion.component.html',
   styleUrl: './modo-de-comparacion.component.css'
@@ -32,7 +34,8 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private comparacionDbService: ComparacionModeService
+    private comparacionDbService: ComparacionModeService,
+    private notificationservice: NotificationService
   ) {
     this.comparisonForm = this.fb.group({
       order: ['', [Validators.required, Validators.min(1)]],
@@ -58,7 +61,7 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
         this.comparisonModes = modes.sort((a, b) => a.order - b.order);
       },
       error: (error) => {
-        console.error('Error loading comparison modes:', error);
+        this.notificationservice.show('Error al cargar los modos de comparación', 'error');
       }
     });
     this.subscriptions.add(subscription);
@@ -69,10 +72,11 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
       .updateItem(Number(mode.id), { emoji: mode.symbol }) // Actualiza solo el emoji
       .subscribe({
         next: () => {
-          console.log(`Emoji actualizado para el modo: ${mode.id}`);
+          this.notificationservice.show('Emoji actualizado correctamente', 'success');
         },
         error: (error) => {
-          console.error('Error updating emoji:', error);
+          this.notificationservice.show('Error al actualizar el emoji', 'error');
+
         },
       });
     this.subscriptions.add(subscription);
@@ -89,7 +93,7 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
               this.resetForm();
             },
             error: (error) => {
-              console.error('Error updating comparison mode:', error);
+              this.notificationservice.show('Error al actualizar el modo de comparación', 'error');
             }
           });
         this.subscriptions.add(subscription);
@@ -102,7 +106,7 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
               this.resetForm();
             },
             error: (error) => {
-              console.error('Error creating comparison mode:', error);
+              this.notificationservice.show('Error al crear el modo de comparación', 'error');
             }
           });
         this.subscriptions.add(subscription);
@@ -120,7 +124,6 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
     });
   }
 
-
   deleteMode(id: string): void {
     if (confirm('¿Está seguro de eliminar este modo de comparación?')) {
       const subscription = this.comparacionDbService
@@ -130,7 +133,7 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
             this.loadComparisonModes();
           },
           error: (error) => {
-            console.error('Error deleting comparison mode:', error);
+            this.notificationservice.show('Error al eliminar el modo de comparación', 'error');
           }
         });
       this.subscriptions.add(subscription);

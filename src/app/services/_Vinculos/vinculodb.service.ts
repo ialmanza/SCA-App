@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { area } from 'd3';
 import { Observable} from 'rxjs';
 
 @Injectable({
@@ -15,34 +14,19 @@ export class VinculodbService {
     return this.http.get<any[]>(this.apiUrl);
   }
 
-  createItem(item1: number, item2: number): Observable<any> { //QUE FUNCIONA CORRECTAMENTE
+  createItem(item1: number, item2: number): Observable<any> {
     const payload = {
           "area_id": item1,
           "related_area_id": item2
         };
     return this.http.post('https://sca-v2b1.onrender.com/api/areas/vinculo/', payload);
 
-  } //EN DECISIONES FORM HAY OTRO CREAR
-
-  // createItem(item1: number, item2: number, id : number): Observable<any> {
-  //   console.log(item1, item2, id, 'item en servicio');
-  //   console.log(typeof id, id);
-  //   const payload = {
-  //         "area_id": item1,
-  //         "related_area_id": item2,
-  //         "id": id
-  //       };
-  //   return this.http.post('https://sca-v2b1.onrender.com/api/areas/vinculo/', payload);
-
-  // }
+  }
 
   updateItem(id: number, item: any): Observable<any> {
     const header = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    console.log(item, 'item en servicio');
-    console.log(typeof id, id);
-    console.log(`${'https://sca-v2b1.onrender.com/api/area/update'}/${id}/`);
     return this.http.put(`${'https://sca-v2b1.onrender.com/api/area/update'}/${id}/`, item, { headers: header });
   }
 
@@ -55,9 +39,6 @@ export class VinculodbService {
       area_id: area_id,
       related_area_id: related_area_id
     };
-
-    // Para debug
-    console.log('Payload enviado:', JSON.stringify(payload));
 
     return this.http.delete<void>('https://sca-v2b1.onrender.com/api/areas/vinculo/', {
       headers: headers,

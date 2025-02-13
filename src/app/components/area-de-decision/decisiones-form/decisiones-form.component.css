@@ -408,7 +408,7 @@ label {
   z-index: 0;
 }
 
-/* Tablet Styles (768px to 1023px) */
+
 @media screen and (max-width: 1023px) {
 
   .titulo-container,
@@ -451,7 +451,7 @@ label {
   }
 }
 
-/* Mobile Styles (max-width: 767px) */
+
 @media screen and (max-width: 767px) {
 
   .titulo-container,
@@ -533,7 +533,7 @@ label {
 }
 
 
-/* Estilos base para el contenedor de la tabla */
+
 app-tabla-decisiones {
   display: block;
   width: 100%;
@@ -543,7 +543,7 @@ app-tabla-decisiones {
   padding: 0 15px;
 }
 
-/* Tablet Styles */
+
 @media screen and (max-width: 1023px) {
   app-tabla-decisiones {
     padding: 0 10px;
@@ -558,7 +558,7 @@ app-tabla-decisiones {
   }
 }
 
-/* Mobile Styles */
+
 @media screen and (max-width: 767px) {
   app-tabla-decisiones {
     padding: 0 5px;
@@ -576,20 +576,20 @@ app-tabla-decisiones {
 
 }
 
-/* Improved Responsive Design for Paso 6 */
+
 @media screen and (max-width: 1023px) {
   .overflow-x-auto {
     width: 100vw;
-    /* Full viewport width */
     margin: 0 auto;
     padding: 0 10px;
-    /* Add some padding */
+
     box-sizing: border-box;
   }
 
   table {
     width: 100%;
     min-width: 320px;
+
     /* Ensure minimum width for smaller devices */
     border-collapse: collapse;
   }
@@ -597,6 +597,12 @@ app-tabla-decisiones {
   /* Adjust table cell sizes */
   td,
   th {
+
+    border-collapse: collapse;
+  }
+
+
+  td, th {
     padding: 8px 4px;
     font-size: 0.8rem;
     word-break: break-word;
@@ -605,28 +611,25 @@ app-tabla-decisiones {
 
 @media screen and (max-width: 767px) {
 
-  /* Mobile-specific adjustments */
+
   .overflow-x-auto {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
-    /* Smooth scrolling on iOS */
   }
 
   table {
     font-size: 0.7rem;
   }
 
-  /* Buttons */
-  .mod,
-  .elim,
-  .bot {
+
+  .mod, .elim, .bot {
     padding: 6px 10px;
     font-size: 0.7rem;
     min-width: auto;
     white-space: nowrap;
   }
 
-  /* Modal adjustments */
+
   .modalabierto {
     width: 90%;
     max-width: 90%;
@@ -634,21 +637,20 @@ app-tabla-decisiones {
     padding: 15px;
   }
 
-  /* Ensure inputs are fully visible */
   input {
     width: 100%;
     font-size: 0.8rem;
     padding: 8px;
   }
 
-  /* Buttons container */
+
   .flex.justify-center {
     flex-direction: row;
     gap: 10px;
   }
 }
 
-/* Additional global styles for better responsiveness */
+
 * {
   box-sizing: border-box;
   max-width: 100%;

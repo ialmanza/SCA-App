@@ -80,7 +80,6 @@
   margin-left: 0.5rem;
 }
 
-/* Estilos para la última área de decisión */
 .decision-area:last-child .options-container {
   display: flex;
   flex-direction: column;
@@ -118,13 +117,10 @@
   gap: 2rem;
 }
 
-/* Última área de decisión */
 .decision-area:last-child .options-container {
-  align-items: stretch; /* Asegura que las opciones ocupen todo el ancho disponible */
+  align-items: stretch;
 }
 
-
-/* Nuevos estilos para la última área */
 .last-area-item {
   width: 100%;
   padding: 0.5rem;
@@ -151,19 +147,16 @@
   min-width: 150px;
 }
 
-/* Asegurarse que la última columna tiene un ancho fijo */
 .decision-area:last-child {
   min-width: 300px;
 }
 
-/* Ajustar el espaciado de los títulos */
 .area-titles {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) 150px;
   gap: 2rem;
 }
 
-/* Ajustar el contenedor principal para el nuevo layout */
 .decision-tree {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) 150px;
