@@ -116,13 +116,19 @@ export class DecisionesFormComponent {
   }
 
   updateDecision(updatedDecision: Decision) {
-    this.decisionesDBService.updateItem(updatedDecision.id!, updatedDecision)
+    const payload = {
+      rotulo: updatedDecision.rotulo,
+      area: updatedDecision.area,
+      description: updatedDecision.description
+    };
+
+    this.decisionesDBService.updateItem(updatedDecision.id!, payload)
       .pipe(
-        switchMap(() => this.decisionesDBService.getItems()),
         catchError(error => {
           this.notificationservice.show('Error al actualizar u obtener las decisiones', 'error');
           return EMPTY;
-        })
+        }),
+        switchMap(() => this.decisionesDBService.getItems())
       )
       .subscribe({
         next: (decisiones: Decision[]) => {
@@ -130,14 +136,12 @@ export class DecisionesFormComponent {
           this.cerrarModal();
           this.cerrarModalEditarDecision();
           this.notificationservice.show('¡Decisión guardada correctamente!', 'success');
-
         },
         error: (error: any) => {
           this.notificationservice.show('Error al guardar la decisión', 'error');
         }
       });
   }
-
 
   avanzarPaso() {
     if (this.pasoActual < 20) {
