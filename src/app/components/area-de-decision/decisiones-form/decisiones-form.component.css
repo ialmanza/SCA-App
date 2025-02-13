@@ -1,4 +1,3 @@
-
 .content-wrapper {
   display: flex;
   gap: 1rem;
@@ -11,7 +10,7 @@
 }
 
 
-.comparacion{
+.comparacion {
   background-color: #5099c4;
   text-align: center;
   padding: 30px;
@@ -22,7 +21,8 @@
   width: 100vh;
 
 }
-.comparacion h1{
+
+.comparacion h1 {
   color: #f5eee2;
   font-size: 2.5rem;
   font-family: 'Arial', sans-serif;
@@ -32,7 +32,8 @@
   position: relative;
   z-index: 1;
 }
-.selección{
+
+.selección {
   background-color: #9566b4;
   text-align: center;
   padding: 30px;
@@ -43,7 +44,8 @@
   width: 100vh;
 
 }
-.selección h1{
+
+.selección h1 {
   color: #f5eee2;
   font-size: 2.5rem;
   font-family: 'Arial', sans-serif;
@@ -53,6 +55,7 @@
   position: relative;
   z-index: 1;
 }
+
 .grafo-container {
   flex: 1;
   max-width: 400px;
@@ -74,7 +77,7 @@
   }
 }
 
- .container {
+.container {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -100,7 +103,8 @@
   margin-top: 24px;
 }
 
-.contact-card, .confirmation-card {
+.contact-card,
+.confirmation-card {
   width: 80%;
   max-width: 600px;
   margin: 0 auto;
@@ -111,12 +115,14 @@
   transition: all 0.3s ease;
 }
 
-.contact-card:hover, .confirmation-card:hover {
+.contact-card:hover,
+.confirmation-card:hover {
   transform: scale(1.02);
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-.confirmar-button, .cancelar-button {
+.confirmar-button,
+.cancelar-button {
   padding: 0.75rem 1.5rem;
   border-radius: 0.375rem;
   font-weight: 500;
@@ -174,7 +180,8 @@
   margin-top: 20px;
 }
 
-.page-size-options, .pagination-buttons {
+.page-size-options,
+.pagination-buttons {
   display: flex;
   align-items: center;
 }
@@ -204,8 +211,8 @@
   background-color: #0056b3;
 }
 
-.alto{
-  margin-top:5%;
+.alto {
+  margin-top: 5%;
   width: 50vw;
 }
 
@@ -232,7 +239,8 @@
   margin: auto;
 }
 
-.table th, .table td {
+.table th,
+.table td {
   border: 1px solid #ddd;
   padding: 8px;
   text-align: center;
@@ -242,13 +250,12 @@
   display: flex;
   justify-content: center;
 }
-h2{
-    font-size: 3vh;
-    text-align: center;
-    font-family: "Poppins", sans-serif;
 
+h2 {
+  font-size: 3vh;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
 }
-
 
 .skills-list {
   display: flex;
@@ -256,29 +263,36 @@ h2{
   padding: 0;
   margin: 0;
 }
-.continuar{
+
+.continuar {
   width: 50%;
-  height: 50px;
+  max-width: 300px; /* No crece más de 200px */
+  height: 60%;
+  min-height: 60px;
+  box-shadow: 0 5px 10px rgba(0, 3, 0, 0.5);
+
   background-color: #3832a3;
-color: whitesmoke;
-font-family: "Poppins", sans-serif;
-border-radius: 8px;
-display: inline-block;
-display: block;
-margin: 0 auto;
-font-size: 2.5vh;
+  color: whitesmoke;
+  font-family: "Poppins", sans-serif;
+  border-radius: 8px;
+  display: inline-block;
+  display: block;
+  margin: 0 auto;
+  font-size: 2.5vh;
 }
 
-.continuar:hover{
+.continuar:hover {
   background-color: #1e1b57;
 
   transform: scale(1.1);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
 }
+
 @media (min-width: 768px) {
   .col {
     flex: 1;
   }
+
   .form-control {
     max-width: 400px;
   }
@@ -295,51 +309,64 @@ font-size: 2.5vh;
   margin-top: 10px;
 }
 
-th{
+th {
   font-size: 2vh;
 }
-td, button{
+
+td,
+button {
   font-size: 1.7vh;
 }
-.mod{
+
+.mod {
   background-color: rgba(0, 128, 0, 0.808);
   color: aliceblue;
   border-radius: 10px;
   padding: 0.5em;
 }
-.mod:hover{
-background-color: rgb(1, 94, 1);
+
+.mod:hover {
+  background-color: rgb(1, 94, 1);
 }
-.elim{
+
+.elim {
   background-color: rgba(192, 3, 3, 0.829);
-color: aliceblue;
+  color: aliceblue;
   border-radius: 10px;
   padding: 0.5em;
 }
-.elim:hover{
+
+.elim:hover {
   background-color: rgb(150, 0, 0);
 }
+
 .icon {
   width: 24px;
   height: 24px;
 }
-.modalabierto{
+
+.modalabierto {
   width: 50%;
   padding: 10px;
   border: 1px solid #a3880f;
   font-size: 2vh;
 }
-input:focus, textarea:focus{
+
+input:focus,
+textarea:focus {
   outline: none;
   box-shadow: 0 0 5px rgba(255, 118, 5, 0.5);
 }
-.bot{
+
+.bot {
 
   margin-right: 50px;
 }
-label{
+
+label {
   font-size: 1.9vh;
 }
+
 .titulo-container {
   background-color: #e65817;
   text-align: center;
@@ -350,13 +377,15 @@ label{
   position: relative;
   width: 100vh;
 }
-.diseño{
+
+.diseño {
   background-color: #279f23cb;
   color: white;
 
 }
+
 .titulo-container h1 {
-  color: #f5eee2;
+  color: white;
   font-size: 2.5rem;
   font-family: 'Arial', sans-serif;
   text-transform: uppercase;
@@ -381,12 +410,17 @@ label{
 
 
 @media screen and (max-width: 1023px) {
-  .titulo-container, .comparacion, .selección {
+
+  .titulo-container,
+  .comparacion,
+  .selección {
     width: 90vw;
     padding: 20px;
   }
 
-  .titulo-container h1, .comparacion h1, .selección h1 {
+  .titulo-container h1,
+  .comparacion h1,
+  .selección h1 {
     font-size: 2rem;
   }
 
@@ -394,7 +428,8 @@ label{
     width: 80%;
   }
 
-  .contact-card, .confirmation-card {
+  .contact-card,
+  .confirmation-card {
     width: 90%;
   }
 
@@ -410,19 +445,25 @@ label{
     font-size: 1.8vh;
   }
 
-  td, button {
+  td,
+  button {
     font-size: 1.5vh;
   }
 }
 
 
 @media screen and (max-width: 767px) {
-  .titulo-container, .comparacion, .selección {
+
+  .titulo-container,
+  .comparacion,
+  .selección {
     width: 95vw;
     padding: 15px;
   }
 
-  .titulo-container h1, .comparacion h1, .selección h1 {
+  .titulo-container h1,
+  .comparacion h1,
+  .selección h1 {
     font-size: 1.5rem;
     letter-spacing: 1px;
   }
@@ -432,7 +473,8 @@ label{
     padding: 15px;
   }
 
-  .contact-card, .confirmation-card {
+  .contact-card,
+  .confirmation-card {
     width: 95%;
     padding: 15px;
   }
@@ -462,7 +504,8 @@ label{
     font-size: 1.6vh;
   }
 
-  td, button {
+  td,
+  button {
     font-size: 1.4vh;
   }
 
@@ -539,12 +582,22 @@ app-tabla-decisiones {
     width: 100vw;
     margin: 0 auto;
     padding: 0 10px;
+
     box-sizing: border-box;
   }
 
   table {
     width: 100%;
     min-width: 320px;
+
+    /* Ensure minimum width for smaller devices */
+    border-collapse: collapse;
+  }
+
+  /* Adjust table cell sizes */
+  td,
+  th {
+
     border-collapse: collapse;
   }
 
@@ -557,6 +610,7 @@ app-tabla-decisiones {
 }
 
 @media screen and (max-width: 767px) {
+
 
   .overflow-x-auto {
     overflow-x: auto;
