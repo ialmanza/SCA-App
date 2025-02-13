@@ -13,15 +13,20 @@
   padding-bottom: 1rem;
   width: 100%;
   justify-content: space-between;
+  text-align: center;
 }
 
 .area-title {
   padding: 0.5rem 1rem;
-  background-color:#c1f9bc;
   border-radius: 4px;
+  background-color: #279f2386;
+  color: white;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
   min-width: 150px;
+  height: 50%;
+  min-height:60px ;
   text-align: center;
-  font-size: 1.9vh;
+  font-size: 2vh;
 
 }
 

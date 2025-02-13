@@ -1,10 +1,10 @@
 <app-notifications></app-notifications>
 <div class="overflow-x-auto mt-6">
   <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden" style="margin: auto;">
-    <thead class="bg-gray-200">
+    <thead>
       <tr>
-        <th class="py-3 px-4 text-center text-gray-700">Área de decisión</th>
-        <th class="py-3 px-4 text-center text-gray-700">Seleccionar</th>
+        <th class="py-3 px-4 text-left">Área de decisión</th>
+        <th class="py-3 px-4 text-left">Seleccionar</th>
       </tr>
     </thead>
     <tbody class="divide-y divide-gray-200">
@@ -16,7 +16,7 @@
           [disabled]="updatingDecisions[decision.id!]"
           [checked]="decision.is_important"
           (change)="onCheckboxChange(decision, $event)"
-          class="form-checkbox h-5 w-5 text-blue-600">
+          class="form-checkbox h-5 w-5 text-orange-600">
         <span *ngIf="updatingDecisions[decision.id!]" class="ml-2 text-sm text-gray-500">
           Actualizando...
         </span>
