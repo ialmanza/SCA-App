@@ -263,6 +263,36 @@ h2 {
   padding: 0;
   margin: 0;
 }
+.avanzar{
+  border-radius: 10px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  width: 45%; /* Se adapta pero mantiene proporción */
+  max-width: 200px; /* No crece más de 200px */
+  height: 100%;
+  min-height: 50px;
+  padding: 10px 20px;
+  margin: 5px;
+  background-color: #3832a3;
+  color: whitesmoke;
+  font-size: 2.2vh;
+  color: aliceblue;
+  box-shadow: 0 5px 10px rgba(0, 3, 0, 0.5);
+}
+.atras{
+  border-radius: 10px;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  width: 45%; /* Se adapta pero mantiene proporción */
+  max-width: 200px; /* No crece más de 200px */
+  height: 100%;
+  min-height: 50px;
+  padding: 10px 20px;
+  margin: 5px;
+  background-color: #3d3c50;
+  color: whitesmoke;
+  font-size: 2.2vh;
+  color: aliceblue;
+  box-shadow: 0 5px 10px rgba(0, 3, 0, 0.5);
+}
 
 .continuar {
   width: 50%;
@@ -270,7 +300,6 @@ h2 {
   height: 60%;
   min-height: 60px;
   box-shadow: 0 5px 10px rgba(0, 3, 0, 0.5);
-
   background-color: #3832a3;
   color: whitesmoke;
   font-family: "Poppins", sans-serif;
@@ -281,11 +310,15 @@ h2 {
   font-size: 2.5vh;
 }
 
-.continuar:hover {
+.continuar:hover, .avanzar:hover{
   background-color: #1e1b57;
-
   transform: scale(1.1);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+}
+.atras:hover{
+  background-color: #2d2d2e;
+  transform: scale(1.1);
+  box-shadow: 0 4px 10px rgba(46, 45, 45, 0.4);
 }
 
 @media (min-width: 768px) {
