@@ -1,6 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { area } from 'd3';
 import { Observable} from 'rxjs';
 
 @Injectable({
@@ -28,9 +27,6 @@ export class VinculodbService {
     const header = new HttpHeaders({
       'Content-Type': 'application/json'
     });
-    console.log(item, 'item en servicio');
-    console.log(typeof id, id);
-    console.log(`${'https://sca-v2b1.onrender.com/api/area/update'}/${id}/`);
     return this.http.put(`${'https://sca-v2b1.onrender.com/api/area/update'}/${id}/`, item, { headers: header });
   }
 

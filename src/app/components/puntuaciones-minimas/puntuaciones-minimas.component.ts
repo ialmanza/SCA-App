@@ -7,11 +7,12 @@ import { FormBuilder, FormGroup, FormArray } from '@angular/forms';
 import { catchError, finalize } from 'rxjs/operators';
 import { of } from 'rxjs';
 import { CommonModule } from '@angular/common';
+import { NotificationService } from '../../services/_Notification/notification.service';
 
 @Component({
   selector: 'app-puntuaciones-minimas',
   standalone: true,
-  imports: [ ReactiveFormsModule, MatInputModule, MatProgressSpinnerModule, CommonModule ],
+  imports: [ReactiveFormsModule, MatInputModule, MatProgressSpinnerModule, CommonModule],
   templateUrl: './puntuaciones-minimas.component.html',
   styleUrl: './puntuaciones-minimas.component.css'
 })
@@ -43,7 +44,6 @@ export class PuntuacionesMinimasComponent implements OnInit {
     this.comparacionService.getItems().pipe(
       catchError(error => {
         this.error = 'Error al cargar las áreas importantes';
-        console.error('Error:', error);
         return of([]);
       }),
       finalize(() => this.loading = false)
@@ -75,7 +75,6 @@ export class PuntuacionesMinimasComponent implements OnInit {
     this.comparacionService.updatePuntuacionMinima(id, puntuacion).pipe(
       catchError(error => {
         this.error = 'Error al actualizar la puntuación';
-        console.error('Error:', error);
         return of(null);
       }),
       finalize(() => this.loading = false)

@@ -90,7 +90,7 @@ export class DecisionesFormComponent {
 
 
     } else {
-      console.error('Áreas no válidas para crear un vínculo.');
+      this.notificationservice.show('Áreas no válidas para crear un vínculo', 'error');
     }
   }
 
@@ -99,7 +99,7 @@ export class DecisionesFormComponent {
     this.decisionesDBService.deleteItem(decisiones.id!)
       .pipe(
         catchError(error => {
-          console.error('Error al eliminar la decisión:', error);
+          this.notificationservice.show('Error al eliminar la decisión', 'error');
           return EMPTY;
         }),
         switchMap(() => this.decisionesDBService.getItems())
@@ -110,7 +110,7 @@ export class DecisionesFormComponent {
           this.cerrarModalEliminarDecision();
         },
         error: (error) => {
-          console.error('Error al obtener las decisiones actualizadas:', error);
+          this.notificationservice.show('Error al obtener las decisiones actualizadas', 'error');
         }
       });
   }
@@ -120,7 +120,7 @@ export class DecisionesFormComponent {
       .pipe(
         switchMap(() => this.decisionesDBService.getItems()),
         catchError(error => {
-          console.error('Error al actualizar u obtener las decisiones:', error);
+          this.notificationservice.show('Error al actualizar u obtener las decisiones', 'error');
           return EMPTY;
         })
       )
@@ -168,7 +168,7 @@ export class DecisionesFormComponent {
     this.decisionesDBService.updateImportantStatus(decisionId, isChecked)
       .pipe(
         catchError(error => {
-          console.error('Error al actualizar el estado de importancia:', error);
+          this.notificationservice.show('Error al actualizar el estado de importancia', 'error');
           checkbox.checked = !isChecked;
           return EMPTY;
         }),
@@ -183,7 +183,7 @@ export class DecisionesFormComponent {
           delete this.updatingDecisions[decisionId];
         },
         error: (error) => {
-          console.error('Error al obtener las decisiones actualizadas:', error);
+          this.notificationservice.show('Error al obtener las decisiones actualizadas', 'error');
           delete this.updatingDecisions[decisionId];
         }
       });
@@ -203,8 +203,6 @@ export class DecisionesFormComponent {
     };
 
     this.opcionesDBService.createItem(nuevaOpcion).subscribe(() => {
-      console.log(nuevaOpcion.cod_area);
-      console.log(typeof nuevaOpcion.cod_area);
       this.opcionesDBService.getItems().subscribe((opcionesActualizadas) => {
         this.opciones = opcionesActualizadas;
       });
@@ -216,12 +214,11 @@ export class DecisionesFormComponent {
   deleteOpcion(opcion: Opcion) {
     this.opcionesDBService.deleteItem(opcion.id!).subscribe({
       next: () => {
-        console.log(`Opción con id ${opcion.id} eliminada correctamente`);
         this.notificationservice.show('¡Opción eliminada correctamente!', 'success');
         this.loadOpciones();
       },
       error: (err) => {
-        console.error(`Error eliminando la opción con id ${opcion.id}:`, err);
+        this.notificationservice.show('Error al eliminar la opcion', 'error');
       },
     });
   }
@@ -232,7 +229,7 @@ export class DecisionesFormComponent {
         this.opciones = opciones;
       },
       error: (err) => {
-        console.error('Error al cargar las opciones:', err);
+        this.notificationservice.show('Error al cargar las opciones', 'error');
       },
     });
   }

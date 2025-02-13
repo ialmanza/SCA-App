@@ -2,11 +2,13 @@ import { Component, Input } from '@angular/core';
 import { Opcion } from '../../../models/opcion';
 import { OpcionesDBService } from '../../../services/_Opciones/opciones-db.service';
 import { Observable } from 'rxjs';
+import { NotificationService } from '../../../services/_Notification/notification.service';
+import { NotificationsComponent } from "../../notifications/notifications.component";
 
 @Component({
   selector: 'app-opcion',
   standalone: true,
-  imports: [],
+  imports: [NotificationsComponent],
   providers: [OpcionesDBService],
   templateUrl: './opcion.component.html',
   styleUrl: './opcion.component.css'
@@ -16,17 +18,16 @@ export class OpcionComponent {
   editing: boolean = false;
 
 
-  constructor( private opcionesDBService: OpcionesDBService) {}
+  constructor( private opcionesDBService: OpcionesDBService, private notificationservice: NotificationService) {}
 
   deleteOpcion(opcion: Opcion) {
-    console.log('Eliminando opcion', opcion)
         this.opcionesDBService.deleteItem(opcion.id!).subscribe({
           next: () => {
-            console.log(`Opción con id ${opcion.id} eliminada correctamente`);
+            this.notificationservice.show('¡Opción eliminada correctamente!', 'success');
             this.opcionesDBService.getItems();
           },
           error: (err) => {
-            console.error(`Error eliminando la opción con id ${opcion.id}:`, err);
+            this.notificationservice.show('Error al eliminar la opcion', 'error');
           },
         });
       }

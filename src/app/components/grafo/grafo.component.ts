@@ -40,8 +40,6 @@ export class GrafoComponent implements OnInit {
       vinculos: this.vinculoService.getItems(),
       importantAreas: this.decisionesService.getImportantStatus()
     }).subscribe(({ vinculos, importantAreas }) => {
-      console.log('Vínculos:', vinculos);
-      console.log('Áreas Importantes:', importantAreas);
 
       // Extract vinculos array from response
       const vinculosList = (vinculos as any).vinculos.map((v: any[]) => ({
@@ -51,7 +49,6 @@ export class GrafoComponent implements OnInit {
       }));
 
       const graphData = this.generateGraphData(vinculosList, importantAreas);
-      console.log('Datos del Grafo:', graphData);
       this.createGraph(graphData);
     });
   }

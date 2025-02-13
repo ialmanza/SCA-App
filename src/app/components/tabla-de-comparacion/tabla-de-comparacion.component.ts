@@ -48,7 +48,6 @@ export class TablaDeComparacionComponent implements OnInit {
     );
 
     this.opciones$.subscribe(opciones => {
-      console.log('Opciones recibidas:', opciones);
       this.opciones = opciones;
     });
   }
@@ -161,8 +160,6 @@ export class TablaDeComparacionComponent implements OnInit {
       value: state.value
     }));
 
-    console.log('Datos a enviar:', cellsToSave);
-
     this.comparisonCellService.createCells(cellsToSave).subscribe(
       savedCells => {
         this.notificationService.show('Todas las celdas guardadas exitosamente', 'success');
@@ -179,8 +176,6 @@ export class TablaDeComparacionComponent implements OnInit {
       modeId: state.modeId,
       value: state.value
     }));
-
-    console.log('Datos a enviar:', cellsToSave);
 
     this.comparisonCellService.updateCells(cellsToSave).subscribe(
       savedCells => {

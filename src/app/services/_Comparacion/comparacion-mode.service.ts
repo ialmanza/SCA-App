@@ -47,9 +47,6 @@ export class ComparacionModeService {
       puntuacion_minima: puntuacion
     };
 
-    console.log("url",`${'https://sca-v2b1.onrender.com/api/comparacion/update/'}${id}/`);
-
-    console.log("updateData",typeof updateData, updateData);
     return this.http.patch(
       `${'https://sca-v2b1.onrender.com/api/comparacion/update/'}${id}/`,
       updateData,

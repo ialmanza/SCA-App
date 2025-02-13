@@ -3,11 +3,13 @@ import { catchError, EMPTY, switchMap } from 'rxjs';
 import { Decision } from '../../../models/decision';
 import { DecisionesDBService } from '../../../services/_Decisiones/decisiones-db.service';
 import { CommonModule } from '@angular/common';
+import { NotificationService } from '../../../services/_Notification/notification.service';
+import { NotificationsComponent } from "../../notifications/notifications.component";
 
 @Component({
   selector: 'app-decision-check',
   standalone: true,
-  imports: [ CommonModule ],
+  imports: [CommonModule, NotificationsComponent],
   templateUrl: './decision-check.component.html',
   styleUrl: './decision-check.component.css'
 })
@@ -16,7 +18,7 @@ export class DecisionCheckComponent {
   decisiones: Decision[] = [];
   areas: Decision[] = [];
 
-  constructor( private decisionesDBService: DecisionesDBService ) {
+  constructor( private decisionesDBService: DecisionesDBService, private notificationsservice: NotificationService ) {
   this.decisiones = [];
   }
 
@@ -37,7 +39,7 @@ export class DecisionCheckComponent {
     this.decisionesDBService.updateImportantStatus(decisionId, isChecked)
       .pipe(
         catchError(error => {
-          console.error('Error al actualizar el estado de importancia:', error);
+          this.notificationsservice.show('Error al actualizar el estado de importancia', 'error');
           checkbox.checked = !isChecked;
           return EMPTY;
         }),
@@ -52,7 +54,7 @@ export class DecisionCheckComponent {
           delete this.updatingDecisions[decisionId];
         },
         error: (error) => {
-          console.error('Error al obtener las decisiones actualizadas:', error);
+          this.notificationsservice.show('Error al obtener las decisiones actualizadas', 'error');
           delete this.updatingDecisions[decisionId];
         }
       });

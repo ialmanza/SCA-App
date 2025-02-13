@@ -4,6 +4,7 @@ import { DecisionesDBService } from '../../../services/_Decisiones/decisiones-db
 import { Decision } from '../../../models/decision';
 import { FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { catchError, EMPTY, switchMap } from 'rxjs';
+import { NotificationService } from '../../../services/_Notification/notification.service';
 
 @Component({
   selector: 'app-tabla-decisiones',
@@ -22,7 +23,7 @@ export class TablaDecisionesComponent {
   modalEditarDecisionAbierto: boolean = false;
   areas: Decision[] = [];
 
-  constructor(  private decisionesDBService: DecisionesDBService) {
+  constructor(  private decisionesDBService: DecisionesDBService, private notificationservice: NotificationService) {
   this.decisiones = [];
   }
 
@@ -51,7 +52,7 @@ export class TablaDecisionesComponent {
     this.decisionesDBService.updateItem(updatedDecision.id!, updatedDecision)
       .pipe(
         catchError(error => {
-          console.error('Error al actualizar la decisión:', error);
+          this.notificationservice.show('Error al actualizar la decisión', 'error');
           return EMPTY;
         }),
         switchMap(() => this.decisionesDBService.getItems())
@@ -63,7 +64,7 @@ export class TablaDecisionesComponent {
           this.cerrarModalEditarDecision();
         },
         error: (error: any) => {
-          console.error('Error al obtener las decisiones actualizadas:', error);
+          this.notificationservice.show('Error al obtener las decisiones actualizadas', 'error');
         }
       });
   }
@@ -83,7 +84,7 @@ export class TablaDecisionesComponent {
     this.decisionesDBService.deleteItem(decisiones.id!)
     .pipe(
       catchError(error => {
-        console.error('Error al eliminar la decisión:', error);
+        this.notificationservice.show('Error al eliminar la decisión', 'error');
         return EMPTY;
       }),
       switchMap(() => this.decisionesDBService.getItems())
@@ -94,7 +95,7 @@ export class TablaDecisionesComponent {
         this.cerrarModalEliminarDecision();
       },
       error: (error) => {
-        console.error('Error al obtener las decisiones actualizadas:', error);
+        this.notificationservice.show('Error al obtener las decisiones actualizadas', 'error');
       }
     });
 }

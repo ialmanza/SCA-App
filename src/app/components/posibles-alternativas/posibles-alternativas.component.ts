@@ -8,6 +8,8 @@ import {OpcionesDBService} from '../../services/_Opciones/opciones-db.service';
 import { SelectedPathsService } from '../../services/selected-path.service';
 import { BehaviorSubject, firstValueFrom, forkJoin } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
+import { NotificationService } from '../../services/_Notification/notification.service';
+import { NotificationsComponent } from "../notifications/notifications.component";
 
 interface DecisionNode {
   areaTitle: string;
@@ -26,7 +28,7 @@ interface DecisionNode {
 @Component({
   selector: 'app-posibles-alternativas',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NotificationsComponent],
   providers: [SelectedPathsService, DecisionesDBService, OpcionesDBService],
   templateUrl: './posibles-alternativas.component.html',
   styleUrls: ['./posibles-alternativas.component.css'],
@@ -46,7 +48,8 @@ export class PosiblesAlternativasComponent implements OnInit {
     private opcionService: OpcionesDBService,
     private selectedPathsService: SelectedPathsService,
     private decisionService: DecisionesDBService,
-    private changeDetectorRef: ChangeDetectorRef
+    private changeDetectorRef: ChangeDetectorRef,
+    private notificationservice : NotificationService
   ) {}
 
   async ngOnInit(): Promise<void> {
@@ -54,7 +57,8 @@ export class PosiblesAlternativasComponent implements OnInit {
       const importantAreas = await firstValueFrom(this.decisionService.getImportantStatus());
 
       if (importantAreas.length === 0) {
-        console.warn('No hay áreas importantes');
+        this.notificationservice.show('No hay áreas importantes', 'info');
+
         return;
       }
 
@@ -68,7 +72,7 @@ export class PosiblesAlternativasComponent implements OnInit {
       this.isLoading = false;
       this.changeDetectorRef.detectChanges();
     } catch (error) {
-      console.error('Error en la inicialización:', error);
+      this.notificationservice.show('Error en la inicialización', 'error');
       this.isLoading = false;
     }
   }
@@ -87,7 +91,7 @@ export class PosiblesAlternativasComponent implements OnInit {
       this.opciones = opciones;
       this.buildDecisionTree();
     } catch (error) {
-      console.error('Error al cargar datos:', error);
+      this.notificationservice.show('Error al cargar datos', 'error');
       throw error;
     }
   }
@@ -95,11 +99,10 @@ export class PosiblesAlternativasComponent implements OnInit {
   async loadExistingPaths(): Promise<void> {
     try {
       const paths = await firstValueFrom(this.selectedPathsService.getPathsFromBackend());
-      console.log('Paths obtenidos:', paths);
       this.paths = paths;
       this.updateTreeSelections();
     } catch (error) {
-      console.error('Error obteniendo paths:', error);
+      this.notificationservice.show('Error obteniendo paths', 'error');
       throw error;
     }
   }
@@ -135,11 +138,11 @@ export class PosiblesAlternativasComponent implements OnInit {
       this.selectedPathsService.addPathToBackend(hexCode, numericPaths.map(String))
         .subscribe({
           next: (response) => {
-            console.log('Alternativa creada exitosamente:', response);
+            this.notificationservice.show('Alternativa creada exitosamente', 'success');
             this.loadExistingPaths();
           },
           error: (error) => {
-            console.error('Error creando alternativa:', error);
+            this.notificationservice.show('Error creando alternativa', 'error');
             option.selected = false;
             this.changeDetectorRef.detectChanges();
           },
@@ -152,11 +155,11 @@ export class PosiblesAlternativasComponent implements OnInit {
       this.selectedPathsService.deletePathFromBackend(option.id,hexCode)
         .subscribe({
           next: (response) => {
-            console.log('Alternativa eliminada exitosamente:', response);
+            this.notificationservice.show('Alternativa eliminada exitosamente', 'success');
             this.loadExistingPaths();
           },
           error: (error) => {
-            console.error('Error eliminando alternativa:', error);
+            this.notificationservice.show('Error eliminando alternativa', 'error');
             option.selected = true;
             this.changeDetectorRef.detectChanges();
           },
