@@ -11,7 +11,7 @@ import { SelectedPathsService } from '../../services/selected-path.service';
 
 interface CellState {
   value: number;
-  opcionId: number;  // Cambiado a number ya que el id es numérico
+  opcionId: number;
   modeId: string;
 }
 
@@ -80,7 +80,6 @@ export class TablaDeSeleccionComponent implements OnInit {
     return index;
   }
 
-  // In your TablaDeSeleccionComponent class
   parseInt(id: string): number {
     return parseInt(id, 10);
   }

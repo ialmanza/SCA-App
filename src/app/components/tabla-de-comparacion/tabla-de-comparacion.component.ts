@@ -10,17 +10,19 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
 import { ComparisonCellService } from '../../services/_ComparisonCell/comparison-cell.service';
 import { ComparisonCell } from '../../models/comparison-cell';
+import { NotificationService } from '../../services/_Notification/notification.service';
+import { NotificationsComponent } from "../notifications/notifications.component";
 
 interface CellState {
   value: number;
-  opcionId: number;  // Cambiado a number ya que el id es numérico
+  opcionId: number;
   modeId: string;
 }
 
 @Component({
   selector: 'app-tabla-de-comparacion',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule],
+  imports: [CommonModule, FontAwesomeModule, NotificationsComponent],
   providers: [OpcionesDBService],
   templateUrl: './tabla-de-comparacion.component.html',
   styleUrl: './tabla-de-comparacion.component.css'
@@ -38,6 +40,7 @@ export class TablaDeComparacionComponent implements OnInit {
     private comparisonModeService: ComparacionModeService,
     private cdr: ChangeDetectorRef,
     private comparisonCellService: ComparisonCellService,
+    private notificationService: NotificationService,
   ) {
     this.opciones$ = this.opcionService.getItems();
     this.comparisonModes$ = this.comparisonModeService.getComparisonModes().pipe(
@@ -55,7 +58,7 @@ export class TablaDeComparacionComponent implements OnInit {
   }
 
   trackByFn(index: number, item: any): any {
-    return item.id; // or any other unique identifier
+    return item.id;
   }
 
   private loadCellsFromBackend(): void {
@@ -64,7 +67,6 @@ export class TablaDeComparacionComponent implements OnInit {
       opciones: this.opciones$,
       modes: this.comparisonModes$
     }).subscribe(({ cells, opciones, modes }) => {
-      // Inicializar el mapa de estados con los valores del backend
       cells.forEach(cell => {
         const key = this.getCellKey(cell.opcionId, cell.modeId);
         this.cellStates.set(key, {
@@ -74,7 +76,6 @@ export class TablaDeComparacionComponent implements OnInit {
         });
       });
 
-      // Inicializar celdas faltantes con valor 0
       opciones.forEach(opcion => {
         modes.forEach(mode => {
           const key = this.getCellKey(opcion.id!, mode.id);
@@ -130,7 +131,6 @@ export class TablaDeComparacionComponent implements OnInit {
       modeId
     };
 
-    // Validar que el valor no exceda 5
     if (currentState.value < 5) {
       const newValue = currentState.value + 1;
       this.cellStates.set(key, { ...currentState, value: newValue });
@@ -147,7 +147,6 @@ export class TablaDeComparacionComponent implements OnInit {
       modeId
     };
 
-    // Validar que el valor no sea menor que 0
     if (currentState.value > 0) {
       const newValue = currentState.value - 1;
       this.cellStates.set(key, { ...currentState, value: newValue });
@@ -156,7 +155,6 @@ export class TablaDeComparacionComponent implements OnInit {
   }
 
   saveAllCells(): void {
-    // Convertir el Map de estados a un array de ComparisonCell
     const cellsToSave: ComparisonCell[] = Array.from(this.cellStates.values()).map(state => ({
       opcionId: state.opcionId,
       modeId: state.modeId,
@@ -167,18 +165,15 @@ export class TablaDeComparacionComponent implements OnInit {
 
     this.comparisonCellService.createCells(cellsToSave).subscribe(
       savedCells => {
-        console.log('Todas las celdas guardadas exitosamente:', savedCells);
-        // Aquí podrías mostrar un mensaje de éxito
+        this.notificationService.show('Todas las celdas guardadas exitosamente', 'success');
       },
       error => {
-        console.error('Error al guardar las celdas:', error);
-        // Aquí podrías mostrar un mensaje de error
+        this.notificationService.show('Error al guardar las celdas', 'error');
       }
     );
   }
 
   editAllCells(): void {
-    // Convertir el Map de estados a un array de ComparisonCell
     const cellsToSave: ComparisonCell[] = Array.from(this.cellStates.values()).map(state => ({
       opcionId: state.opcionId,
       modeId: state.modeId,
@@ -189,22 +184,18 @@ export class TablaDeComparacionComponent implements OnInit {
 
     this.comparisonCellService.updateCells(cellsToSave).subscribe(
       savedCells => {
-        console.log('Todas las celdas guardadas exitosamente:', savedCells);
-        // Aquí podrías mostrar un mensaje de éxito
+        this.notificationService.show('Todas las celdas actualizadas exitosamente', 'success');
       },
       error => {
-        console.error('Error al guardar las celdas:', error);
-        // Aquí podrías mostrar un mensaje de error
+        this.notificationService.show('Error al actualizar las celdas', 'error');
       }
     );
   }
 
-  // Agregar un método para verificar si hay cambios sin guardar
   hasUnsavedChanges(): boolean {
     return Array.from(this.cellStates.values()).some(state => state.value !== 0);
   }
 
-  // Opcional: Agregar un método para limpiar la tabla
   resetTable(): void {
     this.cellStates.clear();
     this.initializeCellStates();

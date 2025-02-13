@@ -100,52 +100,52 @@ tr:hover td.area-cell {
   background-color: #f8f9fa;
 }
 
-/* Estilos para tablet (hasta 768px) */
+/* Estilos para tablet */
 @media (max-width: 768px) {
   .table-container {
     overflow-x: auto;
   }
 
   .comparison-table thead th.opciones-column {
-    min-width: 150px; /* Reducir el ancho mínimo de la columna de opciones */
+    min-width: 150px;
   }
 
   .comparison-table thead .label-headers th {
-    padding: 8px; /* Reducir el padding para caber mejor */
-    font-size: 0.9em; /* Reducir el tamaño de fuente */
+    padding: 8px;
+    font-size: 0.9em;
   }
 
   .comparison-table tbody td.area-cell {
-    min-width: 100px; /* Reducir el ancho mínimo de las celdas */
+    min-width: 100px;
   }
 }
 
-/* Estilos para móvil (hasta 480px) */
+/* Estilos para móvil */
 @media (max-width: 480px) {
   .table-container {
     overflow-x: auto;
   }
 
   .comparison-table thead th.opciones-column {
-    min-width: 120px; /* Ajustar aún más el ancho mínimo de la columna de opciones */
+    min-width: 120px;
   }
 
   .comparison-table thead .areas-header {
-    font-size: 1em; /* Reducir el tamaño de fuente del encabezado */
-    padding: 10px; /* Reducir el padding */
+    font-size: 1em;
+    padding: 10px;
   }
 
   .comparison-table thead .label-headers th {
-    padding: 6px; /* Reducir aún más el padding */
-    font-size: 0.8em; /* Reducir el tamaño de fuente */
+    padding: 6px;
+    font-size: 0.8em;
   }
 
   .comparison-table tbody td.opciones-column {
-    font-size: 0.9em; /* Reducir el tamaño de fuente de las opciones */
+    font-size: 0.9em;
   }
 
   .comparison-table tbody td.area-cell {
-    min-width: 80px; /* Ajustar el ancho mínimo de las celdas */
-    padding: 6px; /* Reducir el padding */
+    min-width: 80px;
+    padding: 6px;
   }
 }

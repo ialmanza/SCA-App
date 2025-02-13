@@ -120,7 +120,6 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
     });
   }
 
-
   deleteMode(id: string): void {
     if (confirm('¿Está seguro de eliminar este modo de comparación?')) {
       const subscription = this.comparacionDbService

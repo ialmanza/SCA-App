@@ -22,13 +22,12 @@ label{
 
 }
 
-/* Estilos para el select */
 .custom-select {
   width: 100%;
-  padding: 0.5rem 1rem; /* px-4 py-2 */
-    border-radius: 0.75rem; /* rounded-lg */
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
-  transition: all 0.2s ease-in-out; /* transition duration-200 */
+  padding: 0.5rem 1rem;
+    border-radius: 0.75rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease-in-out;
 }
 
 .custom-select:focus {
@@ -39,132 +38,132 @@ label{
 .custom-select-option {
   background-color: #ff99000c;
   color: #374151;
-  padding: 0.5rem 1rem; /* Espaciado adecuado */
-  border-radius: 0.25rem; /* Bordes redondeados en las opciones */
-  transition: background-color 0.3s, color 0.3s; /* Transición suave en el hover */
+  padding: 0.5rem 1rem;
+  border-radius: 0.25rem;
+  transition: background-color 0.3s, color 0.3s;
 }
 
 
-/* Media Query para Tablets (pantallas hasta 768px) */
+/* Media Query para Tablets */
 @media (max-width: 768px) {
   .grid.grid-cols-2 {
-    grid-template-columns: 1fr; /* Cambia la cuadrícula a una sola columna */
+    grid-template-columns: 1fr;
   }
 
   .custom-select {
-    font-size: 14px; /* Reduce el tamaño del texto en selects */
+    font-size: 14px;
   }
 
   label {
-    font-size: 1.5vh; /* Ajusta el tamaño de las etiquetas */
+    font-size: 1.5vh;
   }
 
   .fuente {
-    font-size: 1.5vh; /* Ajusta el tamaño de la fuente general */
+    font-size: 1.5vh;
   }
 
   h3.text-xl {
-    font-size: 1.25rem; /* Reduce el tamaño del título */
+    font-size: 1.25rem;
   }
 
   button.px-6 {
-    padding: 0.5rem 1rem; /* Reduce el padding de los botones */
-    font-size: 14px; /* Reduce el tamaño del texto en botones */
+    padding: 0.5rem 1rem;
+    font-size: 14px;
   }
 
   app-grafo {
-    height: 40vh; /* Reduce la altura del gráfico */
+    height: 40vh;
   }
 }
 
-/* Media Query para Móviles (pantallas hasta 480px) */
+/* Media Query para Móviles */
 @media (max-width: 480px) {
   .flex {
-    flex-direction: column; /* Apila los elementos verticalmente */
+    flex-direction: column;
   }
 
   .grid.grid-cols-1 {
-    gap: 4; /* Reduce el espacio entre los elementos */
+    gap: 4;
   }
 
   .custom-select {
-    font-size: 12px; /* Reduce aún más el tamaño del texto en selects */
+    font-size: 12px;
   }
 
   label {
-    font-size: 1.2vh; /* Reduce el tamaño de las etiquetas */
+    font-size: 1.2vh;
   }
 
   .fuente {
-    font-size: 1.2vh; /* Reduce el tamaño de la fuente general */
+    font-size: 1.2vh;
   }
 
   h3.text-xl {
-    font-size: 1rem; /* Reduce aún más el tamaño del título */
+    font-size: 1rem;
   }
 
   button.px-6 {
-    padding: 0.3rem 0.8rem; /* Reduce aún más el padding de los botones */
-    font-size: 12px; /* Reduce el tamaño del texto en botones */
+    padding: 0.3rem 0.8rem;
+    font-size: 12px;
   }
 
   app-grafo {
-    height: 30vh; /* Reduce aún más la altura del gráfico */
+    height: 30vh;
   }
 }
 
-/* Media Query para Tablets (pantallas hasta 768px) */
+/* Media Query para Tablets */
 @media (max-width: 768px) {
   .grid.grid-cols-2 {
-    grid-template-columns: 1fr; /* Apila los elementos en una sola columna */
+    grid-template-columns: 1fr;
   }
 
   ul {
-    width: 100%; /* Asegura que las listas ocupen el mismo ancho que los select */
+    width: 100%;
   }
 
   li {
-    width: 100%; /* Ajusta cada elemento de la lista al 100% del contenedor */
+    width: 100%;
   }
 
   app-grafo {
     width: 100%;
-    height: 40vh; /* Reduce la altura del gráfico */
-    margin-top: 1rem; /* Agrega un margen superior */
+    height: 40vh;
+    margin-top: 1rem;
   }
 
   .border-l {
-    border-left: none; /* Elimina la línea divisoria */
+    border-left: none;
     padding-left: 0;
   }
 }
 
-/* Media Query para Móviles (pantallas hasta 480px) */
+/* Media Query para Móviles */
 @media (max-width: 480px) {
   .flex {
-    flex-direction: column; /* Apila los elementos verticalmente */
+    flex-direction: column;
   }
 
   .grid.grid-cols-1 {
-    gap: 4px; /* Reduce el espacio entre los elementos */
+    gap: 4px;
   }
 
   ul {
-    width: 100%; /* Asegura que las listas ocupen el mismo ancho que los select */
+    width: 100%;
   }
 
   li {
-    width: 100%; /* Ajusta cada elemento de la lista al 100% del contenedor */
+    width: 100%;
   }
 
   app-grafo {
     width: 100%;
-    height: 35vh; /* Reduce aún más la altura del gráfico */
-    margin-top: 1rem; /* Espaciado entre la lista y el gráfico */
+    height: 35vh;
+    margin-top: 1rem;
   }
 
   .border-l {
-    border-left: none; /* Elimina la línea divisoria */
+    border-left: none;
     padding-left: 0;
   }
 }

@@ -8,13 +8,11 @@
     text-align: center;
   }
 
-
   .content-wrapper {
     display: flex;
     gap: 2rem;
     align-items: flex-start;
   }
-
 
   .form-container {
     background-color: #def3ff;
@@ -164,8 +162,6 @@
     width: 100%;
     overflow-x: hidden;
     border-radius: 8px;
-
-
   }
   .table-responsive {
     max-height: 500px;
@@ -210,7 +206,6 @@
   tr {
     height: 60px;
   }
-
 
   @media (max-width: 1024px) {
     .content-wrapper {

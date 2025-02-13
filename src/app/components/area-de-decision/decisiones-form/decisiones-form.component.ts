@@ -2,13 +2,9 @@ import { Component } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CrearDecisionComponent } from "../crear-decision/crear-decision.component";
-import { ListarDecisionesComponent } from "../listar-decisiones/listar-decisiones.component";
 import { Decision } from '../../../models/decision';
-import { DecisionService } from '../../../services/decision.service';
-import { OpcionService } from '../../../services/opcion.service';
 import { Opcion } from '../../../models/opcion';
 import { MatDialog } from '@angular/material/dialog';
-import * as d3 from 'd3';
 import { GrafoComponent } from "../../grafo/grafo.component";
 import { PosiblesAlternativasComponent } from "../../posibles-alternativas/posibles-alternativas.component";
 import { ModoDeComparacionComponent } from "../../modo-de-comparacion/modo-de-comparacion.component";
@@ -16,7 +12,6 @@ import { TablaDeComparacionComponent } from "../../tabla-de-comparacion/tabla-de
 import { DecisionesDBService } from '../../../services/_Decisiones/decisiones-db.service';
 import { catchError, EMPTY, switchMap } from 'rxjs';
 import { OpcionesDBService } from '../../../services/_Opciones/opciones-db.service';
-import { DialogAnimationsExampleDialog } from '../eliminar-decision-modal/eliminar-decision.component';
 import { TablaDecisionesComponent } from "../tabla-decisiones/tabla-decisiones.component";
 import { DecisionCheckComponent } from "../decision-check/decision-check.component";
 import { VinculodbService } from '../../../services/_Vinculos/vinculodb.service';
@@ -24,20 +19,21 @@ import { VinculosComponent } from "../../vinculos/vinculos.component";
 import { PuntuacionesMinimasComponent } from "../../puntuaciones-minimas/puntuaciones-minimas.component";
 import { TablaDeSeleccionComponent } from "../../tabla-de-seleccion/tabla-de-seleccion.component";
 import { UltimopasoComponent } from "../../ultimopaso/ultimopaso.component";
+import { NotificationService } from '../../../services/_Notification/notification.service';
+import { NotificationsComponent } from "../../notifications/notifications.component";
 
 
 
 @Component({
   selector: 'app-decisiones-form',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule, CrearDecisionComponent, ListarDecisionesComponent,
-    GrafoComponent, PosiblesAlternativasComponent, ModoDeComparacionComponent, TablaDeComparacionComponent, TablaDecisionesComponent, DecisionCheckComponent, VinculosComponent, PuntuacionesMinimasComponent, TablaDeSeleccionComponent, UltimopasoComponent],
-  providers: [DecisionService, OpcionService, DecisionesDBService, OpcionesDBService, VinculodbService],
+  imports: [FormsModule, ReactiveFormsModule, CommonModule, CrearDecisionComponent,
+    GrafoComponent, PosiblesAlternativasComponent, ModoDeComparacionComponent, TablaDeComparacionComponent, TablaDecisionesComponent, DecisionCheckComponent, VinculosComponent, PuntuacionesMinimasComponent, TablaDeSeleccionComponent, UltimopasoComponent, NotificationsComponent],
+  providers: [ DecisionesDBService, OpcionesDBService, VinculodbService],
   templateUrl: './decisiones-form.component.html',
   styleUrl: './decisiones-form.component.css'
 })
 export class DecisionesFormComponent {
-
   pasoActual: number = 1;
   decisiones: Decision[];
   opciones: Opcion[];
@@ -55,28 +51,19 @@ export class DecisionesFormComponent {
   selectedArea2: Decision | null = null;
   updatingDecisions: { [key: number]: boolean } = {};
 
-
-
-  constructor(private decisionService: DecisionService, private opcionService: OpcionService, public dialog: MatDialog, private decisionesDBService: DecisionesDBService
-    , private opcionesDBService: OpcionesDBService, private vinculodbService: VinculodbService) {
+  constructor( public dialog: MatDialog, private decisionesDBService: DecisionesDBService
+    , private opcionesDBService: OpcionesDBService, private vinculodbService: VinculodbService,
+      private notificationservice: NotificationService) {
     this.decisiones = [];
     this.opciones = [];
   }
 
   ngOnInit(): void {
-    // this.decisionService.getDecisiones().subscribe((decisiones : Decision[]) => {
-    //   this.areas = decisiones
-    //   this.decisiones = decisiones.map(decision => ({ ...decision, seleccionado: false }));
-    // });
-
     this.decisionesDBService.getItems().subscribe((decisiones: Decision[]) => {
       this.areas = decisiones
       this.decisiones = decisiones.map(decision => ({ ...decision, seleccionado: false }));
     });
 
-    // this.opcionService.getOpciones().subscribe((opciones: Opcion[]) => {
-    //   this.opciones = opciones;
-    // });
     this.opcionesDBService.getItems().subscribe((opciones: Opcion[]) => {
       this.opciones = opciones;
     })
@@ -87,17 +74,15 @@ export class DecisionesFormComponent {
     });
   }
 
-
   eliminarVinculos(): void {
     this.vinculos = [];
   }
 
   crearVinculo(): void {
     if (this.selectedArea1 && this.selectedArea2 && this.selectedArea1 !== this.selectedArea2) {
-      // const nuevoVinculo = `${this.selectedArea1.area} - ${this.selectedArea2.area}`;
       const area_id = this.selectedArea1.id!;
       const related_area_id = this.selectedArea2.id!;
-      //this.decisionService.crearVinculo(nuevoVinculo);
+
       this.vinculodbService.createItem(area_id, related_area_id).subscribe(() => {
         this.selectedArea1 = null;
         this.selectedArea2 = null;
@@ -107,39 +92,6 @@ export class DecisionesFormComponent {
     } else {
       console.error('Áreas no válidas para crear un vínculo.');
     }
-  }
-
-  addDecision(area: HTMLInputElement, descripcion: HTMLTextAreaElement) {
-    const rotuloPattern = /^[A-Z]{3}_[A-Z]{3}$/;
-
-    if (!rotuloPattern.test(this.rotuloValue)) {
-      alert('El rotulo debe estar en el formato "ABC_DEF".');
-      area.value = '';
-      this.rotuloValue = '';
-      descripcion.value = '';
-      return;
-    }
-
-    if (!area.value || !descripcion.value) {
-      alert('Por favor rellene todos los campos.');
-      area.value = '';
-      this.rotuloValue = '';
-      descripcion.value = '';
-      return;
-    }
-
-    const id = Date.now().toString();
-    this.decisionService.addDecision({
-      _id: id,
-      area: area.value,
-      rotulo: this.rotuloValue,
-      description: descripcion.value
-
-    })
-    area.value = '';
-    this.rotuloValue = '';
-    descripcion.value = '';
-    return false;
   }
 
   deleteDecision(decisiones: Decision) {
@@ -177,11 +129,11 @@ export class DecisionesFormComponent {
           this.decisiones = decisiones.map(decision => ({ ...decision, seleccionado: false }));
           this.cerrarModal();
           this.cerrarModalEditarDecision();
-          alert('¡Decisión guardada correctamente!');
+          this.notificationservice.show('¡Decisión guardada correctamente!', 'success');
 
         },
         error: (error: any) => {
-          console.error('Error en la suscripción:', error);
+          this.notificationservice.show('Error al guardar la decisión', 'error');
         }
       });
   }
@@ -190,24 +142,19 @@ export class DecisionesFormComponent {
   avanzarPaso() {
     if (this.pasoActual < 20) {
       this.pasoActual++;
-      // if (this.pasoActual === 7 || this.pasoActual === 10) {
-      //   console.log(this.areasSeleccionadas);
-      //   this.areasSeleccionadas = [];
-      // }
+
     }
   }
 
   retrocederPaso() {
     if (this.pasoActual > 1) {
       this.pasoActual--;
-      // if (this.pasoActual === 7 ) {
-      //   this.areasSeleccionadas = [];
-      // }
+
     }
   }
 
   getOpcionesPorArea(areaId: number) {
-    return this.opciones.filter(opcion => opcion.cod_area.toString() === areaId.toString());  // Filtrar opciones por área de decisión
+    return this.opciones.filter(opcion => opcion.cod_area.toString() === areaId.toString());
 
   }
 
@@ -243,10 +190,9 @@ export class DecisionesFormComponent {
   }
 
   //CRUD PARA LAS OPCIONES DENTRO DE LAS DECISIONES
-
   agregarOpcion() {
     if (!this.nuevaDescripcion.trim()) {
-      alert('Por favor, ingresa una descripción válida.');
+      this.notificationservice.show('Por favor, ingresa una descripción valida.', 'error');
       return;
     }
 
@@ -256,8 +202,6 @@ export class DecisionesFormComponent {
       cod_area: this.decisionSeleccionada?.id?.toString() ?? ''
     };
 
-
-    //this.opcionService.addOpcion(nuevaOpcion);
     this.opcionesDBService.createItem(nuevaOpcion).subscribe(() => {
       console.log(nuevaOpcion.cod_area);
       console.log(typeof nuevaOpcion.cod_area);
@@ -266,31 +210,15 @@ export class DecisionesFormComponent {
       });
     });
 
-    // this.opcionService.getOpciones().subscribe((opcionesActualizadas) => {
-    //   this.opciones = opcionesActualizadas;
-    // });
-
-
-
     this.cerrarModal();
-  }
-
-  eliminarOpcion(id: string) {
-    // this.opcionService.deleteOpcion(id);
-    // this.opcionService.getOpciones().subscribe((opcionesActualizadas) => {
-    //   this.opciones = opcionesActualizadas;
-    // });
-
   }
 
   deleteOpcion(opcion: Opcion) {
     this.opcionesDBService.deleteItem(opcion.id!).subscribe({
       next: () => {
         console.log(`Opción con id ${opcion.id} eliminada correctamente`);
-        alert(`La opción fue eliminada correctamente.`);
-
-        // Recargar la página
-        this.loadOpciones();  // Asegúrate de tener un método que recargue las opciones
+        this.notificationservice.show('¡Opción eliminada correctamente!', 'success');
+        this.loadOpciones();
       },
       error: (err) => {
         console.error(`Error eliminando la opción con id ${opcion.id}:`, err);
@@ -301,17 +229,13 @@ export class DecisionesFormComponent {
   loadOpciones() {
     this.opcionesDBService.getItems().subscribe({
       next: (opciones) => {
-        this.opciones = opciones;  // Asumiendo que 'opciones' es una propiedad en tu componente
+        this.opciones = opciones;
       },
       error: (err) => {
         console.error('Error al cargar las opciones:', err);
       },
     });
   }
-
-
-
-
 
   abrirModal(decision: Decision) {
     this.decisionSeleccionada = decision;
@@ -333,7 +257,6 @@ export class DecisionesFormComponent {
     this.nuevaDescripcion = '';
   }
 
-
   cerrarModalEditarDecision() {
     this.modalEditarDecisionAbierto = false;
     this.nuevaDescripcion = '';
@@ -351,7 +274,7 @@ export class DecisionesFormComponent {
     this.avanzarPaso();
   }
 
-  avanzarYrecargarpagina() { //No Usar
+  recargarpagina() {
     this.avanzarPaso();
     window.location.reload(); //REACARGA LA PAGINA
   }

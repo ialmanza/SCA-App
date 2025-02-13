@@ -49,28 +49,8 @@ export class PosiblesAlternativasComponent implements OnInit {
     private changeDetectorRef: ChangeDetectorRef
   ) {}
 
-  // ngOnInit(): void {
-  //   // Cargar las áreas importantes una sola vez al inicio
-  //   this.decisionService.getImportantStatus().subscribe(
-  //     importantAreas => {
-  //       if (importantAreas.length === 0) {
-  //         console.warn('No hay áreas importantes');
-  //         return;
-  //       }
-  //       const areas = importantAreas.map(area => area.area);
-  //       this.uniqueAreasSubject.next(areas);
-  //       this.loadDecisionsAndOptions();
-  //     },
-  //     error => {
-  //       console.error('Error al cargar áreas importantes:', error);
-  //     }
-  //   );
-  //   this.loadExistingPaths();
-  // }
-
   async ngOnInit(): Promise<void> {
     try {
-      // Esperar por las áreas importantes
       const importantAreas = await firstValueFrom(this.decisionService.getImportantStatus());
 
       if (importantAreas.length === 0) {
@@ -81,10 +61,8 @@ export class PosiblesAlternativasComponent implements OnInit {
       const areas = importantAreas.map(area => area.area);
       this.uniqueAreasSubject.next(areas);
 
-      // Esperar a que se carguen las decisiones y opciones
       await this.loadDecisionsAndOptions();
 
-      // Esperar a que se carguen los paths existentes
       await this.loadExistingPaths();
 
       this.isLoading = false;
@@ -131,7 +109,6 @@ export class PosiblesAlternativasComponent implements OnInit {
 
     const updateNode = (node: DecisionNode) => {
       node.options.forEach(option => {
-        // Buscar si existe un path que coincida con el hexCode de la opción
         const matchingPath = this.paths.find(p => p.hexa === option.hexCode);
         option.selected = !!matchingPath;
 
@@ -145,66 +122,9 @@ export class PosiblesAlternativasComponent implements OnInit {
     this.changeDetectorRef.detectChanges();
   }
 
-
-  // Método getter para obtener las áreas únicas
   getUniqueAreas(): string[] {
     return this.uniqueAreasSubject.getValue();
   }
-
-  // loadExistingPaths(): void {
-  //   this.selectedPathsService.getPathsFromBackend().subscribe(
-  //     paths => {
-  //       console.log('Paths obtenidos:', paths);
-  //       this.paths = paths;
-  //       this.updateTreeSelections();
-  //     },
-  //     error => {
-  //       console.error('Error obteniendo paths:', error);
-  //     }
-  //   );
-  // }
-
-
-
-  // updateTreeSelections(): void {
-  //   // Recorre el árbol y actualiza las selecciones basadas en los paths existentes
-  //   const updateNode = (node: DecisionNode, paths: any[]) => {
-  //     node.options.forEach(option => {
-  //       const matchingPath = this.paths.find(p => p.hexCode === option.hexCode);
-  //       if (matchingPath) {
-  //         option.selected = true;
-  //       }
-  //       if (option.children) {
-  //         option.children.forEach(child => updateNode(child, paths));
-  //       }
-  //     });
-  //   };
-
-  //   this.decisionTree.forEach(node => updateNode(node, this.paths));
-  //   this.changeDetectorRef.detectChanges();
-  // }
-
-  // updateTreeSelections(): void {
-  //   const updateNode = (node: DecisionNode) => {
-  //     node.options.forEach(option => {
-  //       // Buscar si existe un path que coincida con el hexCode de la opción
-  //       const matchingPath = this.paths.find(p => p.hexa === option.hexCode);
-  //       if (matchingPath) {
-  //         option.selected = true;
-  //       }
-
-  //       // Recursivamente actualizar los hijos si existen
-  //       if (option.children) {
-  //         option.children.forEach(childNode => updateNode(childNode));
-  //       }
-  //     });
-  //   };
-
-  //   // Actualizar todo el árbol
-  //   this.decisionTree.forEach(node => updateNode(node));
-  //   this.changeDetectorRef.detectChanges();
-  // }
-
 
   onOptionSelected(option: any, path: string[]): void {
     const hexCode = option.hexCode;
@@ -216,11 +136,11 @@ export class PosiblesAlternativasComponent implements OnInit {
         .subscribe({
           next: (response) => {
             console.log('Alternativa creada exitosamente:', response);
-            this.loadExistingPaths(); // Recargar los paths después de añadir
+            this.loadExistingPaths();
           },
           error: (error) => {
             console.error('Error creando alternativa:', error);
-            option.selected = false; // Revertir la selección en caso de error
+            option.selected = false;
             this.changeDetectorRef.detectChanges();
           },
           complete: () => {
@@ -233,11 +153,11 @@ export class PosiblesAlternativasComponent implements OnInit {
         .subscribe({
           next: (response) => {
             console.log('Alternativa eliminada exitosamente:', response);
-            this.loadExistingPaths(); // Recargar los paths después de eliminar
+            this.loadExistingPaths();
           },
           error: (error) => {
             console.error('Error eliminando alternativa:', error);
-            option.selected = true; // Revertir la selección en caso de error
+            option.selected = true;
             this.changeDetectorRef.detectChanges();
           },
           complete: () => {
@@ -247,25 +167,6 @@ export class PosiblesAlternativasComponent implements OnInit {
         });
     }
   }
-
-  // loadDecisionsAndOptions(): void {
-  //   const areas = this.getUniqueAreas();
-  //   if (areas.length === 0) return;
-
-  //   forkJoin({
-  //     decisions: this.decisionService.getItems(),
-  //     opciones: this.opcionService.getItems()
-  //   }).subscribe(
-  //     ({ decisions, opciones }) => {
-  //       this.decisions = decisions;
-  //       this.opciones = opciones;
-  //       this.buildDecisionTree();
-  //     },
-  //     error => {
-  //       console.error('Error al cargar datos:', error);
-  //     }
-  //   );
-  // }
 
   buildDecisionTree(): void {
     const areas = this.getUniqueAreas();
@@ -301,7 +202,6 @@ export class PosiblesAlternativasComponent implements OnInit {
       }))
     };
 
-    // Genera un código único para cada opción.
     node.options.forEach(option => {
       option['hexCode'] = this.generateHexCode(option.text);
     });
