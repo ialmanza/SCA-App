@@ -4,7 +4,7 @@
     <form [formGroup]="comparisonForm" [ngClass]="{'table-resaltada': modoedicion}" (ngSubmit)="onSubmit()"
       class="form-container">
       <div class="form-group">
-        <label for="order">Orden</label>
+        <label for="order">Orden de importancia:</label>
         <input type="number" id="order" formControlName="order" class="form-control"
           [class.is-invalid]="comparisonForm.get('order')?.invalid && comparisonForm.get('order')?.touched">
         <div class="invalid-feedback"
@@ -14,7 +14,7 @@
       </div>
 
       <div class="form-group">
-        <label for="comparisonArea">Área</label>
+        <label for="comparisonArea">Nombre de la nueva área:</label>
         <input type="text" id="comparisonArea" formControlName="comparisonArea" class="form-control"
           [class.is-invalid]="comparisonForm.get('comparisonArea')?.invalid && comparisonForm.get('comparisonArea')?.touched">
         <div class="invalid-feedback"
@@ -24,7 +24,7 @@
       </div>
 
       <div class="form-group">
-        <label for="label">Rótulo</label>
+        <label for="label">Rótulo:</label>
         <input type="text" id="label" formControlName="label" class="form-control"
           [class.is-invalid]="comparisonForm.get('label')?.invalid && comparisonForm.get('label')?.touched">
         <div class="invalid-feedback"
@@ -34,7 +34,7 @@
       </div>
 
       <div class="form-group">
-        <label for="symbol">Emoji</label>
+        <label for="symbol">Emoji:</label>
         <select id="symbol" formControlName="symbol" class="form-control">
           <option *ngFor="let emoji of emojiOptions" [value]="emoji.value">
             {{ emoji.value }}
@@ -63,7 +63,7 @@
           <thead>
             <tr>
               <th scope="col">Orden</th>
-              <th scope="col">Área</th>
+              <th scope="col">Área de comparación</th>
               <th scope="col">Rótulo</th>
               <th scope="col">Parámetro</th>
               <th scope="col">Acciones</th>
