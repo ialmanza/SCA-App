@@ -27,6 +27,7 @@ export class VinculosComponent {
   selectedArea2: Decision | null = null;
   areas: Decision[] = [];
   vinculos: Vinculo[] = [];
+  vinculoAEliminar: Vinculo | null = null;
   decisiones: Decision[];
 
   constructor(
@@ -86,4 +87,20 @@ export class VinculosComponent {
       this.notificationservice.show('Error al eliminar vínculo', 'error');
     });
   }
+
+  mostrarConfirmacion(vinculo: Vinculo): void {
+    this.vinculoAEliminar = vinculo;
+  }
+
+  cancelarEliminacion(): void {
+    this.vinculoAEliminar = null;
+  }
+
+  confirmarEliminacion(): void {
+    if (this.vinculoAEliminar) {
+      this.eliminarVinculo(this.vinculoAEliminar);
+      this.vinculoAEliminar = null;
+    }
+  }
+
 }
