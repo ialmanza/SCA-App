@@ -16,24 +16,33 @@ import { DecisionCheckComponent } from './components/area-de-decision/decision-c
 import { PuntuacionesMinimasComponent } from './components/puntuaciones-minimas/puntuaciones-minimas.component';
 import { TablaDeSeleccionComponent } from './components/tabla-de-seleccion/tabla-de-seleccion.component';
 import { UltimopasoComponent } from './components/ultimopaso/ultimopaso.component';
+import { LoginComponent } from './components/auth/login/login.component';
+import { RegisterComponent } from './components/auth/register/register.component';
+import { authGuard } from './guards/auth.guard';
+import { ProjectComponent } from './components/project/project.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 
 export const routes: Routes = [
-  { path: '', redirectTo: 'decisiones-form', pathMatch: 'full' },
-  { path: 'crear-decision', component: CrearDecisionComponent },
-  { path: 'listar-decisiones', component: ListarDecisionesComponent },
-  { path: 'decisiones-form', component: DecisionesFormComponent },
-  { path: 'opciones', component: OpcionComponent },
-  { path: 'crear-opcion', component: CrearOpcionComponent },
-  { path: 'listar-opciones', component: ListarOpcionesComponent },
-  { path: 'layout', component: LayoutComponent },
-  { path: 'grafo', component: GrafoComponent },
-  { path: 'posibles-alternativas', component: PosiblesAlternativasComponent },
-  { path: 'modo-de-comparacion', component: ModoDeComparacionComponent },
-  { path: 'tabla-de-comparacion', component: TablaDeComparacionComponent },
-  { path: 'tabla-decisiones', component: TablaDecisionesComponent },
-  { path: 'vinculos', component: VinculosComponent },
-  { path: 'decision-check', component: DecisionCheckComponent },
-  { path: 'puntuaciones-minimas', component: PuntuacionesMinimasComponent },
-  { path: 'tabla-de-seleccion', component: TablaDeSeleccionComponent },
-  { path: 'ultimopaso', component: UltimopasoComponent },
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+  { path: 'dashboard', component: DashboardComponent, canActivate: [authGuard] },
+  { path: 'project/:id', component: ProjectComponent, canActivate: [authGuard] },
+  { path: 'crear-decision', component: CrearDecisionComponent, canActivate: [authGuard] },
+  { path: 'listar-decisiones', component: ListarDecisionesComponent, canActivate: [authGuard] },
+  { path: 'decisiones-form', component: DecisionesFormComponent, canActivate: [authGuard] },
+  { path: 'opciones', component: OpcionComponent, canActivate: [authGuard] },
+  { path: 'crear-opcion', component: CrearOpcionComponent, canActivate: [authGuard] },
+  { path: 'listar-opciones', component: ListarOpcionesComponent, canActivate: [authGuard] },
+  { path: 'grafo', component: GrafoComponent, canActivate: [authGuard] },
+  { path: 'posibles-alternativas', component: PosiblesAlternativasComponent, canActivate: [authGuard] },
+  { path: 'modo-de-comparacion', component: ModoDeComparacionComponent, canActivate: [authGuard] },
+  { path: 'tabla-de-comparacion', component: TablaDeComparacionComponent, canActivate: [authGuard] },
+  { path: 'tabla-decisiones', component: TablaDecisionesComponent, canActivate: [authGuard] },
+  { path: 'vinculos', component: VinculosComponent, canActivate: [authGuard] },
+  { path: 'decision-check', component: DecisionCheckComponent, canActivate: [authGuard] },
+  { path: 'puntuaciones-minimas', component: PuntuacionesMinimasComponent, canActivate: [authGuard] },
+  { path: 'tabla-de-seleccion', component: TablaDeSeleccionComponent, canActivate: [authGuard] },
+  { path: 'ultimopaso', component: UltimopasoComponent, canActivate: [authGuard] },
+
 ];

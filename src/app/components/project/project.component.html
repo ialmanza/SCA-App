@@ -1,0 +1,142 @@
+<div class="project-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Loading project...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-container">
+    <div class="error-message">
+      <h3>Error</h3>
+      <p>{{ error }}</p>
+      <button (click)="loadProject()">Try Again</button>
+    </div>
+  </div>
+
+  <!-- Project Content -->
+  <div *ngIf="!loading && !error && project">
+    <!-- Project Header -->
+    <div class="project-header">
+      <div class="project-title">
+        <div *ngIf="!isEditing">
+          <h1>{{ project.name }}</h1>
+          <p>Created: {{ project.created_at | date:'medium' }}</p>
+        </div>
+        <div *ngIf="isEditing" class="project-form-container">
+          <div class="form-group">
+            <label for="projectName">Project Name</label>
+            <input
+              type="text"
+              id="projectName"
+              class="form-control"
+              [(ngModel)]="editForm.name"
+              placeholder="Enter project name"
+            >
+          </div>
+          <div class="project-actions">
+            <button class="btn-primary" (click)="saveProject()">Save</button>
+            <button class="btn-secondary" (click)="cancelEditing()">Cancel</button>
+          </div>
+        </div>
+      </div>
+      <div class="project-actions" *ngIf="!isEditing">
+        <button class="btn-primary" (click)="startEditing()">Edit Project</button>
+        <div class="dropdown">
+          <button class="btn-secondary dropdown-toggle">
+            Actions
+            <span class="caret"></span>
+          </button>
+          <div class="dropdown-menu">
+            <a (click)="deleteProject()">Delete Project</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project Tabs -->
+    <div class="project-tabs">
+      <nav>
+        <ul>
+          <li [class.active]="activeTab === 'overview'">
+            <a (click)="setActiveTab('overview')">Overview</a>
+          </li>
+          <li [class.active]="activeTab === 'decision-areas'">
+            <a (click)="setActiveTab('decision-areas')">Decision Areas</a>
+          </li>
+          <li [class.active]="activeTab === 'options'">
+            <a (click)="setActiveTab('options')">Options</a>
+          </li>
+          <li [class.active]="activeTab === 'comparison'">
+            <a (click)="setActiveTab('comparison')">Comparison</a>
+          </li>
+          <li [class.active]="activeTab === 'links'">
+            <a (click)="setActiveTab('links')">Links</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+      <!-- Overview Tab -->
+      <div class="tab-pane" *ngIf="activeTab === 'overview'">
+        <div class="project-dashboard">
+          <!-- Statistics Card -->
+          <div class="dashboard-card">
+            <h3>Project Statistics</h3>
+            <div class="stats-container">
+              <div class="stat-item">
+                <span class="stat-label">Decision Areas</span>
+                <span class="stat-value">{{ stats.decisionAreas }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Options</span>
+                <span class="stat-value">{{ stats.options }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Comparison Modes</span>
+                <span class="stat-value">{{ stats.comparisonModes }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Important Areas</span>
+                <span class="stat-value">{{ stats.importantAreas }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions Card -->
+          <div class="dashboard-card">
+            <h3>Quick Actions</h3>
+            <div class="quick-actions">
+              <a routerLink="crear-decision" class="btn-primary">Create Decision Area</a>
+              <a routerLink="crear-opcion" class="btn-primary">Add Option</a>
+              <a routerLink="modo-de-comparacion" class="btn-primary">Configure Comparison</a>
+              <a routerLink="vinculos" class="btn-primary">Manage Links</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Decision Areas Tab -->
+      <div class="tab-pane" *ngIf="activeTab === 'decision-areas'">
+        <app-decisiones-form></app-decisiones-form>
+      </div>
+
+      <!-- Options Tab -->
+      <div class="tab-pane" *ngIf="activeTab === 'options'">
+        <app-opcion></app-opcion>
+      </div>
+
+      <!-- Comparison Tab -->
+      <div class="tab-pane" *ngIf="activeTab === 'comparison'">
+        <app-modo-de-comparacion></app-modo-de-comparacion>
+      </div>
+
+      <!-- Links Tab -->
+      <div class="tab-pane" *ngIf="activeTab === 'links'">
+        <app-vinculos></app-vinculos>
+      </div>
+    </div>
+  </div>
+</div>
