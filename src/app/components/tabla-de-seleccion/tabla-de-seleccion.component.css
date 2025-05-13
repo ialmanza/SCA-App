@@ -1,151 +1,99 @@
-.comparison-table {
+.container {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  margin: 20px 0;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  padding: 20px;
+  box-sizing: border-box;
 }
 
-.comparison-table th,
-.comparison-table td {
-  border: 1px solid #ddd;
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  margin-bottom: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+th, td {
   padding: 12px;
-  text-align: left;
-}
-
-.comparison-table thead th {
-  background-color: #f8f9fa;
-  font-weight: 600;
-}
-
-.comparison-table thead th.opciones-column {
-  background-color: #fff;
-  width: 30%;
-  min-width: 200px;
-}
-
-.comparison-table thead .areas-header {
   text-align: center;
-  border-bottom: none;
-  background-color: #f1f3f5;
-  font-size: 1.1em;
-  padding: 15px;
+  border: 1px solid #ddd;
 }
 
-.comparison-table thead .label-headers th {
-  text-align: center;
-  padding: 12px 8px;
-  font-weight: 500;
-  border-top: none;
-  width: calc(70% / var(--column-count, 4));
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+th {
+  background-color: #f5f5f5;
+  font-weight: bold;
 }
 
-.comparison-table tbody td.opciones-column {
-  background-color: #fff;
-  font-weight: 500;
+.path-hex {
+  font-weight: bold;
+  font-family: monospace;
 }
 
-.comparison-table tbody td.area-cell {
-  text-align: center;
-  padding: 8px;
-  min-width: 120px;
-  background-color: #fff;
+.symbol-cell {
+  min-width: 80px;
 }
 
-.counter-container {
+.buttons-container {
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 4px;
-  border-radius: 4px;
-  background-color: #f8f9fa;
+  padding: 10px 0;
 }
 
-.counter-btn {
-  background: none;
+.btn-back, .btn-continue {
+  padding: 10px 20px;
   border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-  transition: all 0.2s ease;
   border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
-.counter-btn:hover {
-  background-color: #e9ecef;
+.btn-back {
+  background-color: #f2f2f2;
+  color: #333;
 }
 
-.counter-btn.decrease {
-  color: #dc3545;
+.btn-continue {
+  background-color: #4CAF50;
+  color: white;
 }
 
-.counter-btn.increase {
-  color: #28a745;
+.btn-continue:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }
 
-.counter-value {
-  font-size: 1.1em;
-  font-weight: 500;
-  min-width: 40px;
+.loading {
   text-align: center;
+  padding: 20px;
+  font-style: italic;
+  color: #666;
 }
 
-tr:nth-child(even) td.area-cell {
-  background-color: #fcfcfc;
+.error-message {
+  color: #d9534f;
+  padding: 15px;
+  margin-bottom: 20px;
+  border: 1px solid #ebccd1;
+  border-radius: 4px;
+  background-color: #f2dede;
 }
 
-tr:hover td.area-cell {
-  background-color: #f8f9fa;
+.retry-button {
+  background-color: #d9534f;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
-/* Estilos para tablet */
-@media (max-width: 768px) {
-  .table-container {
-    overflow-x: auto;
-  }
-
-  .comparison-table thead th.opciones-column {
-    min-width: 150px;
-  }
-
-  .comparison-table thead .label-headers th {
-    padding: 8px;
-    font-size: 0.9em;
-  }
-
-  .comparison-table tbody td.area-cell {
-    min-width: 100px;
-  }
-}
-
-/* Estilos para móvil */
-@media (max-width: 480px) {
-  .table-container {
-    overflow-x: auto;
-  }
-
-  .comparison-table thead th.opciones-column {
-    min-width: 120px;
-  }
-
-  .comparison-table thead .areas-header {
-    font-size: 1em;
-    padding: 10px;
-  }
-
-  .comparison-table thead .label-headers th {
-    padding: 6px;
-    font-size: 0.8em;
-  }
-
-  .comparison-table tbody td.opciones-column {
-    font-size: 0.9em;
-  }
-
-  .comparison-table tbody td.area-cell {
-    min-width: 80px;
-    padding: 6px;
-  }
+.empty-state {
+  text-align: center;
+  color: #777;
+  padding: 30px;
+  font-style: italic;
 }
