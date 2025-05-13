@@ -4,6 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 
 export interface ComparisonMode {
   id: string;
+  project_id: string;
   order_num: number;
   peso: number;
   comparison_area: string;
@@ -21,14 +22,13 @@ export class ComparisonModeService {
   private comparisonModesSubject = new BehaviorSubject<ComparisonMode[]>([]);
   public comparisonModes$ = this.comparisonModesSubject.asObservable();
 
-  constructor() {
-    this.loadComparisonModes();
-  }
+  constructor() {}
 
-  async loadComparisonModes() {
+  async loadComparisonModes(projectId: string) {
     const { data, error } = await supabase
       .from('comparison_modes')
       .select('*')
+      .eq('project_id', projectId)
       .order('order_num', { ascending: true });
 
     if (error) {
@@ -51,7 +51,7 @@ export class ComparisonModeService {
       return null;
     }
 
-    await this.loadComparisonModes();
+    await this.loadComparisonModes(mode.project_id);
     return data;
   }
 
@@ -68,11 +68,24 @@ export class ComparisonModeService {
       return null;
     }
 
-    await this.loadComparisonModes();
+    if (data) {
+      await this.loadComparisonModes(data.project_id);
+    }
     return data;
   }
 
   async deleteComparisonMode(id: string): Promise<boolean> {
+    // First get the project_id before deleting
+    const { data: mode } = await supabase
+      .from('comparison_modes')
+      .select('project_id')
+      .eq('id', id)
+      .single();
+
+    if (!mode) {
+      return false;
+    }
+
     const { error } = await supabase
       .from('comparison_modes')
       .delete()
@@ -83,22 +96,26 @@ export class ComparisonModeService {
       return false;
     }
 
-    await this.loadComparisonModes();
+    await this.loadComparisonModes(mode.project_id);
     return true;
   }
 
   async updatePuntuacionMinima(id: string, puntuacion_minima: number): Promise<boolean> {
-    const { error } = await supabase
+    const { data, error } = await supabase
       .from('comparison_modes')
       .update({ puntuacion_minima })
-      .eq('id', id);
+      .eq('id', id)
+      .select()
+      .single();
 
     if (error) {
       console.error('Error updating minimum score:', error);
       return false;
     }
 
-    await this.loadComparisonModes();
+    if (data) {
+      await this.loadComparisonModes(data.project_id);
+    }
     return true;
   }
 

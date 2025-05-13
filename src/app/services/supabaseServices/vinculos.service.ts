@@ -1,14 +1,7 @@
 import { Injectable } from '@angular/core';
 import { supabase } from '../../config/supabase.config';
 import { BehaviorSubject, Observable } from 'rxjs';
-
-export interface Vinculo {
-  id: string;
-  area_id: string;
-  related_area_id: string;
-  created_at: string;
-  updated_at: string;
-}
+import { Vinculo, DecisionArea } from '../../models/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +17,11 @@ export class VinculosService {
   async loadVinculos() {
     const { data, error } = await supabase
       .from('vinculos')
-      .select('*')
+      .select(`
+        *,
+        area:area_id(nombre_area),
+        related_area:related_area_id(nombre_area)
+      `)
       .order('created_at', { ascending: false });
 
     if (error) {
@@ -38,7 +35,11 @@ export class VinculosService {
   async getVinculosByArea(areaId: string): Promise<Vinculo[]> {
     const { data, error } = await supabase
       .from('vinculos')
-      .select('*')
+      .select(`
+        *,
+        area:area_id(nombre_area),
+        related_area:related_area_id(nombre_area)
+      `)
       .or(`area_id.eq.${areaId},related_area_id.eq.${areaId}`);
 
     if (error) {
@@ -49,25 +50,31 @@ export class VinculosService {
     return data || [];
   }
 
-  async createVinculo(area_id: string, related_area_id: string): Promise<Vinculo | null> {
+  async createVinculo(projectId: string, area_id: string, related_area_id: string): Promise<Vinculo> {
     const { data, error } = await supabase
       .from('vinculos')
-      .insert([
-        { area_id, related_area_id }
-      ])
-      .select()
+      .insert([{
+        area_id,
+        related_area_id,
+        project_id: projectId
+      }])
+      .select(`
+        *,
+        area:area_id(nombre_area),
+        related_area:related_area_id(nombre_area)
+      `)
       .single();
 
     if (error) {
       console.error('Error creating link:', error);
-      return null;
+      throw error;
     }
 
     await this.loadVinculos();
     return data;
   }
 
-  async deleteVinculo(id: string): Promise<boolean> {
+  async deleteVinculo(id: string): Promise<void> {
     const { error } = await supabase
       .from('vinculos')
       .delete()
@@ -75,11 +82,10 @@ export class VinculosService {
 
     if (error) {
       console.error('Error deleting link:', error);
-      return false;
+      throw error;
     }
 
     await this.loadVinculos();
-    return true;
   }
 
   async deleteVinculosByArea(areaId: string): Promise<boolean> {
@@ -100,12 +106,17 @@ export class VinculosService {
   async getVinculosByProject(projectId: string): Promise<Vinculo[]> {
     const { data, error } = await supabase
       .from('vinculos')
-      .select('*')
-      .eq('project_id', projectId);
+      .select(`
+        *,
+        area:area_id(nombre_area),
+        related_area:related_area_id(nombre_area)
+      `)
+      .eq('project_id', projectId)
+      .order('created_at', { ascending: false });
 
     if (error) {
-      console.error('Error loading vinculos for project:', error);
-      return [];
+      console.error('Error loading links:', error);
+      throw error;
     }
 
     return data || [];

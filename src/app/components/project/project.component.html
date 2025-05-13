@@ -109,14 +109,17 @@
           <div class="dashboard-card">
             <h3>Quick Actions</h3>
             <div class="quick-actions">
-              <a routerLink="crear-decision" class="btn-primary">Create Decision Area</a>
-              <a routerLink="crear-opcion" class="btn-primary">Add Option</a>
-              <a routerLink="modo-de-comparacion" class="btn-primary">Configure Comparison</a>
-              <a routerLink="vinculos" class="btn-primary">Manage Links</a>
+              <a [routerLink]="['crear-decision']" class="btn-primary">Create Decision Area</a>
+              <a [routerLink]="['crear-opcion']" class="btn-primary">Add Option</a>
+              <a [routerLink]="['modo-de-comparacion']" class="btn-primary">Configure Comparison</a>
+              <a [routerLink]="['vinculos']" class="btn-primary">Manage Links</a>
             </div>
           </div>
         </div>
       </div>
+
+      <!-- Child Routes -->
+      <router-outlet></router-outlet>
 
       <!-- Decision Areas Tab -->
       <div class="tab-pane" *ngIf="activeTab === 'decision-areas'">

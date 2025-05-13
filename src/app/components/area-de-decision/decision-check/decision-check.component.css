@@ -2,3 +2,56 @@ thead{
     --tw-bg-opacity: 1;
     background-color: rgb(254 236 220 / var(--tw-bg-opacity)) /* #feecdc */;
 }
+
+.decision-check-container {
+  padding: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+h2 {
+  color: #333;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+}
+
+.decision-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.decision-item {
+  background: #fff;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.checkbox-container input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  cursor: pointer;
+}
+
+.area-name {
+  font-size: 1rem;
+  color: #333;
+}
+
+.area-rotulo {
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.checkbox-container input[type="checkbox"]:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}

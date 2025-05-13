@@ -1,14 +1,7 @@
 import { Injectable } from '@angular/core';
 import { supabase } from '../../config/supabase.config';
 import { BehaviorSubject, Observable } from 'rxjs';
-
-export interface Opcion {
-  id: string;
-  descripcion: string;
-  cod_area: string;
-  created_at: string;
-  updated_at: string;
-}
+import { Opcion } from '../../models/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -44,31 +37,33 @@ export class OpcionesService {
 
     if (error) {
       console.error('Error loading options for area:', error);
-      return [];
+      throw error;
     }
 
     return data || [];
   }
 
-  async createOpcion(descripcion: string, cod_area: string): Promise<Opcion | null> {
+  async createOpcion(projectId: string, descripcion: string, cod_area: string): Promise<Opcion> {
     const { data, error } = await supabase
       .from('opciones')
-      .insert([
-        { descripcion, cod_area }
-      ])
+      .insert([{
+        descripcion,
+        cod_area,
+        project_id: projectId
+      }])
       .select()
       .single();
 
     if (error) {
       console.error('Error creating option:', error);
-      return null;
+      throw error;
     }
 
     await this.loadOpciones();
     return data;
   }
 
-  async updateOpcion(id: string, updates: Partial<Opcion>): Promise<Opcion | null> {
+  async updateOpcion(id: string, updates: Partial<Omit<Opcion, 'id' | 'project_id' | 'created_at' | 'updated_at'>>): Promise<Opcion> {
     const { data, error } = await supabase
       .from('opciones')
       .update(updates)
@@ -78,14 +73,14 @@ export class OpcionesService {
 
     if (error) {
       console.error('Error updating option:', error);
-      return null;
+      throw error;
     }
 
     await this.loadOpciones();
     return data;
   }
 
-  async deleteOpcion(id: string): Promise<boolean> {
+  async deleteOpcion(id: string): Promise<void> {
     const { error } = await supabase
       .from('opciones')
       .delete()
@@ -93,11 +88,10 @@ export class OpcionesService {
 
     if (error) {
       console.error('Error deleting option:', error);
-      return false;
+      throw error;
     }
 
     await this.loadOpciones();
-    return true;
   }
 
   async getOpcionesByProject(projectId: string): Promise<Opcion[]> {
@@ -109,9 +103,9 @@ export class OpcionesService {
 
     if (error) {
       console.error('Error loading options for project:', error);
-      return [];
+      throw error;
     }
 
     return data || [];
   }
-} 
+}

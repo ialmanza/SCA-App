@@ -1,37 +1,55 @@
-import { Component, Input } from '@angular/core';
-import { Opcion } from '../../../models/opcion';
-import { OpcionesDBService } from '../../../services/_Opciones/opciones-db.service';
-import { Observable } from 'rxjs';
-import { NotificationService } from '../../../services/_Notification/notification.service';
+import { Component, Input, OnInit } from '@angular/core';
+import { Opcion } from '../../../models/interfaces';
+import { OpcionesService } from '../../../services/supabaseServices/opciones.service';
+import { NotificationService } from '../../../services/supabaseServices/notification.service';
 import { NotificationsComponent } from "../../notifications/notifications.component";
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-opcion',
   standalone: true,
   imports: [NotificationsComponent],
-  providers: [OpcionesDBService],
   templateUrl: './opcion.component.html',
   styleUrl: './opcion.component.css'
 })
-export class OpcionComponent {
-  @Input() opciones!: Opcion
+export class OpcionComponent implements OnInit {
+  @Input() opciones!: Opcion;
   editing: boolean = false;
+  projectId: string = '';
 
+  constructor(
+    private opcionesService: OpcionesService,
+    private notificationService: NotificationService,
+    private route: ActivatedRoute
+  ) {}
 
-  constructor( private opcionesDBService: OpcionesDBService, private notificationservice: NotificationService) {}
+  ngOnInit() {
+    // Obtener el ID del proyecto de la ruta
+    this.route.params.subscribe(params => {
+      this.projectId = params['id'];
+    });
+    // Cargar las opciones al iniciar el componente
+    this.opcionesService.loadOpciones();
+  }
 
-  deleteOpcion(opcion: Opcion) {
-        this.opcionesDBService.deleteItem(opcion.id!).subscribe({
-          next: () => {
-            this.notificationservice.show('¡Opción eliminada correctamente!', 'success');
-            this.opcionesDBService.getItems();
-          },
-          error: (err) => {
-            this.notificationservice.show('Error al eliminar la opcion', 'error');
-          },
+  async deleteOpcion(opcion: Opcion) {
+    if (!opcion.id) return;
+    
+    if (confirm('¿Estás seguro de que deseas eliminar esta opción?')) {
+      try {
+        await this.opcionesService.deleteOpcion(opcion.id.toString());
+        this.notificationService.createNotification({
+          project_id: this.projectId,
+          message: '¡Opción eliminada correctamente!',
+          type: 'success'
+        });
+      } catch (error) {
+        this.notificationService.createNotification({
+          project_id: this.projectId,
+          message: 'Error al eliminar la opción',
+          type: 'error'
         });
       }
-
-
-
+    }
+  }
 }

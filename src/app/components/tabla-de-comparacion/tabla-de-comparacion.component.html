@@ -1,57 +1,60 @@
 <app-notifications></app-notifications>
-<ng-container *ngIf="comparisonModes$ | async as modes">
-  <div class="table-wrapper">
-    <table class="comparison-table" [style.--column-count]="modes.length">
-      <thead>
-        <tr>
-          <th rowspan="2" class="opciones-column">Opciones de Decisión</th>
-          <th [attr.colspan]="modes.length" class="areas-header">Áreas de comparación</th>
-        </tr>
-        <tr class="label-headers">
-          <th *ngFor="let mode of modes; trackBy: trackByFn">
-            {{ mode.label }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngIf="opciones$ | async as opciones">
-          <tr *ngFor="let opcion of opciones$ | async; trackBy: trackByFn">
+
+<div class="table-container">
+  <ng-container *ngIf="comparisonModes$ | async as modes">
+    <div class="table-wrapper">
+      <table class="comparison-table" [style.--column-count]="modes.length">
+        <thead>
+          <tr>
+            <th rowspan="2" class="opciones-column">Opciones de Decisión</th>
+            <th [attr.colspan]="modes.length" class="areas-header">Áreas de comparación</th>
+          </tr>
+          <tr class="label-headers">
+            <th *ngFor="let mode of modes; trackBy: trackByFn" class="mode-header">
+              {{ mode.label }}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let opcion of opciones; trackBy: trackByFn">
             <td class="opciones-column">{{ opcion.descripcion }}</td>
             <td *ngFor="let mode of modes" class="area-cell">
-                <div class="counter-container">
-                    <button
-                        class="counter-btn decrease"
-                        (click)="decrement(opcion.id!, mode.id, $event)"
-                        [attr.data-cell-id]="getCellKey(opcion.id!, mode.id)">
-                        <fa-icon [icon]="faMinus"></fa-icon>
-                    </button>
-                    <span class="counter-value">{{ getCellValue(opcion.id!, mode.id) }}</span>
-                    <button
-                        class="counter-btn increase"
-                        (click)="increment(opcion.id!, mode.id, $event)"
-                        [attr.data-cell-id]="getCellKey(opcion.id!, mode.id)">
-                        <fa-icon [icon]="faPlus"></fa-icon>
-                    </button>
-                </div>
+              <div class="counter-container">
+                <button
+                  class="counter-btn decrease"
+                  (click)="decrement(opcion.id, mode.id, $event)"
+                  [attr.data-cell-id]="getCellKey(opcion.id, mode.id)"
+                  [disabled]="getCellValue(opcion.id, mode.id) <= 0">
+                  <fa-icon [icon]="faMinus"></fa-icon>
+                </button>
+                <span class="counter-value">{{ getCellValue(opcion.id, mode.id) }}</span>
+                <button
+                  class="counter-btn increase"
+                  (click)="increment(opcion.id, mode.id, $event)"
+                  [attr.data-cell-id]="getCellKey(opcion.id, mode.id)"
+                  [disabled]="getCellValue(opcion.id, mode.id) >= 5">
+                  <fa-icon [icon]="faPlus"></fa-icon>
+                </button>
+              </div>
             </td>
-        </tr>
-        </ng-container>
-      </tbody>
-    </table>
-  </div>
-</ng-container>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ng-container>
 
-<div class="actions-container">
-  <button
-    class="save-button"
-    (click)="saveAllCells()"
-    [disabled]="!hasUnsavedChanges()">
-    Guardar Tabla
-  </button>
-  <button
-    class="reset-button"
-    (click)="resetTable()"
-    [disabled]="!hasUnsavedChanges()">
-    Reiniciar Tabla
-  </button>
+  <div class="actions-container">
+    <button
+      class="action-button save-button"
+      (click)="saveAllCells()"
+      [disabled]="!hasUnsavedChanges()">
+      Guardar Tabla
+    </button>
+    <button
+      class="action-button reset-button"
+      (click)="resetTable()"
+      [disabled]="!hasUnsavedChanges()">
+      Reiniciar Tabla
+    </button>
+  </div>
 </div>

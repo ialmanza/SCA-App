@@ -11,8 +11,8 @@
       </thead>
       <tbody>
         <tr *ngFor="let decision of decisiones" class="border-b hover:bg-gray-100">
-          <td data-label="Área de decisión" class="py-3 px-4">{{decision.area}}</td>
-          <td data-label="Descripción" class="py-3 px-4">{{decision.description}}</td>
+          <td data-label="Área de decisión" class="py-3 px-4">{{decision.nombre_area}}</td>
+          <td data-label="Descripción" class="py-3 px-4">{{decision.descripcion}}</td>
           <td data-label="Modificar" class="cen py-3 px-4">
             <button class="mod" (click)="abrirModal(decision)">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="icon">
@@ -37,10 +37,10 @@
                 <input id="rotulo" type="text" [(ngModel)]="decisionSeleccionada!.rotulo" class="border p-2 w-full mb-4 focus:border-orange-500 focus:outline-none" placeholder="{{ decisionSeleccionada?.rotulo || 'Escribe el código' }}">
 
               <label for="descripcion" class="block mb-2">Nombre del área</label>
-              <input id="rotulo" type="text" [(ngModel)]="decisionSeleccionada!.area" class="border p-2 w-full mb-4" placeholder="{{ decisionSeleccionada?.area || 'Escribe el código' }}">
+              <input id="rotulo" type="text" [(ngModel)]="decisionSeleccionada!.nombre_area" class="border p-2 w-full mb-4" placeholder="{{ decisionSeleccionada?.nombre_area || 'Escribe el nombre del área' }}">
 
               <label for="descripcion" class="block mb-2">Complete descripción:</label>
-              <textarea id="descripcion" type="text" [(ngModel)]="decisionSeleccionada!.description" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-600 focus:border-indigo-600" required="" rows="4" placeholder="{{ decisionSeleccionada?.description || 'Escribe la descripción' }}"></textarea>
+              <textarea id="descripcion" type="text" [(ngModel)]="decisionSeleccionada!.descripcion" class="w-full border border-gray-300 rounded-lg p-2.5 focus:ring-indigo-600 focus:border-indigo-600" required="" rows="4" placeholder="{{ decisionSeleccionada?.descripcion || 'Escribe la descripción' }}"></textarea>
 
               <div class="flex justify-center">
                 <button (click)="cerrarModal()" class="elim bot">Cancelar</button>

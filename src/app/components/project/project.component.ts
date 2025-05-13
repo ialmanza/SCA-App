@@ -182,5 +182,22 @@ export class ProjectComponent implements OnInit {
 
   setActiveTab(tab: string) {
     this.activeTab = tab;
+    // Navigate to the corresponding route if it exists
+    switch (tab) {
+      case 'decision-areas':
+        this.router.navigate(['decisiones-form'], { relativeTo: this.route });
+        break;
+      case 'options':
+        this.router.navigate(['opciones'], { relativeTo: this.route });
+        break;
+      case 'comparison':
+        this.router.navigate(['modo-de-comparacion'], { relativeTo: this.route });
+        break;
+      case 'links':
+        this.router.navigate(['vinculos'], { relativeTo: this.route });
+        break;
+      default:
+        this.router.navigate(['.'], { relativeTo: this.route });
+    }
   }
 }

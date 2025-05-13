@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ComparisonMode } from '../../models/comparacion';
-import { Opcion } from '../../models/opcion';
+import { Opcion } from '../../models/interfaces';
 import { OpcionesDBService } from '../../services/_Opciones/opciones-db.service';
 import { CommonModule } from '@angular/common';
 import { ComparacionModeService } from '../../services/_Comparacion/comparacion-mode.service';
@@ -50,7 +50,7 @@ export class TablaDeSeleccionComponent implements OnInit {
   ) {
     this.opciones$ = this.opcionService.getItems();
     this.comparisonModes$ = this.comparisonModeService.getComparisonModes().pipe(
-      map(modes => modes.sort((a, b) => Number(a.order) - Number(b.order)))
+      map(modes => modes.sort((a, b) => Number(a.order_num) - Number(b.order_num)))
     );
   }
 

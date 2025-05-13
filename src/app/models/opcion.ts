@@ -1,6 +1,8 @@
 export interface Opcion {
-  _id: string;
+  id: string;
   descripcion: string;
   cod_area: string;
-  id?: number;
+  project_id: string;
+  created_at: string;
+  updated_at: string;
 }

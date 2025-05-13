@@ -1,13 +1,15 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
 import * as d3 from 'd3';
-import { VinculodbService } from '../../services/_Vinculos/vinculodb.service';
-import { DecisionesDBService } from '../../services/_Decisiones/decisiones-db.service';
 import { forkJoin } from 'rxjs';
+import { Vinculo } from '../../models/interfaces';
+import { VinculosService } from '../../services/supabaseServices/vinculos.service';
+import { DecisionsService } from '../../services/supabaseServices/decisions.service';
 
 interface Node extends d3.SimulationNodeDatum {
   isSelected: boolean;
   id: string;
   isImportant?: boolean;
+  name?: string;
 }
 
 interface Link extends d3.SimulationLinkDatum<Node> {
@@ -15,62 +17,71 @@ interface Link extends d3.SimulationLinkDatum<Node> {
   target: string | Node;
 }
 
-interface VinculoData {
-  nombre: string;
-  area_id: number;
-  related_area_id: number;
-}
-
 @Component({
   selector: 'app-grafo',
   standalone: true,
   imports: [],
-  providers: [VinculodbService, DecisionesDBService],
+  providers: [VinculosService],
   templateUrl: './grafo.component.html',
   styleUrls: ['./grafo.component.css'],
 })
-export class GrafoComponent implements OnInit {
+export class GrafoComponent implements OnInit, OnChanges {
+  @Input() projectId!: string;
+
   constructor(
-    private vinculoService: VinculodbService,
-    private decisionesService: DecisionesDBService
+    private vinculosService: VinculosService,
+    private decisionesService: DecisionsService
   ) {}
 
   ngOnInit(): void {
+    // We'll handle initialization in ngOnChanges
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['projectId'] && this.projectId) {
+      this.loadGraphData();
+    }
+  }
+
+  private loadGraphData(): void {
+    if (!this.projectId) {
+      console.error('No se proporcionó un projectId para el componente de grafo');
+      return;
+    }
+
     forkJoin({
-      vinculos: this.vinculoService.getItems(),
-      importantAreas: this.decisionesService.getImportantStatus()
-    }).subscribe(({ vinculos, importantAreas }) => {
-
-      // Extract vinculos array from response
-      const vinculosList = (vinculos as any).vinculos.map((v: any[]) => ({
-        nombre: v[0],
-        area_id: v[1],
-        related_area_id: v[2]
-      }));
-
-      const graphData = this.generateGraphData(vinculosList, importantAreas);
-      this.createGraph(graphData);
+      vinculos: this.vinculosService.getVinculosByProject(this.projectId),
+      importantAreas: this.decisionesService.getImportantStatus(this.projectId)
+    }).subscribe({
+      next: ({ vinculos, importantAreas }) => {
+        const graphData = this.generateGraphData(vinculos, importantAreas);
+        this.createGraph(graphData);
+      },
+      error: (error) => {
+        console.error('Error al cargar los datos del grafo:', error);
+      }
     });
   }
 
   private generateGraphData(
-    vinculos: VinculoData[],
+    vinculos: Vinculo[],
     importantAreas: any[]
   ): { nodes: Node[]; links: Link[] } {
     const nodesMap = new Map<string, Node>();
     const links: Link[] = [];
 
     vinculos.forEach((vinculo) => {
-      const [source, target] = vinculo.nombre.split(' - ');
+      const source = vinculo.area_id;
+      const target = vinculo.related_area_id;
 
       if (source && target) {
-
         if (!nodesMap.has(source)) {
           nodesMap.set(source, {
             id: source,
+            name: vinculo.area?.nombre_area || source,
             isSelected: false,
             isImportant: importantAreas.some(
-              area => area.area === source && area.is_important
+              area => area.id === source && area.is_important
             )
           });
         }
@@ -78,9 +89,10 @@ export class GrafoComponent implements OnInit {
         if (!nodesMap.has(target)) {
           nodesMap.set(target, {
             id: target,
+            name: vinculo.related_area?.nombre_area || target,
             isSelected: false,
             isImportant: importantAreas.some(
-              area => area.area === target && area.is_important
+              area => area.id === target && area.is_important
             )
           });
         }
@@ -172,7 +184,7 @@ export class GrafoComponent implements OnInit {
       .attr('fill', (d) => d.isImportant ? '#ff0000' : '#000')
       .attr('text-anchor', 'middle')
       .attr('dy', -20)
-      .text((d) => d.id);
+      .text((d) => d.name || d.id);
 
     // Actualizar simulación
     simulation.on('tick', () => {

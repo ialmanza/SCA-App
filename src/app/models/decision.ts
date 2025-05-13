@@ -1,12 +1,13 @@
-import { Opcion } from "./opcion";
+import { Opcion } from "./interfaces";
 
 export interface Decision {
-  _id: string;
+  id: string;
+  project_id: string;
   rotulo: string;
-  area: string;
-  description: string;
+  nombre_area: string;
+  descripcion: string;
+  is_important: boolean;
+  created_at: string;
+  updated_at: string;
   opciones?: Opcion[];
-  is_important?: boolean;
-  id?: number;
-  puntuacion?: number;
 }
