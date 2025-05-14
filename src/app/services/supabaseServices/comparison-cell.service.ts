@@ -1,27 +1,35 @@
 import { Injectable } from '@angular/core';
 import { supabase } from '../../config/supabase.config';
 import { Observable, from } from 'rxjs';
-import { ComparisonCell } from '../../models/interfaces';
+import { map } from 'rxjs/operators';
+
+interface ComparisonModeWithCells {
+  id: string;
+  puntuacion_minima: number | null;
+  comparison_cells: {
+    opcion_id: string;
+    value: number;
+  }[];
+}
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComparisonCellService {
-
   constructor() {}
 
-  async getComparisonCellsByProject(projectId: string): Promise<ComparisonCell[]> {
-    const { data, error } = await supabase
-      .from('comparison_cells')
-      .select('*')
-      .eq('project_id', projectId);
-
-    if (error) {
-      console.error('Error loading comparison cells:', error);
-      throw error;
-    }
-
-    return data || [];
+  getComparisonCellsByProject(projectId: string): Observable<any[]> {
+    return from(
+      supabase
+        .from('comparison_cells')
+        .select('*')
+        .eq('project_id', projectId)
+    ).pipe(
+      map(response => {
+        if (response.error) throw response.error;
+        return response.data;
+      })
+    );
   }
 
   async upsertComparisonCell(
@@ -29,7 +37,7 @@ export class ComparisonCellService {
     modeId: string,
     value: number,
     projectId: string
-  ): Promise<ComparisonCell> {
+  ): Promise<any> {
     // Primero verificamos si la celda ya existe
     const { data: existingCells, error: fetchError } = await supabase
       .from('comparison_cells')
@@ -95,5 +103,44 @@ export class ComparisonCellService {
       console.error('Error deleting comparison cells:', error);
       throw error;
     }
+  }
+
+  getCellsWithMinimumScores(projectId: string): Observable<Map<string, Set<string>>> {
+    return from(
+      supabase
+        .from('comparison_modes')
+        .select(`
+          id,
+          puntuacion_minima,
+          comparison_cells (
+            opcion_id,
+            value
+          )
+        `)
+        .eq('project_id', projectId)
+    ).pipe(
+      map(response => {
+        if (response.error) throw response.error;
+        
+        const validOptionsMap = new Map<string, Set<string>>();
+        
+        (response.data as ComparisonModeWithCells[]).forEach(mode => {
+          const minScore = mode.puntuacion_minima;
+          if (minScore !== null) {
+            const validOptions = new Set<string>();
+            
+            mode.comparison_cells.forEach(cell => {
+              if (cell.value >= minScore) {
+                validOptions.add(cell.opcion_id);
+              }
+            });
+            
+            validOptionsMap.set(mode.id, validOptions);
+          }
+        });
+        
+        return validOptionsMap;
+      })
+    );
   }
 }

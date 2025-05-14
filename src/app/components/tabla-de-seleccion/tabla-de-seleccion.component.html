@@ -1,5 +1,18 @@
+<!-- Loading indicator -->
+<div *ngIf="isLoading" class="loading-container">
+  <div class="loading-spinner"></div>
+  <p>Cargando datos...</p>
+</div>
+
+<!-- Error message -->
+<div *ngIf="error && !isLoading" class="error-container">
+  <p class="error-message">{{ error }}</p>
+  <button (click)="loadData()" class="retry-button">Intentar de nuevo</button>
+</div>
+
+<!-- Main content -->
 <div class="container" *ngIf="!isLoading && !error">
-  <div class="table-container">
+  <div class="table-container" *ngIf="paths && paths.length > 0">
     <table>
       <thead>
         <tr>
@@ -11,29 +24,30 @@
       </thead>
       <tbody>
         <tr *ngFor="let path of paths; trackBy: trackByFn">
-          <td class="path-hex">{{ path.hexa }}</td>
+          <td class="path-hex clickable" (click)="openPathModal(path)">{{ path.hexa }}</td>
           <td class="path-name">
             <!-- Aquí puedes mostrar el nombre del path si lo tienes -->
           </td>
-          <td *ngFor="let mode of comparisonModes; trackBy: trackByFn" class="symbol-cell">
-            {{ getSymbolsForCell(path, parseInt(mode.id)) }}
+          <td *ngFor="let mode of comparisonModes; trackBy: trackByFn"
+              class="symbol-cell"
+              [attr.data-mode-id]="mode.id"
+              [class.valid]="isValidCell(path, mode.id)">
+            {{ getSymbolsForCell(path, mode.id) }}
           </td>
         </tr>
       </tbody>
     </table>
   </div>
+
+  <!-- No data message -->
+  <div *ngIf="!paths || paths.length === 0" class="no-data-container">
+    <p>No hay alternativas disponibles para mostrar</p>
+  </div>
 </div>
 
-<div *ngIf="isLoading" class="loading">
-  Cargando datos...
-</div>
-
-<div *ngIf="error" class="error-message">
-  <p>{{ error }}</p>
-  <button (click)="loadData()" class="retry-button">Intentar de nuevo</button>
-</div>
-
-<div *ngIf="!isLoading && !error && paths.length === 0" class="empty-state">
-  <p>No hay datos disponibles para mostrar</p>
-</div>
-
+<!-- Path Modal -->
+<app-path-modal
+  [isOpen]="isModalOpen"
+  [path]="selectedPath"
+  (closeEvent)="closeModal()">
+</app-path-modal>

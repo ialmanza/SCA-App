@@ -5,11 +5,13 @@ import { Decision } from '../../models/decision';
 import { Opcion } from '../../models/interfaces';
 import { OpcionesService } from '../../services/supabaseServices/opciones.service';
 import { SelectedPathsService } from '../../services/supabaseServices/selected-paths.service';
+import { PathDescriptionsService } from '../../services/supabaseServices/path-descriptions.service';
 import { BehaviorSubject, firstValueFrom } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { NotificationService } from '../../services/_Notification/notification.service';
 import { NotificationsComponent } from "../notifications/notifications.component";
 import { DecisionsService } from '../../services/supabaseServices/decisions.service';
+import { supabase } from '../../config/supabase.config';
 
 interface DecisionNode {
   areaTitle: string;
@@ -29,7 +31,7 @@ interface DecisionNode {
   selector: 'app-posibles-alternativas',
   standalone: true,
   imports: [CommonModule, FormsModule, NotificationsComponent],
-  providers: [SelectedPathsService, OpcionesService],
+  providers: [SelectedPathsService, OpcionesService, PathDescriptionsService],
   templateUrl: './posibles-alternativas.component.html',
   styleUrls: ['./posibles-alternativas.component.css'],
 })
@@ -49,6 +51,7 @@ export class PosiblesAlternativasComponent implements OnInit {
     private opcionesService: OpcionesService,
     private selectedPathsService: SelectedPathsService,
     private decisionsService: DecisionsService,
+    private pathDescriptionsService: PathDescriptionsService,
     private changeDetectorRef: ChangeDetectorRef,
     private notificationService: NotificationService
   ) {}
@@ -105,8 +108,15 @@ export class PosiblesAlternativasComponent implements OnInit {
 
   async loadExistingPaths(): Promise<void> {
     try {
-      const paths = await firstValueFrom(this.selectedPathsService.getPathsFromBackend(this.projectId));
-      this.paths = paths;
+      // Obtener todos los paths del proyecto
+      const { data: paths, error } = await supabase
+        .from('path_descriptions')
+        .select('*')
+        .eq('project_id', this.projectId);
+
+      if (error) throw error;
+
+      this.paths = paths || [];
       this.updateTreeSelections();
     } catch (error) {
       this.notificationService.show('Error obteniendo paths', 'error');
@@ -119,7 +129,7 @@ export class PosiblesAlternativasComponent implements OnInit {
 
     const updateNode = (node: DecisionNode) => {
       node.options.forEach(option => {
-        const matchingPath = this.paths.find(p => p.hexa === option.hexCode);
+        const matchingPath = this.paths.find(p => p.hex_code === option.hexCode);
         option.selected = !!matchingPath;
 
         if (option.children) {
@@ -136,46 +146,46 @@ export class PosiblesAlternativasComponent implements OnInit {
     return this.uniqueAreasSubject.getValue();
   }
 
-  onOptionSelected(option: any, path: string[]): void {
+  async onOptionSelected(option: any, path: string[]): Promise<void> {
     const hexCode = option.hexCode;
     this.updatingOptions[hexCode] = true;
 
-    if (option.selected) {
-      const numericPaths = path.map(p => parseInt(p, 10));
-      this.selectedPathsService.addPathToBackend(hexCode, numericPaths.map(String), this.projectId)
-        .subscribe({
-          next: () => {
-            this.notificationService.show('Alternativa creada exitosamente', 'success');
-            this.loadExistingPaths();
-          },
-          error: () => {
-            this.notificationService.show('Error creando alternativa', 'error');
-            option.selected = false;
-            this.changeDetectorRef.detectChanges();
-          },
-          complete: () => {
-            delete this.updatingOptions[hexCode];
-            this.changeDetectorRef.detectChanges();
-          }
-        });
-    } else {
-      this.selectedPathsService.deletePathFromBackend(option.id, hexCode, this.projectId)
-        .subscribe({
-          next: () => {
-            this.notificationService.show('Alternativa eliminada exitosamente', 'success');
-            this.loadExistingPaths();
-          },
-          error: () => {
-            this.notificationService.show('Error eliminando alternativa', 'error');
-            option.selected = true;
-            this.changeDetectorRef.detectChanges();
-          },
-          complete: () => {
-            delete this.updatingOptions[hexCode];
-            this.changeDetectorRef.detectChanges();
-          }
-        });
+    try {
+      if (option.selected) {
+        const descriptions = this.getPathDescriptions(path);
+        await this.pathDescriptionsService.savePathDescription(this.projectId, hexCode, descriptions);
+        this.notificationService.show('Alternativa creada exitosamente', 'success');
+      } else {
+        await this.pathDescriptionsService.deletePathDescription(this.projectId, hexCode);
+        this.notificationService.show('Alternativa eliminada exitosamente', 'success');
+      }
+      await this.loadExistingPaths();
+    } catch (error) {
+      this.notificationService.show('Error en la operación', 'error');
+      option.selected = !option.selected;
+    } finally {
+      delete this.updatingOptions[hexCode];
+      this.changeDetectorRef.detectChanges();
     }
+  }
+
+  private getPathDescriptions(path: string[]): string[] {
+    const descriptions: string[] = [];
+    let currentNode = this.decisionTree;
+
+    for (const pathId of path) {
+      const currentArea = currentNode[0];
+      const option = currentArea.options.find(opt => opt.id === pathId);
+      
+      if (option) {
+        descriptions.push(option.text);
+        if (option.children) {
+          currentNode = option.children;
+        }
+      }
+    }
+
+    return descriptions;
   }
 
   buildDecisionTree(): void {
