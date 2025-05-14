@@ -23,7 +23,7 @@
 
 .form-group label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 15px;
   color: #333;
   font-size: 2vh;
 }
@@ -131,7 +131,9 @@ transform: scale(1.1);
 
 }
 
-
+h2{
+  margin: auto;
+}
 
 
 .card-body {
@@ -142,12 +144,14 @@ transform: scale(1.1);
 }
 
 .resaltado {
-  text-align: center;
+  display: flex;
+  align-items: center; /* Centra verticalmente (Y) */
+  text-align: center;;
   background-color: rgba(255, 125, 4, 0.774);
-  box-sizing: border-box;
-  padding: 10px;
+  height: 30%;
+  min-height: 80px;
   color: rgb(255, 255, 255);
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   border-radius: 10px;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
 

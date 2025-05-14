@@ -1,7 +1,7 @@
 <app-notifications></app-notifications>
 <div class="bg-white shadow-xl rounded-2xl border border-gray-200 p-6">
   <div class="flex items-center justify-between mb-4">
-    <h3 class="text-xl font-semibold text-gray-800">Crear Conexión Entre Áreas</h3>
+    <h3 class="tituloconexion">Crear conexión entre áreas</h3>
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
     </svg>
@@ -36,7 +36,7 @@
     <div class="flex justify-end">
       <button
         (click)="crearVinculo()"
-        class="px-6 py-2  text-white rounded-md bg-green-500 hover:bg-green-800 focus:ring-2 focus:ring-green-800 focus:ring-offset-2 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+        class="crearvinculo px-6 py-2  text-white rounded-md bg-orange-500 focus:ring-orange-900 focus:ring-offset-2 transition duration-300 ease-in-out transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
         [disabled]="!selectedArea1 || !selectedArea2 || selectedArea1 === selectedArea2"
       >
         Crear Vínculo
@@ -46,8 +46,6 @@
   </div>
 </div>
 <br>
-
-
     <div *ngIf="vinculoAEliminar" class="modal-overlay">
       <div class="modal-content">
         <h3>Confirmar eliminación</h3>
@@ -77,3 +75,4 @@
 <!-- <div class="border-l border-gray-200 pl-4">
   <app-grafo [projectId]="projectId" class="w-full h-64"></app-grafo>
 </div> -->
+
