@@ -71,16 +71,13 @@ export class DecisionesFormComponent implements OnInit {
 
   async loadData() {
     try {
-      // Cargar decisiones
       const decisiones = await this.decisionAreaService.getDecisionAreasByProject(this.projectId);
       this.areas = decisiones;
       this.decisiones = decisiones.map(decision => ({ ...decision, seleccionado: false }));
 
-      // Cargar opciones
       const opciones = await this.opcionesService.getOpcionesByProject(this.projectId);
       this.opciones = opciones;
 
-      // Cargar vínculos
       const vinculos = await this.vinculosService.getVinculosByProject(this.projectId);
       this.vinculos = vinculos;
     } catch (error) {
@@ -290,14 +287,11 @@ export class DecisionesFormComponent implements OnInit {
     this.decisionsService.getImportantStatus(this.projectId).subscribe((result) => {
       console.log('Resultado de getImportantStatus:', result);
 
-      // Verificar si hay áreas importantes seleccionadas
       if (result && result.length > 0) {
-        // Actualiza areasSeleccionadas con las áreas importantes
         this.areasSeleccionadas = result;
 
-        // Cargar los datos necesarios para la tabla de comparación
         this.loadData().then(() => {
-          this.pasoActual = 6; // Avanza al paso 6 solo si hay datos
+          this.pasoActual = 6;
         });
       } else {
         this.notificationService.createNotification({

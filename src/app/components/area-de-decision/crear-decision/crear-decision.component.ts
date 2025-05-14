@@ -16,11 +16,10 @@ import { ActivatedRoute } from '@angular/router';
   styleUrl: './crear-decision.component.css'
 })
 export class CrearDecisionComponent implements OnInit {
-  // Podemos recibir el projectId como input o de los parámetros de la ruta
   @Input() projectId: string = '';
   rotuloValue: string = '';
-  isLoading: boolean = false; // Para manejar estados de carga
-  projectIdConfirmed: boolean = false; // Para confirmar que tenemos un ID válido
+  isLoading: boolean = false;
+  projectIdConfirmed: boolean = false;
 
   constructor(
     private decisionAreaService: DecisionAreaService,
@@ -33,14 +32,12 @@ export class CrearDecisionComponent implements OnInit {
   }
 
   private loadProjectId() {
-    // Si ya tenemos un projectId como Input, usarlo directamente
     if (this.projectId && this.projectId.trim() !== '') {
       console.log('ProjectId recibido como Input:', this.projectId);
       this.projectIdConfirmed = true;
       return;
     }
 
-    // Intentamos con params (para rutas como /proyectos/:id)
     this.route.params.subscribe(params => {
       if (params['id']) {
         this.projectId = params['id'];
@@ -49,7 +46,6 @@ export class CrearDecisionComponent implements OnInit {
         return;
       }
 
-      // Si no hay en params, intentamos con paramMap
       const id = this.route.snapshot.paramMap.get('id');
       if (id) {
         this.projectId = id;
@@ -58,7 +54,6 @@ export class CrearDecisionComponent implements OnInit {
         return;
       }
 
-      // También podemos intentar con queryParams como último recurso
       this.route.queryParams.subscribe(queryParams => {
         if (queryParams['projectId']) {
           this.projectId = queryParams['projectId'];
@@ -73,7 +68,6 @@ export class CrearDecisionComponent implements OnInit {
   }
 
   async addDecision(area: HTMLInputElement, descripcion: HTMLTextAreaElement) {
-    // Confirmar que tenemos un projectId válido
     if (!this.projectId || this.projectId.trim() === '' || !this.isValidUUID(this.projectId)) {
       console.error('ID del proyecto no válido o no encontrado:', this.projectId);
       alert('Error: No se pudo determinar el ID del proyecto');
@@ -82,13 +76,11 @@ export class CrearDecisionComponent implements OnInit {
 
     console.log('Intentando crear decisión con projectId:', this.projectId);
 
-    // Validar campos requeridos
     if (!area.value || !descripcion.value) {
       alert('Por favor rellene todos los campos.');
       return;
     }
 
-    // Evitar múltiples envíos
     if (this.isLoading) return;
     this.isLoading = true;
 
@@ -100,12 +92,10 @@ export class CrearDecisionComponent implements OnInit {
         is_important: false
       });
 
-      // Limpiar campos después de guardar exitosamente
       area.value = '';
       this.rotuloValue = '';
       descripcion.value = '';
 
-      // Mostrar la notificación de éxito
       await this.createSuccessNotification('Área de decisión creada correctamente');
     } catch (error) {
       console.error('Error al crear decisión:', error);
@@ -134,7 +124,6 @@ export class CrearDecisionComponent implements OnInit {
     }
   }
 
-  // Validador simple de UUID para asegurar que tenemos un ID válido
   private isValidUUID(uuid: string): boolean {
     const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     return uuidRegex.test(uuid);

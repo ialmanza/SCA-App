@@ -114,20 +114,17 @@ export class ProjectComponent implements OnInit {
   private loadProjectStats() {
     if (!this.project?.id) return;
 
-    // Load decision areas
     this.decisionAreaService.getDecisionAreasByProject(this.project.id)
       .then(areas => {
         this.stats.decisionAreas = areas.length;
         this.stats.importantAreas = areas.filter(area => area.is_important).length;
       });
 
-    // Load options
     this.opcionesService.getOpcionesByProject(this.project.id)
       .then(options => {
         this.stats.options = options.length;
       });
 
-    // Load comparison modes
     this.comparisonModeService.getComparisonModesByProject(this.project.id)
       .then(modes => {
         this.stats.comparisonModes = modes.length;
@@ -202,13 +199,11 @@ export class ProjectComponent implements OnInit {
 
   logout() {
     this.authService.signOut().then(() => {
-      // Limpiamos cualquier estado del componente
       this.project = null;
       this.error = null;
 
       // Agregamos un pequeño retraso para asegurar que todo se ha limpiado
       setTimeout(() => {
-        // Navegamos a la página de login
         this.router.navigate(['/login'], { replaceUrl: true });
 
         // Mostramos notificación solo si tenemos un ID de proyecto válido

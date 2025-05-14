@@ -95,7 +95,6 @@ export class PosiblesAlternativasComponent implements OnInit {
       const decisions = await firstValueFrom(this.decisionsService.getDecisionsByProject(this.projectId));
       this.decisions = decisions;
 
-      // Usar el nuevo servicio de opciones con Supabase
       const opciones = await this.opcionesService.getOpcionesByProject(this.projectId);
       this.opciones = opciones;
 
@@ -108,7 +107,6 @@ export class PosiblesAlternativasComponent implements OnInit {
 
   async loadExistingPaths(): Promise<void> {
     try {
-      // Obtener todos los paths del proyecto
       const { data: paths, error } = await supabase
         .from('path_descriptions')
         .select('*')
@@ -176,7 +174,7 @@ export class PosiblesAlternativasComponent implements OnInit {
     for (const pathId of path) {
       const currentArea = currentNode[0];
       const option = currentArea.options.find(opt => opt.id === pathId);
-      
+
       if (option) {
         descriptions.push(option.text);
         if (option.children) {

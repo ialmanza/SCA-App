@@ -22,13 +22,12 @@ export class OpcionComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    // Cargar las opciones al iniciar el componente
     this.opcionesService.loadOpciones();
   }
 
   async deleteOpcion(opcion: Opcion) {
     if (!opcion.id) return;
-    
+
     if (confirm('¿Estás seguro de que deseas eliminar esta opción?')) {
       try {
         await this.opcionesService.deleteOpcion(opcion.id.toString());

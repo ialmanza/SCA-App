@@ -196,7 +196,6 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
 
   // Método para cargar las descripciones de los paths
   loadPathDescriptions(): void {
-    // Solo procesamos si hay paths para cargar
     if (!this.paths || this.paths.length === 0) {
       this.isLoading = false;
       this.cdr.detectChanges();
@@ -218,7 +217,6 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
     // Ejecutamos todas las promesas en paralelo
     forkJoin(descriptionPromises).subscribe({
       next: (results) => {
-        // Actualizamos cada path con sus descripciones
         results.forEach(result => {
           const pathIndex = this.paths.findIndex(p => p.hexa === result.hexCode);
           if (pathIndex !== -1 && result.descriptions) {
@@ -226,7 +224,6 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
           }
         });
 
-        // Intentamos generar y guardar descripciones para los paths que no tienen
         this.generateAndSavePathDescriptions();
 
         this.isLoading = false;
@@ -248,15 +245,12 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
 
     console.log(`Generando descripciones para ${pathsWithoutDescriptions.length} caminos...`);
 
-    // Para cada path sin descripciones, generamos y guardamos las descripciones
     pathsWithoutDescriptions.forEach(path => {
       const descriptions = this.generatePathDescriptions(path);
 
-      // Guardamos las descripciones en Supabase
       this.pathDescriptionsService.savePathDescription(this.projectId, path.hexa, descriptions)
         .then(() => {
           console.log(`Descripciones guardadas para el camino ${path.hexa}`);
-          // Actualizamos el path con las nuevas descripciones
           const pathIndex = this.paths.findIndex(p => p.hexa === path.hexa);
           if (pathIndex !== -1) {
             this.paths[pathIndex].descriptions = descriptions;
@@ -276,29 +270,24 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
         return "[Opción no especificada]";
       }
 
-      // Intentamos encontrar la opción usando el ID exacto primero
       let opcion = this.optionIdMap.get(optionId);
 
-      // Si no se encuentra, intentamos buscar por coincidencia parcial
       if (!opcion) {
         opcion = this.opciones.find(op =>
           op.id.startsWith(optionId) || optionId.startsWith(op.id)
         );
       }
 
-      // Si seguimos sin encontrar, buscamos por inclusión
       if (!opcion) {
         opcion = this.opciones.find(op =>
           op.id.includes(optionId) || optionId.includes(op.id)
         );
       }
 
-      // Registramos para debug
       if (!opcion) {
         console.warn(`No se encontró opción para ID: ${optionId}`);
       }
 
-      // Retornar la descripción de la opción, o el ID si no se encuentra
       return opcion ? opcion.descripcion : `[${optionId || "Desconocido"}]`;
     });
   }
@@ -321,9 +310,6 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
           return;
         }
 
-        // Una celda es válida si:
-        // 1. No tiene puntuación mínima (minScore es null) O
-        // 2. El valor es mayor o igual a la puntuación mínima
         value.isValid = value.minScore === null || value.value >= value.minScore;
       });
     });
@@ -335,7 +321,6 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
     const valueObj = path.values.find(v => v && v.area === modeId);
     if (!valueObj) return '';
 
-    // Solo mostramos símbolos si el valor es mayor que 0 y cumple con la puntuación mínima
     if (valueObj.value > 0 && valueObj.isValid) {
       return valueObj.symbol.repeat(valueObj.value);
     }
@@ -349,9 +334,6 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
     const valueObj = path.values.find(v => v && v.area === modeId);
     if (!valueObj) return false;
 
-    // Una celda es válida si:
-    // 1. No tiene puntuación mínima (minScore es null) O
-    // 2. El valor es mayor o igual a la puntuación mínima
     return valueObj.minScore === null || valueObj.value >= valueObj.minScore;
   }
 
@@ -363,14 +345,11 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
     return parseInt(id, 10);
   }
 
-  // Método para encontrar una opción por ID (completo o parcial)
   findOpcionById(optionId: string): Opcion | undefined {
-    // Primero intentamos buscar en el mapa por ID completo
     if (this.optionIdMap.has(optionId)) {
       return this.optionIdMap.get(optionId);
     }
 
-    // Si no se encuentra, buscamos en el array de opciones por ID parcial
     return this.opciones.find(opcion =>
       opcion.id.startsWith(optionId) || opcion.id.includes(optionId)
     );
@@ -379,7 +358,6 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
   openPathModal(path: PathValues): void {
     this.isLoading = true;
 
-    // Usar las descripciones directamente del path
     if (path.descriptions && path.descriptions.length > 0) {
       this.selectedPath = {
         hexa: path.hexa,
@@ -391,7 +369,6 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
       return;
     }
 
-    // Si no tiene descripciones, intentamos cargarlas de la base de datos
     from(this.pathDescriptionsService.getPathDescription(this.projectId, path.hexa))
       .pipe(
         catchError(error => {
@@ -401,7 +378,6 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
       )
       .subscribe(descriptions => {
         if (descriptions && descriptions.length > 0) {
-          // Actualizar el path en memoria con las descripciones
           const pathIndex = this.paths.findIndex(p => p.hexa === path.hexa);
           if (pathIndex !== -1) {
             this.paths[pathIndex].descriptions = descriptions;
@@ -412,10 +388,8 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
             path: descriptions
           };
         } else {
-          // Si no hay descripciones, generamos nuevas
           const generatedDescriptions = this.generatePathDescriptions(path);
 
-          // Guardar las descripciones generadas
           this.pathDescriptionsService.savePathDescription(this.projectId, path.hexa, generatedDescriptions)
             .then(() => {
               const pathIndex = this.paths.findIndex(p => p.hexa === path.hexa);

@@ -33,9 +33,7 @@ export class GrafoComponent implements OnInit, OnChanges {
     private decisionesService: DecisionsService
   ) {}
 
-  ngOnInit(): void {
-    // We'll handle initialization in ngOnChanges
-  }
+  ngOnInit(): void {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['projectId'] && this.projectId) {

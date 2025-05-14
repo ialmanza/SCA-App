@@ -72,7 +72,6 @@ export class TablaDeComparacionComponent implements OnInit {
 
   private inicializarDatos(): void {
     console.log('Inicializando datos...');
-    // Primero cargamos los modos de comparación
     from(this.comparisonModeService.getComparisonModesByProject(this.projectId)).pipe(
       tap(modes => {
         console.log('Modos de comparación cargados:', modes);
@@ -268,6 +267,7 @@ export class TablaDeComparacionComponent implements OnInit {
     try {
       console.log('Guardando celda:', { opcionId, modeId, value });
       await this.comparisonCellService.upsertComparisonCell(opcionId, modeId, value, this.projectId);
+      this.notificationService.show('Celda guardada exitosamente', 'success');
     } catch (error) {
       console.error('Error al guardar la celda:', error);
       this.notificationService.show('Error al guardar la celda', 'error');
