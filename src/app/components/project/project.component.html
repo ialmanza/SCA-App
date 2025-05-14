@@ -1,0 +1,167 @@
+<div class="project-container">
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando proyectos...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error" class="error-container">
+    <div class="error-message">
+      <h3>Error</h3>
+      <p>{{ error }}</p>
+      <button (click)="loadProject()">Intente Nuevamente</button>
+    </div>
+  </div>
+
+  <!-- Project Content -->
+  <div *ngIf="!loading && !error && project">
+    <!-- Project Header -->
+    <div class="project-header">
+      <div class="project-title">
+        <div *ngIf="!isEditing">
+          <h1>{{ project.name }}</h1>
+          <p>Creado: {{ project.created_at | date:'medium' }}</p>
+        </div>
+        <div *ngIf="isEditing" class="project-form-container">
+          <div class="form-group">
+            <label for="projectName">Nombre del Proyecto</label>
+            <input
+              type="text"
+              id="projectName"
+              class="form-control"
+              [(ngModel)]="editForm.name"
+              placeholder="Enter project name"
+            >
+          </div>
+          <div class="project-actions">
+            <button class="btn-primary" (click)="saveProject()">Salvar</button>
+            <button class="btn-secondary" (click)="cancelEditing()">Cancelar</button>
+          </div>
+        </div>
+      </div>
+      <div class="project-actions" *ngIf="!isEditing">
+        <button class="btn-primary" (click)="startEditing()">Editar Projecto</button>
+        <div class="dropdown">
+          <button class="btn-secondary dropdown-toggle">
+            Acciones
+          </button>
+          <div class="dropdown-menu">
+            <a (click)="navegarToDashboard()">Atrás</a>
+            <a (click)="logout()">Salir</a>
+            <a (click)="deleteProject()">Eliminar Proyecto</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Project Tabs -->
+    <div class="project-tabs">
+      <nav>
+        <ul>
+          <li [class.active]="activeTab === 'overview'">
+            <a (click)="setActiveTab('overview')">Descripción general</a>
+          </li>
+          <li [class.active]="activeTab === 'decision-areas'">
+            <a (click)="setActiveTab('decision-areas')">Decision Areas</a>
+          </li>
+          <li [class.active]="activeTab === 'alternativas'">
+            <a (click)="setActiveTab('alternativas')">Posibles alternativas</a>
+          </li>
+          <li [class.active]="activeTab === 'comparison'">
+            <a (click)="setActiveTab('comparison')">Modo de comparación</a>
+          </li>
+          <li [class.active]="activeTab === 'comparacion'">
+            <a (click)="setActiveTab('comparacion')">Tabla de comparación</a>
+          </li>
+          <li [class.active]="activeTab === 'seleccion'">
+            <a (click)="setActiveTab('seleccion')">Tabla de selección</a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="tab-content">
+      <!-- Overview Tab -->
+      <div class="tab-pane" *ngIf="activeTab === 'overview'">
+        <div class="project-dashboard">
+          <!-- Statistics Card -->
+          <div class="dashboard-card">
+            <h3>Estadísticas del proyecto</h3>
+            <div class="stats-container">
+              <div class="stat-item">
+                <span class="stat-label">Decision Areas</span>
+                <span class="stat-value">{{ stats.decisionAreas }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Opciones</span>
+                <span class="stat-value">{{ stats.options }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Modos de Comparación</span>
+                <span class="stat-value">{{ stats.comparisonModes }}</span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Areas Importantes</span>
+                <span class="stat-value">{{ stats.importantAreas }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions Card -->
+          <div class="dashboard-card">
+            <h3>Accesos rápidos</h3>
+            <div class="quick-actions">
+              <a (click)="openModal('vinculos')" class="btn-primary">Vínculos</a>
+              <a (click)="openModal('decision-check')" class="btn-primary">Seleccionar áreas Importantes</a>
+              <a (click)="openModal('grafo')" class="btn-primary">Grafo</a>
+              <a (click)="openModal('puntuaciones')" class="btn-primary">Puntuaciones Mínimas</a>
+            </div>
+          </div>
+
+          <!-- Modales -->
+          <div *ngIf="showModal" class="modal-overlay" (click)="closeModal()">
+            <div class="modal-content" (click)="$event.stopPropagation()">
+              <div class="modal-header">
+                <h2>{{ modalTitle }}</h2>
+                <button class="close-button" (click)="closeModal()">&times;</button>
+              </div>
+              <div class="modal-body">
+                <app-puntuaciones-minimas *ngIf="activeModal === 'puntuaciones'" [projectId]="project.id || ''"></app-puntuaciones-minimas>
+                <app-decision-check *ngIf="activeModal === 'decision-check'" [projectId]="project.id || ''"></app-decision-check>
+                <app-grafo *ngIf="activeModal === 'grafo'" [projectId]="project.id || ''"></app-grafo>
+                <app-vinculos *ngIf="activeModal === 'vinculos'" [projectId]="project.id || ''"></app-vinculos>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Decision Areas Tab -->
+      <div class="tab-pane" *ngIf="activeTab === 'decision-areas'">
+        <app-decisiones-form [projectId]="project.id || ''"></app-decisiones-form>
+      </div>
+
+      <!-- Alternatives Tab -->
+      <div class="tab-pane" *ngIf="activeTab === 'alternativas'">
+        <app-posibles-alternativas [projectId]="project.id || ''"></app-posibles-alternativas>
+      </div>
+
+      <!-- Alternatives Tab -->
+      <div class="tab-pane" *ngIf="activeTab === 'comparacion'">
+        <app-tabla-de-comparacion [projectId]="project.id || ''"></app-tabla-de-comparacion>
+      </div>
+
+      <!-- Comparison Tab -->
+      <div class="tab-pane" *ngIf="activeTab === 'comparison'">
+        <app-modo-de-comparacion [projectId]="project.id || ''"></app-modo-de-comparacion>
+      </div>
+
+      <!-- Selection Tab -->
+      <div class="tab-pane" *ngIf="activeTab === 'seleccion'">
+        <app-tabla-de-seleccion [projectId]="project.id || ''"></app-tabla-de-seleccion>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,57 +1,98 @@
-<app-notifications></app-notifications>
-<ng-container *ngIf="comparisonModes$ | async as modes">
-  <div class="table-wrapper">
-    <table class="comparison-table" [style.--column-count]="modes.length">
-      <thead>
-        <tr>
-          <th rowspan="2" class="opciones-column">Opciones de Decisión</th>
-          <th [attr.colspan]="modes.length" class="areas-header">Áreas de comparación</th>
-        </tr>
-        <tr class="label-headers">
-          <th *ngFor="let mode of modes; trackBy: trackByFn">
-            {{ mode.label }}
-          </th>
-        </tr>
-      </thead>
-      <tbody>
-        <ng-container *ngIf="opciones$ | async as opciones">
-          <tr *ngFor="let opcion of opciones$ | async; trackBy: trackByFn">
-            <td class="opciones-column">{{ opcion.descripcion }}</td>
-            <td *ngFor="let mode of modes" class="area-cell">
-                <div class="counter-container">
-                    <button
-                        class="counter-btn decrease"
-                        (click)="decrement(opcion.id!, mode.id, $event)"
-                        [attr.data-cell-id]="getCellKey(opcion.id!, mode.id)">
-                        <fa-icon [icon]="faMinus"></fa-icon>
-                    </button>
-                    <span class="counter-value">{{ getCellValue(opcion.id!, mode.id) }}</span>
-                    <button
-                        class="counter-btn increase"
-                        (click)="increment(opcion.id!, mode.id, $event)"
-                        [attr.data-cell-id]="getCellKey(opcion.id!, mode.id)">
-                        <fa-icon [icon]="faPlus"></fa-icon>
-                    </button>
-                </div>
-            </td>
-        </tr>
-        </ng-container>
-      </tbody>
-    </table>
-  </div>
-</ng-container>
+<div class="table-container">
+  <app-notifications></app-notifications>
 
-<div class="actions-container">
-  <button
-    class="save-button"
-    (click)="saveAllCells()"
-    [disabled]="!hasUnsavedChanges()">
-    Guardar Tabla
-  </button>
-  <button
-    class="reset-button"
-    (click)="resetTable()"
-    [disabled]="!hasUnsavedChanges()">
-    Reiniciar Tabla
-  </button>
+  <!-- Indicador de carga -->
+  <div *ngIf="loading" class="loading-indicator">
+    <div class="spinner"></div>
+    <p>Cargando datos...</p>
+  </div>
+
+  <!-- Mensaje de error si existe -->
+  <div *ngIf="error && !loading" class="error-message">
+    <fa-icon [icon]="faExclamationCircle" class="error-icon"></fa-icon>
+    <p>{{ error }}</p>
+  </div>
+
+  <!-- Contenido de la tabla cuando hay datos -->
+  <ng-container *ngIf="!loading && !error">
+    <ng-container *ngIf="opciones.length > 0 && comparisonModes.length > 0; else noData">
+      <div class="debug-info" style="margin-bottom: 10px; font-size: 0.8em; color: #555">
+        Opciones: {{ opciones.length }} | Modos de comparación: {{ comparisonModes.length }}
+      </div>
+
+      <div class="table-wrapper">
+        <table class="comparison-table">
+          <thead>
+            <tr>
+              <th rowspan="2" class="opciones-column">Opciones de Decisión</th>
+              <th [attr.colspan]="comparisonModes.length" class="areas-header">Áreas de comparación</th>
+            </tr>
+            <tr class="label-headers">
+              <th *ngFor="let mode of comparisonModes; trackBy: trackByFn" class="mode-header">
+                <div class="mode-label">{{ mode.label }}</div>
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let opcion of opciones; trackBy: trackByFn">
+              <td class="opciones-column">
+                <div class="opcion-label">{{ opcion.descripcion }}</div>
+              </td>
+              <td *ngFor="let mode of comparisonModes" class="area-cell">
+                <div class="counter-container">
+                  <button
+                    class="counter-btn decrease"
+                    (click)="decrement(opcion.id, mode.id, $event)"
+                    [attr.data-cell-id]="getCellKey(opcion.id, mode.id)"
+                    [disabled]="getCellValue(opcion.id, mode.id) <= 0"
+                    aria-label="Decrementar valor">
+                    <fa-icon [icon]="faMinus"></fa-icon>
+                  </button>
+                  <span class="counter-value">{{ getCellValue(opcion.id, mode.id) }}</span>
+                  <button
+                    class="counter-btn increase"
+                    (click)="increment(opcion.id, mode.id, $event)"
+                    [attr.data-cell-id]="getCellKey(opcion.id, mode.id)"
+                    [disabled]="getCellValue(opcion.id, mode.id) >= 5"
+                    aria-label="Incrementar valor">
+                    <fa-icon [icon]="faPlus"></fa-icon>
+                  </button>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="actions-container">
+        <button
+          class="action-button save-button"
+          (click)="saveAllCells()"
+          [disabled]="!hasUnsavedChanges()"
+          aria-label="Guardar cambios">
+          <fa-icon [icon]="faSave" class="button-icon"></fa-icon>
+          Guardar Tabla
+        </button>
+        <button
+          class="action-button reset-button"
+          (click)="resetTable()"
+          [disabled]="!hasUnsavedChanges()"
+          aria-label="Reiniciar tabla">
+          <fa-icon [icon]="faUndo" class="button-icon"></fa-icon>
+          Reiniciar Tabla
+        </button>
+      </div>
+    </ng-container>
+
+    <!-- Mensaje cuando no hay datos -->
+    <ng-template #noData>
+      <div class="no-data-message">
+        <fa-icon [icon]="faExclamationCircle" class="no-data-icon"></fa-icon>
+        <p>No hay datos para mostrar. Asegúrate de que existan opciones y áreas de comparación.</p>
+        <div class="debug-info" style="margin-top: 10px; font-size: 0.8em; color: #555">
+          Opciones: {{ opciones.length }} | Modos de comparación: {{ comparisonModes.length }}
+        </div>
+      </div>
+    </ng-template>
+  </ng-container>
 </div>

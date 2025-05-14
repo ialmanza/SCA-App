@@ -5,21 +5,21 @@
     <form [formGroup]="comparisonForm" [ngClass]="{'table-resaltada': modoedicion}" (ngSubmit)="onSubmit()"
       class="form-container">
       <div class="form-group">
-        <label for="order">Orden de importancia:</label>
-        <input type="number" id="order" formControlName="order" class="form-control"
-          [class.is-invalid]="comparisonForm.get('order')?.invalid && comparisonForm.get('order')?.touched">
+        <label for="order_num">Orden de importancia:</label>
+        <input type="number" id="order_num" formControlName="order_num" class="form-control"
+          [class.is-invalid]="comparisonForm.get('order_num')?.invalid && comparisonForm.get('order_num')?.touched">
         <div class="invalid-feedback"
-          *ngIf="comparisonForm.get('order')?.errors?.['required'] && comparisonForm.get('order')?.touched">
+          *ngIf="comparisonForm.get('order_num')?.errors?.['required'] && comparisonForm.get('order_num')?.touched">
           El orden es requerido
         </div>
       </div>
 
       <div class="form-group">
-        <label for="comparisonArea">Nombre de la nueva área:</label>
-        <input type="text" id="comparisonArea" formControlName="comparisonArea" class="form-control"
-          [class.is-invalid]="comparisonForm.get('comparisonArea')?.invalid && comparisonForm.get('comparisonArea')?.touched">
+        <label for="comparison_area">Nombre de la nueva área:</label>
+        <input type="text" id="comparison_area" formControlName="comparison_area" class="form-control"
+          [class.is-invalid]="comparisonForm.get('comparison_area')?.invalid && comparisonForm.get('comparison_area')?.touched">
         <div class="invalid-feedback"
-          *ngIf="comparisonForm.get('comparisonArea')?.errors?.['required'] && comparisonForm.get('comparisonArea')?.touched">
+          *ngIf="comparisonForm.get('comparison_area')?.errors?.['required'] && comparisonForm.get('comparison_area')?.touched">
           El área es requerida
         </div>
       </div>
@@ -53,10 +53,6 @@
       </div>
     </form>
 
-
-
-
-
     <div class="table-container">
 
       <div class="table-responsive">
@@ -72,8 +68,8 @@
           </thead>
           <tbody>
             <tr *ngFor="let mode of comparisonModes">
-              <td class="text-center">{{ mode.order }}</td>
-              <td>{{ mode.comparisonArea }}</td>
+              <td class="text-center">{{ mode.order_num }}</td>
+              <td>{{ mode.comparison_area }}</td>
               <td>{{ mode.label }}</td>
               <td>{{ mode.symbol }}</td>
 
@@ -93,7 +89,6 @@
         </table>
       </div>
     </div>
-
 
   </div>
 </div>

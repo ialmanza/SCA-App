@@ -16,7 +16,7 @@
               class="custom-select"
               [disabled]="areas.length === 0"
             >
-            <option *ngFor="let area of areas" [ngValue]="area" class="custom-select-option">{{ area.area }}</option>
+            <option *ngFor="let area of areas" [ngValue]="area" class="custom-select-option">{{ area.nombre_area }}</option>
           </select>
 
       </div>
@@ -28,7 +28,7 @@
           class="custom-select"
           [disabled]="areas.length === 0"
         >
-        <option *ngFor="let area of areas" [ngValue]="area" class="custom-select-option">{{ area.area }}</option>
+        <option *ngFor="let area of areas" [ngValue]="area" class="custom-select-option">{{ area.nombre_area }}</option>
       </select>
       </div>
     </div>
@@ -49,7 +49,7 @@
     <div *ngIf="vinculoAEliminar" class="modal-overlay">
       <div class="modal-content">
         <h3>Confirmar eliminación</h3>
-        <p>¿Estás seguro que deseas eliminar el vínculo "{{vinculoAEliminar.nombre}}"?</p>
+        <p>¿Estás seguro que deseas eliminar el vínculo entre "{{vinculoAEliminar.area?.nombre_area}}" y "{{vinculoAEliminar.related_area?.nombre_area}}"?</p>
         <div class="modal-buttons">
           <button class="btn-cancelar" (click)="cancelarEliminacion()">Cancelar</button>
           <button class="btn-eliminar" (click)="confirmarEliminacion()">Eliminar</button>
@@ -63,7 +63,7 @@
         *ngFor="let vinculo of vinculos"
         class="bg-yellow-50 p-3 rounded-lg shadow-sm border border-yellow-200 flex items-center justify-between"
       >
-        <span class="text-base text-gray-700">{{ vinculo.nombre }}</span>
+        <span class="text-base text-gray-700">{{vinculo.area?.nombre_area}} y {{vinculo.related_area?.nombre_area}}</span>
         <button class="text-red-500 hover:text-red-900" (click)="mostrarConfirmacion(vinculo)">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
             <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
@@ -72,7 +72,7 @@
       </li>
     </ul>
 
+<!-- <div class="border-l border-gray-200 pl-4">
+  <app-grafo [projectId]="projectId" class="w-full h-64"></app-grafo>
+</div> -->
 
-<div class="border-l border-gray-200 pl-4">
-  <app-grafo class="w-full h-64"></app-grafo>
-</div>

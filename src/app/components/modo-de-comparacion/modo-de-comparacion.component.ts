@@ -1,19 +1,18 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ComparisonMode } from '../../models/comparacion';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { ComparacionModeService } from '../../services/_Comparacion/comparacion-mode.service';
+import { ComparisonModeService } from '../../services/supabaseServices/comparison-mode.service';
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../../services/_Notification/notification.service';
 import { NotificationsComponent } from "../notifications/notifications.component";
-
 
 @Component({
   selector: 'app-modo-de-comparacion',
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, FormsModule, NotificationsComponent],
-  providers: [ ComparacionModeService ],
+  providers: [ ComparisonModeService ],
   templateUrl: './modo-de-comparacion.component.html',
   styleUrl: './modo-de-comparacion.component.css'
 })
@@ -24,6 +23,7 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
   modoedicion = false;
   currentEditId: string | null = null;
   private subscriptions: Subscription = new Subscription();
+  @Input() projectId!: string;
   emojiOptions = [
     { value: '😀', label: 'Sonrisa' },
     { value: '😢', label: 'Triste' },
@@ -34,21 +34,24 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
 
   constructor(
     private fb: FormBuilder,
-    private comparacionDbService: ComparacionModeService,
+    private comparisonModeService: ComparisonModeService,
     private notificationservice: NotificationService
   ) {
     this.comparisonForm = this.fb.group({
-      order: ['', [Validators.required, Validators.min(1)]],
-      comparisonArea: ['', [Validators.required]],
+      order_num: ['', [Validators.required, Validators.min(1)]],
+      comparison_area: ['', [Validators.required]],
       label: ['', [Validators.required]],
       symbol: ['',[Validators.required]],
+      peso: [1, [Validators.required, Validators.min(0)]]
     });
   }
 
-
-
   ngOnInit(): void {
-    this.loadComparisonModes();
+    if (this.projectId) {
+      this.loadComparisonModes();
+    } else {
+      this.notificationservice.show('Error: No se ha especificado un proyecto', 'error');
+    }
   }
 
   ngOnDestroy(): void {
@@ -56,92 +59,78 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
   }
 
   loadComparisonModes(): void {
-    const subscription = this.comparacionDbService.getItems().subscribe({
+    const subscription = this.comparisonModeService.comparisonModes$.subscribe({
       next: (modes) => {
-        this.comparisonModes = modes.sort((a, b) => a.order - b.order);
+        this.comparisonModes = modes;
       },
       error: (error) => {
         this.notificationservice.show('Error al cargar los modos de comparación', 'error');
       }
     });
     this.subscriptions.add(subscription);
-  }
-
-  updateEmoji(mode: ComparisonMode): void {
-    const subscription = this.comparacionDbService
-      .updateItem(Number(mode.id), { emoji: mode.symbol }) // Actualiza solo el emoji
-      .subscribe({
-        next: () => {
-          this.notificationservice.show('Emoji actualizado correctamente', 'success');
-        },
-        error: (error) => {
-          this.notificationservice.show('Error al actualizar el emoji', 'error');
-
-        },
-      });
-    this.subscriptions.add(subscription);
+    this.comparisonModeService.loadComparisonModes(this.projectId);
   }
 
   onSubmit(): void {
     if (this.comparisonForm.valid) {
+      const formData = {
+        ...this.comparisonForm.value,
+        project_id: this.projectId
+      };
+
       if (this.isEditing && this.currentEditId) {
-        const subscription = this.comparacionDbService
-          .updateItem(Number(this.currentEditId), this.comparisonForm.value)
-          .subscribe({
-            next: () => {
-              this.loadComparisonModes();
-              this.resetForm();
-            },
-            error: (error) => {
-              this.notificationservice.show('Error al actualizar el modo de comparación', 'error');
-            }
+        this.comparisonModeService.updateComparisonMode(this.currentEditId, formData)
+          .then(() => {
+            this.loadComparisonModes();
+            this.resetForm();
+            this.notificationservice.show('Modo de comparación actualizado exitosamente', 'success');
+          })
+          .catch((error) => {
+            this.notificationservice.show('Error al actualizar el modo de comparación', 'error');
           });
-        this.subscriptions.add(subscription);
       } else {
-        const subscription = this.comparacionDbService
-          .createItem(this.comparisonForm.value)
-          .subscribe({
-            next: () => {
-              this.loadComparisonModes();
-              this.resetForm();
-            },
-            error: (error) => {
-              this.notificationservice.show('Error al crear el modo de comparación', 'error');
-            }
+        this.comparisonModeService.createComparisonMode(formData)
+          .then(() => {
+            this.loadComparisonModes();
+            this.resetForm();
+            this.notificationservice.show('Modo de comparación creado exitosamente', 'success');
+          })
+          .catch((error) => {
+            this.notificationservice.show('Error al crear el modo de comparación', 'error');
           });
-        this.subscriptions.add(subscription);
       }
     }
   }
+
   editMode(mode: ComparisonMode): void {
     this.isEditing = true;
     this.currentEditId = mode.id;
     this.comparisonForm.patchValue({
-      order: mode.order,
-      comparisonArea: mode.comparisonArea,
+      order_num: mode.order_num,
+      comparison_area: mode.comparison_area,
       label: mode.label,
       symbol: mode.symbol,
+      peso: mode.peso
     });
   }
 
   deleteMode(id: string): void {
     if (confirm('¿Está seguro de eliminar este modo de comparación?')) {
-      const subscription = this.comparacionDbService
-        .deleteItem(Number(id))
-        .subscribe({
-          next: () => {
-            this.loadComparisonModes();
-          },
-          error: (error) => {
-            this.notificationservice.show('Error al eliminar el modo de comparación', 'error');
-          }
+      this.comparisonModeService.deleteComparisonMode(id)
+        .then(() => {
+          this.loadComparisonModes();
+          this.notificationservice.show('Modo de comparación eliminado exitosamente', 'success');
+        })
+        .catch((error) => {
+          this.notificationservice.show('Error al eliminar el modo de comparación', 'error');
         });
-      this.subscriptions.add(subscription);
     }
   }
 
   resetForm(): void {
-    this.comparisonForm.reset();
+    this.comparisonForm.reset({
+      peso: 1
+    });
     this.isEditing = false;
     this.currentEditId = null;
   }

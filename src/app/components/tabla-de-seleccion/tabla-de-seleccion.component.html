@@ -1,12 +1,22 @@
-<ng-container *ngIf="comparisonModes.length > 0">
-  <div class="table-container">
-    <table class="comparison-table" [style.--column-count]="comparisonModes.length">
+<!-- Loading indicator -->
+<div *ngIf="isLoading" class="loading-container">
+  <div class="loading-spinner"></div>
+  <p>Cargando datos...</p>
+</div>
+
+<!-- Error message -->
+<div *ngIf="error && !isLoading" class="error-container">
+  <p class="error-message">{{ error }}</p>
+  <button (click)="loadData()" class="retry-button">Intentar de nuevo</button>
+</div>
+
+<!-- Main content -->
+<div class="container" *ngIf="!isLoading && !error">
+  <div class="table-container" *ngIf="paths && paths.length > 0">
+    <table>
       <thead>
         <tr>
-          <th rowspan="2" class="opciones-column">Alternativas de Decisión</th>
-          <th [attr.colspan]="comparisonModes.length" class="areas-header">Áreas de Decisión</th>
-        </tr>
-        <tr class="label-headers">
+          <th colspan="2">Alternativas de Decisión</th>
           <th *ngFor="let mode of comparisonModes; trackBy: trackByFn">
             {{ mode.label }}
           </th>
@@ -14,12 +24,30 @@
       </thead>
       <tbody>
         <tr *ngFor="let path of paths; trackBy: trackByFn">
-          <td class="opciones-column">{{ path.hexa }}</td>
-          <td *ngFor="let mode of comparisonModes" class="area-cell">
-            {{ getSymbolsForCell(path, parseInt(mode.id)) }}
+          <td class="path-hex clickable" (click)="openPathModal(path)">{{ path.hexa }}</td>
+          <td class="path-name">
+            <!-- Aquí puedes mostrar el nombre del path si lo tienes -->
+          </td>
+          <td *ngFor="let mode of comparisonModes; trackBy: trackByFn"
+              class="symbol-cell"
+              [attr.data-mode-id]="mode.id"
+              [class.valid]="isValidCell(path, mode.id)">
+            {{ getSymbolsForCell(path, mode.id) }}
           </td>
         </tr>
       </tbody>
     </table>
   </div>
-</ng-container>
+
+  <!-- No data message -->
+  <div *ngIf="!paths || paths.length === 0" class="no-data-container">
+    <p>No hay alternativas disponibles para mostrar</p>
+  </div>
+</div>
+
+<!-- Path Modal -->
+<app-path-modal
+  [isOpen]="isModalOpen"
+  [path]="selectedPath"
+  (closeEvent)="closeModal()">
+</app-path-modal>

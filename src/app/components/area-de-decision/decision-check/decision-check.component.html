@@ -1,27 +1,20 @@
-<app-notifications></app-notifications>
-<div class="overflow-x-auto mt-6">
-  <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden" style="margin: auto;">
-    <thead>
-      <tr>
-        <th class="py-3 px-4 text-left">Área de decisión</th>
-        <th class="py-3 px-4 text-left">Seleccionar</th>
-      </tr>
-    </thead>
-    <tbody class="divide-y divide-gray-200">
-      <tr *ngFor="let decision of decisiones" class="border-b hover:bg-gray-100">
-        <td class="py-3 px-4 text-left text-gray-700">{{ decision.area }}</td>
-        <td class="py-3 px-4 text-center">
-          <input
-          type="checkbox"
-          [disabled]="updatingDecisions[decision.id!]"
-          [checked]="decision.is_important"
-          (change)="onCheckboxChange(decision, $event)"
-          class="form-checkbox h-5 w-5 text-orange-600">
-        <span *ngIf="updatingDecisions[decision.id!]" class="ml-2 text-sm text-gray-500">
-          Actualizando...
-        </span>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+
+<div class="decision-check-container">
+  <h2>Áreas de Decisión</h2>
+  <div class="decision-list">
+    <div *ngFor="let area of decisionAreas" class="decision-item">
+      <label class="checkbox-container">
+        <input 
+          type="checkbox" 
+          [checked]="area.is_important"
+          (change)="onCheckboxChange(area, $event)"
+          [disabled]="updatingDecisions[area.id]"
+        >
+        <span class="checkmark"></span>
+        <span class="area-name">{{ area.nombre_area }}</span>
+        <span class="area-rotulo">({{ area.rotulo }})</span>
+      </label>
+    </div>
+  </div>
+  <app-notifications></app-notifications>
 </div>

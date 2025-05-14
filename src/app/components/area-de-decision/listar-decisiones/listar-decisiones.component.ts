@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Decision } from '../../../models/decision';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { Opcion } from '../../../models/opcion';
+import { Opcion } from '../../../models/interfaces';
 import { DecisionesDBService } from '../../../services/_Decisiones/decisiones-db.service';
 import { OpcionesDBService } from '../../../services/_Opciones/opciones-db.service';
 

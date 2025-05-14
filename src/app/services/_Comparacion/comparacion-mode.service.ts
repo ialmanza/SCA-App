@@ -1,58 +1,86 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, from } from 'rxjs';
 import { ComparisonMode } from '../../models/comparacion';
+import { supabase } from '../../config/supabase.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ComparacionModeService {
-  private apiUrl = 'https://sca-v2b1.onrender.com/api/comparaciones/';
+  constructor() {}
 
-  constructor(private http: HttpClient) { }
+  async getComparisonModesByProject(projectId: string): Promise<ComparisonMode[]> {
+    const { data, error } = await supabase
+      .from('comparison_modes')
+      .select('*')
+      .eq('project_id', projectId)
+      .order('order_num', { ascending: true });
 
-  // Método específico para obtener los modos de comparación
-  getComparisonModes(): Observable<ComparisonMode[]> {
-    return this.http.get<ComparisonMode[]>(this.apiUrl);
+    if (error) {
+      console.error('Error loading comparison modes:', error);
+      throw error;
+    }
+
+    return data || [];
   }
 
-  getItems(): Observable<any[]> {
-    return this.http.get<any[]>(this.apiUrl);
+  async createComparisonMode(mode: Partial<ComparisonMode>): Promise<ComparisonMode> {
+    const { data, error } = await supabase
+      .from('comparison_modes')
+      .insert([mode])
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error creating comparison mode:', error);
+      throw error;
+    }
+
+    return data;
   }
 
-  createItem(item: any): Observable<any> {
-    return this.http.post('https://sca-v2b1.onrender.com/api/comparacion/create/', item);
+  async updateComparisonMode(id: string, mode: Partial<ComparisonMode>): Promise<ComparisonMode> {
+    const { data, error } = await supabase
+      .from('comparison_modes')
+      .update(mode)
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating comparison mode:', error);
+      throw error;
+    }
+
+    return data;
   }
 
-  updateItem(id: number, item: any): Observable<any> {
-    const header = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-    return this.http.put(`${'https://sca-v2b1.onrender.com/api/comparacion/update'}/${id}/`, item, { headers: header });
+  async deleteComparisonMode(id: string): Promise<void> {
+    const { error } = await supabase
+      .from('comparison_modes')
+      .delete()
+      .eq('id', id);
+
+    if (error) {
+      console.error('Error deleting comparison mode:', error);
+      throw error;
+    }
   }
 
-  deleteItem(id: number): Observable<void> {
-    const header = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-    return this.http.delete<void>(`${'https://sca-v2b1.onrender.com/api/comparacion/delete'}/${id}/`, { headers: header });
+  async updatePuntuacionMinima(id: string, puntuacion: number): Promise<ComparisonMode> {
+    const { data, error } = await supabase
+      .from('comparison_modes')
+      .update({ puntuacion_minima: puntuacion })
+      .eq('id', id)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Error updating minimum score:', error);
+      throw error;
+    }
+
+    return data;
   }
-
-  updatePuntuacionMinima(id: number, puntuacion: number): Observable<any> {
-    const header = new HttpHeaders({
-      'Content-Type': 'application/json'
-    });
-
-    const updateData = {
-      puntuacion_minima: puntuacion
-    };
-
-    return this.http.patch(
-      `${'https://sca-v2b1.onrender.com/api/comparacion/update/'}${id}/`,
-      updateData,
-      { headers: header }
-    );
-  }
-
 }
 

@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { OpcionComponent } from "../opcion/opcion.component";
-import { Opcion } from '../../../models/opcion';
+import { Opcion } from '../../../models/interfaces';
 import { CommonModule } from '@angular/common';
 import { OpcionesDBService } from '../../../services/_Opciones/opciones-db.service';
 

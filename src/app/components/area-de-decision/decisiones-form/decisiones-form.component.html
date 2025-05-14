@@ -8,7 +8,7 @@
     <!-- Paso 1: Formulario para generar área de desarrollo -->
     <div class="alto">
 
-      <app-crear-decision></app-crear-decision>
+      <app-crear-decision [projectId]="projectId"></app-crear-decision>
 
 
       <button class="continuar" (click)="avanzarPaso()">Continuar</button>
@@ -21,7 +21,7 @@
     </div>
 
     <div class="table-container">
-      <app-tabla-decisiones></app-tabla-decisiones>
+      <app-tabla-decisiones [projectId]="projectId"></app-tabla-decisiones>
     </div>
 
     <div class="flex justify-between mt-6">
@@ -39,7 +39,7 @@
       </div>
 
 
-      <app-vinculos></app-vinculos>
+      <app-vinculos [projectId]="projectId"></app-vinculos>
       <div class="flex justify-between">
         <button class="atras"
         (click)="retrocederPaso()">Atrás</button>
@@ -54,7 +54,7 @@
       <h1>Modo de modelado</h1>
     </div>
 
-    <app-decision-check></app-decision-check>
+    <app-decision-check [projectId]="projectId"></app-decision-check>
 
     <div class="flex justify-between mt-6">
       <button class="atras"
@@ -69,8 +69,8 @@
     <div class="titulo-container">
       <h1>Modo de modelado</h1>
     </div>
-    <!-- Paso 4: Muestra los grafos conectados -->
-    <app-grafo></app-grafo>
+    <!-- Paso 5: Muestra los grafos conectados -->
+    <app-grafo [projectId]="projectId"></app-grafo>
     <div class="flex justify-between mt-6">
       <button class="atras"
         (click)="retrocederPaso()">Atrás</button>
@@ -98,7 +98,7 @@
         </thead>
         <tbody>
           <tr *ngFor="let decision of areasSeleccionadas" class="border-b hover:bg-gray-100">
-            <td class="py-4 px-6 text-sm text-gray-800">{{decision.area}}</td>
+            <td class="py-4 px-6 text-sm text-gray-800">{{decision.nombre_area}}</td>
             <td class="py-4 px-6 text-sm text-gray-800">
               <ul class="space-y-2">
                 <li *ngFor="let opcion of getOpcionesPorArea(decision.id!)" class="flex justify-between  border border-yellow-200  rounded-md mb-2 p-2 items-center">
@@ -163,9 +163,9 @@
                       placeholder="{{ decisionSeleccionada?.rotulo || 'Escribe el código como ABC-DEF' }}">
 
                     <label for="descripcion" class=" block mb-2">Nombre del área:</label>
-                    <input id="rotulo" type="text" [(ngModel)]="decisionSeleccionada!.area"
+                    <input id="rotulo" type="text" [(ngModel)]="decisionSeleccionada!.nombre_area"
                       class="border p-2 w-full mb-4"
-                      placeholder="{{ decisionSeleccionada?.area || 'Escribe el código' }}">
+                      placeholder="{{ decisionSeleccionada?.nombre_area || 'Escribe el código' }}">
 
 
                     <div class="flex  justify-center mt-1">
@@ -210,7 +210,7 @@
     <div class="titulo-container diseño">
       <h1>Modo de diseño</h1>
     </div>
-    <app-posibles-alternativas></app-posibles-alternativas>
+    <app-posibles-alternativas [projectId]="projectId"></app-posibles-alternativas>
 
 
     <div class="flex justify-between mt-6">
@@ -227,7 +227,7 @@
     <div class=" comparacion">
       <h1>Modo de comparación</h1>
     </div>
-    <app-modo-de-comparacion></app-modo-de-comparacion>
+    <app-modo-de-comparacion [projectId]="projectId"></app-modo-de-comparacion>
 
 
     <div class="flex justify-between mt-6">
@@ -244,7 +244,7 @@
     <div class=" comparacion">
       <h1>Modo de comparación</h1>
     </div>
-    <app-tabla-de-comparacion></app-tabla-de-comparacion>
+    <app-tabla-de-comparacion [projectId]="projectId"></app-tabla-de-comparacion>
 
     <div class="flex justify-between mt-6">
       <button class="atras"
@@ -260,7 +260,7 @@
     <div class=" comparacion">
       <h1>Modo de comparación</h1>
     </div>
-      <app-puntuaciones-minimas></app-puntuaciones-minimas>
+      <app-puntuaciones-minimas [projectId]="projectId"></app-puntuaciones-minimas>
 
     <div class="flex justify-between mt-6">
       <button class="atras"
@@ -276,7 +276,7 @@
     <div class=" selección">
       <h1>Modo de Selección</h1>
     </div>
-      <app-tabla-de-seleccion></app-tabla-de-seleccion>
+      <app-tabla-de-seleccion [projectId]="projectId"></app-tabla-de-seleccion>
 
     <div class="flex justify-between mt-6">
       <button class="atras"

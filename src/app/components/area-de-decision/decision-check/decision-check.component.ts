@@ -1,10 +1,9 @@
-import { Component } from '@angular/core';
-import { catchError, EMPTY, switchMap } from 'rxjs';
-import { Decision } from '../../../models/decision';
-import { DecisionesDBService } from '../../../services/_Decisiones/decisiones-db.service';
+import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NotificationService } from '../../../services/_Notification/notification.service';
 import { NotificationsComponent } from "../../notifications/notifications.component";
+import { DecisionAreaService } from '../../../services/supabaseServices/decision-area.service';
+import { NotificationService } from '../../../services/supabaseServices/notification.service';
+import { DecisionArea } from '../../../models/interfaces';
 
 @Component({
   selector: 'app-decision-check',
@@ -13,50 +12,64 @@ import { NotificationsComponent } from "../../notifications/notifications.compon
   templateUrl: './decision-check.component.html',
   styleUrl: './decision-check.component.css'
 })
-export class DecisionCheckComponent {
-  updatingDecisions: { [key: number]: boolean } = {};
-  decisiones: Decision[] = [];
-  areas: Decision[] = [];
+export class DecisionCheckComponent implements OnInit {
+  @Input() projectId!: string;
 
-  constructor( private decisionesDBService: DecisionesDBService, private notificationsservice: NotificationService ) {
-  this.decisiones = [];
-  }
+  updatingDecisions: { [key: string]: boolean } = {};
+  decisionAreas: DecisionArea[] = [];
+
+  constructor(
+    private decisionAreaService: DecisionAreaService,
+    private notificationService: NotificationService
+  ) {}
 
   ngOnInit(): void {
-    this.decisionesDBService.getItems().subscribe((decisiones : Decision[]) => {
-      this.areas = decisiones
-      this.decisiones = decisiones.map(decision => ({ ...decision, seleccionado: false }));
-    });
-
+    this.loadDecisionAreas();
   }
-  onCheckboxChange(decision: Decision, event: any): void {
+
+  private loadDecisionAreas(): void {
+    this.decisionAreaService.getDecisionAreasByProject(this.projectId)
+      .then(areas => {
+        this.decisionAreas = areas;
+      })
+      .catch(error => {
+        this.createNotification('Error al cargar las áreas de decisión', 'error');
+        console.error('Error loading decision areas:', error);
+      });
+  }
+
+  async onCheckboxChange(area: DecisionArea, event: any): Promise<void> {
     const checkbox = event.target as HTMLInputElement;
     const isChecked = checkbox.checked;
-    const decisionId = decision.id!;
+    const areaId = area.id;
 
-    this.updatingDecisions[decisionId] = true;
+    this.updatingDecisions[areaId] = true;
 
-    this.decisionesDBService.updateImportantStatus(decisionId, isChecked)
-      .pipe(
-        catchError(error => {
-          this.notificationsservice.show('Error al actualizar el estado de importancia', 'error');
-          checkbox.checked = !isChecked;
-          return EMPTY;
-        }),
-        switchMap(() => this.decisionesDBService.getItems())
-      )
-      .subscribe({
-        next: (decisiones: Decision[]) => {
-          this.decisiones = decisiones.map(d => ({
-            ...d,
-            seleccionado: false
-          }));
-          delete this.updatingDecisions[decisionId];
-        },
-        error: (error) => {
-          this.notificationsservice.show('Error al obtener las decisiones actualizadas', 'error');
-          delete this.updatingDecisions[decisionId];
-        }
-      });
+    try {
+      await this.decisionAreaService.updateDecisionArea(areaId, { is_important: isChecked });
+      await this.loadDecisionAreas();
+      this.createNotification('Estado de importancia actualizado correctamente', 'success');
+    } catch (error) {
+      this.createNotification('Error al actualizar el estado de importancia', 'error');
+      checkbox.checked = !isChecked;
+      console.error('Error updating importance status:', error);
+    } finally {
+      delete this.updatingDecisions[areaId];
+    }
+  }
+
+  private createNotification(message: string, type: 'success' | 'error' | 'info'): void {
+    if (!this.projectId) {
+      console.error('No hay projectId disponible para crear notificación');
+      return;
+    }
+
+    this.notificationService.createNotification({
+      project_id: this.projectId,
+      message: message,
+      type: type
+    }).catch(error => {
+      console.error('Error al crear notificación:', error);
+    });
   }
 }
