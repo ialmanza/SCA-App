@@ -2,13 +2,13 @@
   <!-- Header Section -->
   <header class="dashboard-header">
     <div class="header-content">
-      <h1>My Projects</h1>
+      <h1>Mis Proyectos</h1>
       <div class="header-actions">
         <button class="btn-primary" (click)="showNewProjectForm = true">
-          <i class="fas fa-plus"></i> New Project
+          <i class="fas fa-plus"></i> Nuevo Proyecto
         </button>
         <button class="btn-secondary" (click)="signOut()">
-          <i class="fas fa-sign-out-alt"></i> Sign Out
+          <i class="fas fa-sign-out-alt"></i> Salir
         </button>
       </div>
     </div>
@@ -17,9 +17,9 @@
   <!-- New Project Form -->
   <div class="new-project-form" *ngIf="showNewProjectForm">
     <div class="form-container">
-      <h2>Create New Project</h2>
+      <h2>Crear nuevo proyecto</h2>
       <div class="form-group">
-        <label for="projectName">Project Name</label>
+        <label for="projectName">Nombre del Proyecto</label>
         <input
           type="text"
           id="projectName"
@@ -29,8 +29,8 @@
         >
       </div>
       <div class="form-actions">
-        <button class="btn-primary" (click)="createProject()">Create Project</button>
-        <button class="btn-secondary" (click)="showNewProjectForm = false">Cancel</button>
+        <button class="btn-primary" (click)="createProject()">Crear Proyecto</button>
+        <button class="btn-secondary" (click)="showNewProjectForm = false">Cancelar</button>
       </div>
     </div>
   </div>
@@ -38,7 +38,7 @@
   <!-- Loading State -->
   <div *ngIf="loading" class="loading-container">
     <div class="spinner"></div>
-    <p>Loading projects...</p>
+    <p>Cargando proyectos...</p>
   </div>
 
   <!-- Error State -->
@@ -46,7 +46,7 @@
     <div class="error-message">
       <h3>Error</h3>
       <p>{{ error }}</p>
-      <button class="btn-primary" (click)="loadProjects()">Try Again</button>
+      <button class="btn-primary" (click)="loadProjects()">Intente Nuevamente</button>
     </div>
   </div>
 
@@ -55,10 +55,10 @@
     <div *ngIf="projects.length === 0" class="no-projects">
       <div class="empty-state">
         <i class="fas fa-folder-open"></i>
-        <h2>No Projects Yet</h2>
-        <p>Create your first project to get started</p>
+        <h2>No tienes proyectos</h2>
+        <p>Crea tu primer proyecto para empezar</p>
         <button class="btn-primary" (click)="showNewProjectForm = true">
-          Create Project
+          Crear Proyecto
         </button>
       </div>
     </div>
@@ -68,7 +68,7 @@
         <div class="project-info">
           <h3>{{ project.name }}</h3>
           <p class="project-date">
-            Created: {{ project.created_at | date:'medium' }}
+            Creado: {{ project.created_at | date:'medium' }}
           </p>
         </div>
         <div class="project-actions">
@@ -79,4 +79,4 @@
       </div>
     </div>
   </div>
-</div> 
+</div>

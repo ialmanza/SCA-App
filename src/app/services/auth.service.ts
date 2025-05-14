@@ -37,10 +37,26 @@ export class AuthService {
     return data;
   }
 
+  // async signOut() {
+  //   const { error } = await supabase.auth.signOut();
+  //   if (error) throw error;
+  //   this.currentUser.next(null);
+  // }
+
   async signOut() {
+    // 1. Primero limpiamos cualquier dato de sesión en localStorage
+    localStorage.removeItem('supabase.auth.token');
+    localStorage.removeItem('currentProject');
+    // Limpia cualquier otro dato relevante que estés guardando
+
+    // 2. Limpiamos el estado de la aplicación
+    this.currentUser.next(null);
+
+    // 3. Luego realizamos el signOut de Supabase
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
-    this.currentUser.next(null);
+
+    return true;
   }
 
   isAuthenticated(): boolean {
@@ -50,4 +66,4 @@ export class AuthService {
   getCurrentUser(): Observable<User | null> {
     return this.currentUser.asObservable();
   }
-} 
+}

@@ -1,5 +1,5 @@
 import { DecisionsService } from './../../../services/supabaseServices/decisions.service';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { CrearDecisionComponent } from "../crear-decision/crear-decision.component";
@@ -21,7 +21,6 @@ import { TablaDeSeleccionComponent } from "../../tabla-de-seleccion/tabla-de-sel
 import { UltimopasoComponent } from "../../ultimopaso/ultimopaso.component";
 import { NotificationService } from '../../../services/supabaseServices/notification.service';
 import { NotificationsComponent } from "../../notifications/notifications.component";
-import { ActivatedRoute } from '@angular/router';
 import { Vinculo } from '../../../models/interfaces';
 
 @Component({
@@ -35,6 +34,7 @@ import { Vinculo } from '../../../models/interfaces';
   styleUrl: './decisiones-form.component.css'
 })
 export class DecisionesFormComponent implements OnInit {
+  @Input() projectId!: string;
   pasoActual: number = 1;
   decisiones: (DecisionArea & { seleccionado: boolean })[] = [];
   opciones: Opcion[] = [];
@@ -51,7 +51,6 @@ export class DecisionesFormComponent implements OnInit {
   selectedArea1: DecisionArea | null = null;
   selectedArea2: DecisionArea | null = null;
   updatingDecisions: { [key: string]: boolean } = {};
-  projectId: string = '';
 
   constructor(
     public dialog: MatDialog,
@@ -59,19 +58,15 @@ export class DecisionesFormComponent implements OnInit {
     private decisionsService: DecisionsService,
     private opcionesService: OpcionesService,
     private vinculosService: VinculosService,
-    private notificationService: NotificationService,
-    private route: ActivatedRoute
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      if (!params['id']) {
-        console.error('No se proporcionó un ID de proyecto');
-        return;
-      }
-      this.projectId = params['id'];
+    if (this.projectId) {
       this.loadData();
-    });
+    } else {
+      console.error('No se proporcionó un ID de proyecto');
+    }
   }
 
   async loadData() {

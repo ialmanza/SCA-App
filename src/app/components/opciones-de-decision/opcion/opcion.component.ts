@@ -3,7 +3,6 @@ import { Opcion } from '../../../models/interfaces';
 import { OpcionesService } from '../../../services/supabaseServices/opciones.service';
 import { NotificationService } from '../../../services/supabaseServices/notification.service';
 import { NotificationsComponent } from "../../notifications/notifications.component";
-import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-opcion',
@@ -14,20 +13,15 @@ import { ActivatedRoute } from '@angular/router';
 })
 export class OpcionComponent implements OnInit {
   @Input() opciones!: Opcion;
+  @Input() projectId!: string;
   editing: boolean = false;
-  projectId: string = '';
 
   constructor(
     private opcionesService: OpcionesService,
-    private notificationService: NotificationService,
-    private route: ActivatedRoute
+    private notificationService: NotificationService
   ) {}
 
   ngOnInit() {
-    // Obtener el ID del proyecto de la ruta
-    this.route.params.subscribe(params => {
-      this.projectId = params['id'];
-    });
     // Cargar las opciones al iniciar el componente
     this.opcionesService.loadOpciones();
   }

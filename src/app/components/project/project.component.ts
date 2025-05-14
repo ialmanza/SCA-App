@@ -17,6 +17,12 @@ import { DecisionesFormComponent } from '../area-de-decision/decisiones-form/dec
 import { OpcionComponent } from '../opciones-de-decision/opcion/opcion.component';
 import { ModoDeComparacionComponent } from '../modo-de-comparacion/modo-de-comparacion.component';
 import { VinculosComponent } from '../vinculos/vinculos.component';
+import { GrafoComponent } from "../grafo/grafo.component";
+import { TablaDeComparacionComponent } from "../tabla-de-comparacion/tabla-de-comparacion.component";
+import { PosiblesAlternativasComponent } from '../posibles-alternativas/posibles-alternativas.component';
+import { TablaDeSeleccionComponent } from '../tabla-de-seleccion/tabla-de-seleccion.component';
+import { PuntuacionesMinimasComponent } from '../puntuaciones-minimas/puntuaciones-minimas.component';
+import { DecisionCheckComponent } from '../area-de-decision/decision-check/decision-check.component';
 
 @Component({
   selector: 'app-project',
@@ -26,9 +32,14 @@ import { VinculosComponent } from '../vinculos/vinculos.component';
     RouterModule,
     FormsModule,
     DecisionesFormComponent,
-    OpcionComponent,
     ModoDeComparacionComponent,
-    VinculosComponent
+    VinculosComponent,
+    GrafoComponent,
+    TablaDeComparacionComponent,
+    PosiblesAlternativasComponent,
+    TablaDeSeleccionComponent,
+    PuntuacionesMinimasComponent,
+    DecisionCheckComponent
   ],
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.css']
@@ -42,6 +53,11 @@ export class ProjectComponent implements OnInit {
   editForm = {
     name: ''
   };
+
+  // Modal properties
+  showModal = false;
+  activeModal: 'puntuaciones' | 'decision-check' | 'grafo' | 'vinculos'| null = null;
+  modalTitle = '';
 
   // Statistics
   stats = {
@@ -180,24 +196,66 @@ export class ProjectComponent implements OnInit {
     }
   }
 
+  navegarToDashboard() {
+    this.router.navigate(['/dashboard']);
+  }
+
+  logout() {
+    this.authService.signOut().then(() => {
+      // Limpiamos cualquier estado del componente
+      this.project = null;
+      this.error = null;
+
+      // Agregamos un pequeño retraso para asegurar que todo se ha limpiado
+      setTimeout(() => {
+        // Navegamos a la página de login
+        this.router.navigate(['/login'], { replaceUrl: true });
+
+        // Mostramos notificación solo si tenemos un ID de proyecto válido
+        if (this.project && this.project.id) {
+          this.notificationService.createNotification({
+            project_id: this.project.id,
+            message: 'Logged out successfully',
+            type: 'success'
+          });
+        } else {
+          this.showGenericNotification('Logged out successfully', 'success');
+        }
+      }, 100);
+    }).catch((error) => {
+      this.error = 'Error logging out: ' + error.message;
+      this.showGenericNotification('Error logging out', 'error');
+    });
+  }
+
+  showGenericNotification(message: string, type: 'success' | 'error') {
+    if(message && type == 'success' || type === 'error') {
+      console.log(message + ' ' + type);
+    }
+
+  }
   setActiveTab(tab: string) {
     this.activeTab = tab;
-    // Navigate to the corresponding route if it exists
-    switch (tab) {
-      case 'decision-areas':
-        this.router.navigate(['decisiones-form'], { relativeTo: this.route });
-        break;
-      case 'options':
-        this.router.navigate(['opciones'], { relativeTo: this.route });
-        break;
-      case 'comparison':
-        this.router.navigate(['modo-de-comparacion'], { relativeTo: this.route });
-        break;
-      case 'links':
-        this.router.navigate(['vinculos'], { relativeTo: this.route });
-        break;
-      default:
-        this.router.navigate(['.'], { relativeTo: this.route });
-    }
   }
+
+  navigateTo(path: string) {
+    if (!this.project?.id) return;
+    this.router.navigate(['/project', this.project.id, path]);
+  }
+
+  openModal(type: 'puntuaciones' | 'decision-check' | 'grafo'| 'vinculos') {
+    this.activeModal = type;
+    this.modalTitle = type === 'puntuaciones' ? 'Puntuaciones Mínimas' :
+                      type === 'vinculos' ? 'Vincular areas de decisión' :
+                     type === 'decision-check' ? 'Areas Importantes' :
+                     'Grafo';
+    this.showModal = true;
+  }
+
+  closeModal() {
+    this.showModal = false;
+    this.activeModal = null;
+    this.modalTitle = '';
+  }
+
 }
