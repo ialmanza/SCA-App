@@ -23,6 +23,7 @@ import { PosiblesAlternativasComponent } from '../posibles-alternativas/posibles
 import { TablaDeSeleccionComponent } from '../tabla-de-seleccion/tabla-de-seleccion.component';
 import { PuntuacionesMinimasComponent } from '../puntuaciones-minimas/puntuaciones-minimas.component';
 import { DecisionCheckComponent } from '../area-de-decision/decision-check/decision-check.component';
+import { ConfirmationModalComponent } from '../shared/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-project',
@@ -39,7 +40,8 @@ import { DecisionCheckComponent } from '../area-de-decision/decision-check/decis
     PosiblesAlternativasComponent,
     TablaDeSeleccionComponent,
     PuntuacionesMinimasComponent,
-    DecisionCheckComponent
+    DecisionCheckComponent,
+    ConfirmationModalComponent
   ],
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.css']
@@ -66,6 +68,8 @@ export class ProjectComponent implements OnInit {
     comparisonModes: 0,
     importantAreas: 0
   };
+
+  showDeleteModal = false;
 
   constructor(
     private projectService: ProjectService,
@@ -167,30 +171,36 @@ export class ProjectComponent implements OnInit {
       });
   }
 
+  openDeleteModal() {
+    this.showDeleteModal = true;
+  }
+
   deleteProject() {
     if (!this.project?.id) return;
 
-    if (confirm('Are you sure you want to delete this project? This action cannot be undone.')) {
-      this.projectService.deleteProject(this.project.id)
-        .subscribe({
-          next: () => {
-            this.router.navigate(['/']);
-            this.notificationService.createNotification({
-              project_id: this.project!.id!,
-              message: 'Project deleted successfully',
-              type: 'success'
-            });
-          },
-          error: (error) => {
-            this.error = 'Error deleting project: ' + error.message;
-            this.notificationService.createNotification({
-              project_id: this.project!.id!,
-              message: 'Error deleting project',
-              type: 'error'
-            });
-          }
-        });
-    }
+    this.projectService.deleteProject(this.project.id)
+      .subscribe({
+        next: () => {
+          this.router.navigate(['/dashboard']);
+          this.notificationService.createNotification({
+            project_id: this.project!.id!,
+            message: 'Project deleted successfully',
+            type: 'success'
+          });
+        },
+        error: (error) => {
+          this.error = 'Error deleting project: ' + error.message;
+          this.notificationService.createNotification({
+            project_id: this.project!.id!,
+            message: 'Error deleting project',
+            type: 'error'
+          });
+        }
+      });
+  }
+
+  onDeleteCancel() {
+    this.showDeleteModal = false;
   }
 
   navegarToDashboard() {

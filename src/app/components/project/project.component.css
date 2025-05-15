@@ -516,3 +516,23 @@
   min-height: 500px;
   height: 70vh;
 }
+
+.btn-icon {
+  background: none;
+  border: none;
+  color: #666;
+  padding: 8px;
+  cursor: pointer;
+  transition: color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-icon:hover {
+  color: #dc2626;
+}
+
+.btn-icon i {
+  font-size: 1rem;
+}

@@ -5,12 +5,13 @@ import { AuthService } from '../../services/supabaseServices/auth.service';
 import { NotificationService } from '../../services/supabaseServices/notification.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ConfirmationModalComponent } from '../shared/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
   templateUrl: './dashboard.component.html',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, ConfirmationModalComponent],
   styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
@@ -19,6 +20,8 @@ export class DashboardComponent implements OnInit {
   error: string | null = null;
   newProjectName = '';
   showNewProjectForm = false;
+  showDeleteModal = false;
+  projectToDelete: string | null = null;
 
   constructor(
     private projectService: ProjectService,
@@ -87,25 +90,38 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  async deleteProject(projectId: string) {
-    if (confirm('Are you sure you want to delete this project?')) {
-      try {
-        await this.projectService.deleteProject(projectId).toPromise();
-        this.projects = this.projects.filter(p => p.id !== projectId);
-        this.notificationService.createNotification({
-          project_id: '',
-          message: 'Project deleted successfully',
-          type: 'success'
-        });
-      } catch (err) {
-        console.error('Error deleting project:', err);
-        this.notificationService.createNotification({
-          project_id: '',
-          message: 'Error deleting project',
-          type: 'error'
-        });
-      }
+  openDeleteModal(projectId: string) {
+    this.projectToDelete = projectId;
+    this.showDeleteModal = true;
+  }
+
+  async deleteProject() {
+    if (!this.projectToDelete) return;
+
+    try {
+      await this.projectService.deleteProject(this.projectToDelete).toPromise();
+      this.projects = this.projects.filter(p => p.id !== this.projectToDelete);
+      this.notificationService.createNotification({
+        project_id: '',
+        message: 'Project deleted successfully',
+        type: 'success'
+      });
+    } catch (err) {
+      console.error('Error deleting project:', err);
+      this.notificationService.createNotification({
+        project_id: '',
+        message: 'Error deleting project',
+        type: 'error'
+      });
+    } finally {
+      this.showDeleteModal = false;
+      this.projectToDelete = null;
     }
+  }
+
+  onDeleteCancel() {
+    this.showDeleteModal = false;
+    this.projectToDelete = null;
   }
 
   openProject(projectId: string) {
