@@ -72,11 +72,21 @@
           </p>
         </div>
         <div class="project-actions">
-          <button class="btn-icon" (click)="deleteProject(project.id!); $event.stopPropagation()">
+          <button class="btn-icon" (click)="openDeleteModal(project.id!); $event.stopPropagation()">
             <i class="fas fa-trash"></i>
           </button>
         </div>
       </div>
     </div>
   </div>
+
+  <app-confirmation-modal
+    [isOpen]="showDeleteModal"
+    title="Eliminar Proyecto"
+    message="¿Está seguro que desea eliminar este proyecto? Esta acción no se puede deshacer."
+    confirmText="Eliminar"
+    cancelText="Cancelar"
+    (confirm)="deleteProject()"
+    (cancel)="onDeleteCancel()"
+  ></app-confirmation-modal>
 </div>

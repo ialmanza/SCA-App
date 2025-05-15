@@ -49,7 +49,9 @@
           <div class="dropdown-menu">
             <a (click)="navegarToDashboard()">Atrás</a>
             <a (click)="logout()">Salir</a>
-            <a (click)="deleteProject()">Eliminar Proyecto</a>
+            <a (click)="openDeleteModal(); $event.stopPropagation()" class="btn-icon">
+              <i class="fas fa-trash"></i>
+            </a>
           </div>
         </div>
       </div>
@@ -164,4 +166,14 @@
       </div>
     </div>
   </div>
+
+  <app-confirmation-modal
+    [isOpen]="showDeleteModal"
+    title="Eliminar Proyecto"
+    message="¿Está seguro que desea eliminar este proyecto? Esta acción no se puede deshacer."
+    confirmText="Eliminar"
+    cancelText="Cancelar"
+    (confirm)="deleteProject()"
+    (cancel)="onDeleteCancel()"
+  ></app-confirmation-modal>
 </div>
