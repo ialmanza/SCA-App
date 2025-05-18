@@ -3,7 +3,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import 'flowbite';
 import { DecisionAreaService } from '../../../services/supabaseServices/decision-area.service';
-import { NotificationService } from '../../../services/supabaseServices/notification.service';
+import { NotificationService } from '../../../services/_Notification/notification.service';
 import { NotificationsComponent } from "../../notifications/notifications.component";
 import { ActivatedRoute } from '@angular/router';
 
@@ -70,14 +70,16 @@ export class CrearDecisionComponent implements OnInit {
   async addDecision(area: HTMLInputElement, descripcion: HTMLTextAreaElement) {
     if (!this.projectId || this.projectId.trim() === '' || !this.isValidUUID(this.projectId)) {
       console.error('ID del proyecto no válido o no encontrado:', this.projectId);
-      alert('Error: No se pudo determinar el ID del proyecto');
+      this.notificationService.show('ID del proyecto no válido o no encontrado', 'error');
+      this.limpiarCampos(area, descripcion);
       return;
     }
 
     console.log('Intentando crear decisión con projectId:', this.projectId);
 
     if (!area.value || !descripcion.value) {
-      alert('Por favor rellene todos los campos.');
+      this.notificationService.show('Por favor, complete todos los campos', 'error');
+      this.limpiarCampos(area, descripcion);
       return;
     }
 
@@ -92,40 +94,24 @@ export class CrearDecisionComponent implements OnInit {
         is_important: false
       });
 
-      area.value = '';
-      this.rotuloValue = '';
-      descripcion.value = '';
+      this.notificationService.show('Área de decisión creada correctamente', 'success');
+      this.limpiarCampos(area, descripcion);
 
-      await this.createSuccessNotification('Área de decisión creada correctamente');
     } catch (error) {
-      console.error('Error al crear decisión:', error);
-      alert('Error al crear el área de decisión');
+      this.notificationService.show('Error al crear el área de decisión', 'error');
     } finally {
       this.isLoading = false;
     }
   }
 
-  private async createSuccessNotification(message: string) {
-    try {
-      if (!this.isValidUUID(this.projectId)) {
-        console.error('No se puede crear notificación: ID inválido', this.projectId);
-        return;
-      }
-
-      console.log('Enviando notificación con projectId:', this.projectId);
-
-      await this.notificationService.createNotification({
-        project_id: this.projectId,
-        message: message,
-        type: 'success'
-      });
-    } catch (error) {
-      console.error('Error al crear notificación:', error);
-    }
+  private isValidUUID(uuid: string): boolean {
+    const regex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+    return regex.test(uuid);
   }
 
-  private isValidUUID(uuid: string): boolean {
-    const uuidRegex = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
-    return uuidRegex.test(uuid);
+  private limpiarCampos(area: HTMLInputElement, descripcion: HTMLTextAreaElement) {
+    area.value = '';
+    this.rotuloValue = '';
+    descripcion.value = '';
   }
 }
