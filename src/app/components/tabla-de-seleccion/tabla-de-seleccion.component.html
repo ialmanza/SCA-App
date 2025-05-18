@@ -1,4 +1,4 @@
-<!-- Loading indicator -->
+<!-- Loading -->
 <div *ngIf="isLoading" class="loading-container">
   <div class="loading-spinner"></div>
   <p>Cargando datos...</p>
@@ -12,6 +12,14 @@
 
 <!-- Main content -->
 <div class="container" *ngIf="!isLoading && !error">
+  <!-- Botón para recalcular puntajes -->
+  <div class="actions-bar">
+    <button (click)="calculateAllPathScores()" class="action-button" [disabled]="isCalculatingScores">
+      {{ isCalculatingScores ? 'Calculando...' : 'Recalcular puntajes' }}
+    </button>
+  </div>
+
+  <!-- Tabla -->
   <div class="table-container" *ngIf="paths && paths.length > 0">
     <table>
       <thead>
@@ -24,15 +32,35 @@
       </thead>
       <tbody>
         <tr *ngFor="let path of paths; trackBy: trackByFn">
-          <td class="path-hex clickable" (click)="openPathModal(path)">{{ path.hexa }}</td>
-          <td class="path-name">
-            <!-- Aquí puedes mostrar el nombre del path si lo tienes -->
+          <td class="path-hex clickable" (click)="openPathModal(path)">
+            {{ path.hexa }}
           </td>
+          <td class="path-name">
+            <!-- Puedes mostrar el nombre del path aquí si lo tienes -->
+          </td>
+
+          <!-- Celda por cada modo de comparación -->
           <td *ngFor="let mode of comparisonModes; trackBy: trackByFn"
               class="symbol-cell"
               [attr.data-mode-id]="mode.id"
               [class.valid]="isValidCell(path, mode.id)">
-            {{ getSymbolsForCell(path, mode.id) }}
+            <div class="cell-content">
+              <!-- Puntaje (valor calculado) -->
+              <!-- <div class="score-value">
+                {{ getCellScore(path, mode.id) }}
+              </div> -->
+              <!-- Símbolos -->
+              <div class="symbol-display">
+                {{ getSymbolsForCell(path, mode.id) }}
+              </div>
+              <!-- Puntaje por área (dentro de la celda) -->
+              <div class="area-score-cell" *ngIf="path.areaScores && path.areaScores[mode.comparison_area] !== undefined">
+                <!-- <small class="area-score-label">{{ mode.comparison_area }}:</small> -->
+                <span class="area-score-value">
+                  {{ getPathAreaScore(path, mode.comparison_area) }}
+                </span>
+              </div>
+            </div>
           </td>
         </tr>
       </tbody>
