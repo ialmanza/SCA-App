@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Decision } from '../../models/decision';
@@ -6,7 +6,7 @@ import { Opcion } from '../../models/interfaces';
 import { OpcionesService } from '../../services/supabaseServices/opciones.service';
 import { SelectedPathsService } from '../../services/supabaseServices/selected-paths.service';
 import { PathDescriptionsService } from '../../services/supabaseServices/path-descriptions.service';
-import { BehaviorSubject, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Subscription } from 'rxjs';
 import { ChangeDetectorRef } from '@angular/core';
 import { NotificationService } from '../../services/_Notification/notification.service';
 import { NotificationsComponent } from "../notifications/notifications.component";
@@ -35,7 +35,7 @@ interface DecisionNode {
   templateUrl: './posibles-alternativas.component.html',
   styleUrls: ['./posibles-alternativas.component.css'],
 })
-export class PosiblesAlternativasComponent implements OnInit {
+export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
   decisions: Decision[] = [];
   opciones: Opcion[] = [];
   decisionTree: DecisionNode[] = [];
@@ -46,6 +46,8 @@ export class PosiblesAlternativasComponent implements OnInit {
   updatingOptions: { [key: string]: boolean } = {};
   isLoading: boolean = true;
   @Input() projectId!: string;
+  private subscription: Subscription = new Subscription();
+  private previousSelections: { [key: string]: boolean } = {};
 
   constructor(
     private opcionesService: OpcionesService,
@@ -64,8 +66,34 @@ export class PosiblesAlternativasComponent implements OnInit {
     }
 
     try {
-      const importantAreas = await firstValueFrom(this.decisionsService.getImportantStatus(this.projectId));
+      // Suscribirse a cambios en las áreas importantes
+      this.subscription.add(
+        this.decisionsService.getImportantStatus(this.projectId).subscribe(async (importantAreas) => {
+          if (importantAreas.length === 0) {
+            this.notificationService.show('No hay áreas importantes para este proyecto', 'info');
+            this.isLoading = false;
+            return;
+          }
 
+          const areas = importantAreas.map(area => area.nombre_area);
+          this.uniqueAreasSubject.next(areas);
+
+          // Guardar selecciones actuales antes de actualizar
+          this.saveCurrentSelections();
+
+          await this.loadDecisionsAndOptions();
+          await this.loadExistingPaths();
+
+          // Restaurar selecciones después de actualizar
+          this.restoreSelections();
+
+          this.isLoading = false;
+          this.changeDetectorRef.detectChanges();
+        })
+      );
+
+      // Cargar datos iniciales
+      const importantAreas = await firstValueFrom(this.decisionsService.getImportantStatus(this.projectId));
       if (importantAreas.length === 0) {
         this.notificationService.show('No hay áreas importantes para este proyecto', 'info');
         this.isLoading = false;
@@ -76,7 +104,6 @@ export class PosiblesAlternativasComponent implements OnInit {
       this.uniqueAreasSubject.next(areas);
 
       await this.loadDecisionsAndOptions();
-
       await this.loadExistingPaths();
 
       this.isLoading = false;
@@ -85,6 +112,67 @@ export class PosiblesAlternativasComponent implements OnInit {
       this.notificationService.show('Error en la inicialización', 'error');
       this.isLoading = false;
     }
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  private saveCurrentSelections(): void {
+    this.previousSelections = {};
+    const saveNodeSelections = (node: DecisionNode) => {
+      node.options.forEach(option => {
+        if (option.hexCode) {
+          this.previousSelections[option.hexCode] = option.selected;
+        }
+        if (option.children) {
+          option.children.forEach(childNode => saveNodeSelections(childNode));
+        }
+      });
+    };
+
+    this.decisionTree.forEach(node => saveNodeSelections(node));
+  }
+
+  private restoreSelections(): void {
+    const restoreNodeSelections = (node: DecisionNode) => {
+      node.options.forEach(option => {
+        if (option.hexCode && this.previousSelections[option.hexCode]) {
+          option.selected = this.previousSelections[option.hexCode];
+          // Si la opción estaba seleccionada, actualizar en la base de datos
+          if (option.selected) {
+            const path = this.getPathForOption(option);
+            if (path) {
+              this.onOptionSelected(option, path);
+            }
+          }
+        }
+        if (option.children) {
+          option.children.forEach(childNode => restoreNodeSelections(childNode));
+        }
+      });
+    };
+
+    this.decisionTree.forEach(node => restoreNodeSelections(node));
+  }
+
+  private getPathForOption(option: any): string[] | null {
+    const findPath = (nodes: DecisionNode[], targetHexCode: string, currentPath: string[] = []): string[] | null => {
+      for (const node of nodes) {
+        for (const opt of node.options) {
+          if (opt.hexCode === targetHexCode) {
+            return [...currentPath, opt.id];
+          }
+          if (opt.children) {
+            const childPath = findPath(opt.children, targetHexCode, [...currentPath, opt.id]);
+            if (childPath) return childPath;
+          }
+        }
+      }
+      return null;
+    };
+
+    return findPath(this.decisionTree, option.hexCode);
   }
 
   async loadDecisionsAndOptions(): Promise<void> {

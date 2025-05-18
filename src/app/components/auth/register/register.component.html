@@ -1,7 +1,7 @@
 <div class="auth-container">
   <div class="auth-card">
-    <h2>Register</h2>
-    
+    <h2>Registrarse</h2>
+
     <form (ngSubmit)="onSubmit()" #registerForm="ngForm">
       <div class="form-group">
         <label for="email">Email</label>
@@ -15,15 +15,15 @@
           #emailInput="ngModel"
           class="form-control"
           [class.is-invalid]="emailInput.invalid && emailInput.touched"
-          placeholder="Enter your email"
+          placeholder="Ingrese su correo electrónico"
         >
         <div class="invalid-feedback" *ngIf="emailInput.invalid && emailInput.touched">
-          Please enter a valid email address
+          Por favor ingrese un correo electrónico válido
         </div>
       </div>
 
       <div class="form-group">
-        <label for="password">Password</label>
+        <label for="password">Contraseña</label>
         <input
           type="password"
           id="password"
@@ -34,15 +34,15 @@
           #passwordInput="ngModel"
           class="form-control"
           [class.is-invalid]="passwordInput.invalid && passwordInput.touched"
-          placeholder="Enter your password"
+          placeholder="Ingrese su contraseña"
         >
         <div class="invalid-feedback" *ngIf="passwordInput.invalid && passwordInput.touched">
-          Password must be at least 6 characters long
+          La contraseña debe tener al menos 6 caracteres
         </div>
       </div>
 
       <div class="form-group">
-        <label for="confirmPassword">Confirm Password</label>
+        <!-- <label for="confirmPassword">Confirmar Contraseña</label> -->
         <input
           type="password"
           id="confirmPassword"
@@ -52,10 +52,10 @@
           #confirmPasswordInput="ngModel"
           class="form-control"
           [class.is-invalid]="confirmPasswordInput.invalid && confirmPasswordInput.touched"
-          placeholder="Confirm your password"
+          placeholder="Confirme su contraseña"
         >
         <div class="invalid-feedback" *ngIf="confirmPasswordInput.invalid && confirmPasswordInput.touched">
-          Please confirm your password
+          Por favor confirme su contraseña
         </div>
       </div>
 
@@ -70,13 +70,13 @@
           [disabled]="registerForm.invalid || loading"
         >
           <span *ngIf="loading" class="spinner"></span>
-          <span *ngIf="!loading">Register</span>
+          <span *ngIf="!loading">Registrarse</span>
         </button>
       </div>
 
       <div class="auth-links">
-        <a routerLink="/login" class="login-link">Already have an account? Login</a>
+        <a routerLink="/login" class="login-link">Ya tienes una cuenta? Ingresar</a>
       </div>
     </form>
   </div>
-</div> 
+</div>

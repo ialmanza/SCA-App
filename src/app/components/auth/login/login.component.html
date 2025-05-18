@@ -1,7 +1,8 @@
+<app-notifications></app-notifications>
 <div class="auth-container">
   <div class="auth-card">
-    <h2>Login</h2>
-    
+    <h2>Ingresar</h2>
+
     <form (ngSubmit)="onSubmit()" #loginForm="ngForm">
       <div class="form-group">
         <label for="email">Email</label>
@@ -15,15 +16,15 @@
           #emailInput="ngModel"
           class="form-control"
           [class.is-invalid]="emailInput.invalid && emailInput.touched"
-          placeholder="Enter your email"
+          placeholder="Ingrese su correo electrónico"
         >
         <div class="invalid-feedback" *ngIf="emailInput.invalid && emailInput.touched">
-          Please enter a valid email address
+          Por favor ingrese un correo electrónico válido
         </div>
       </div>
 
       <div class="form-group">
-        <label for="password">Password</label>
+        <label for="password">Contraseña</label>
         <input
           type="password"
           id="password"
@@ -34,10 +35,10 @@
           #passwordInput="ngModel"
           class="form-control"
           [class.is-invalid]="passwordInput.invalid && passwordInput.touched"
-          placeholder="Enter your password"
+          placeholder="Ingrese su contraseña"
         >
         <div class="invalid-feedback" *ngIf="passwordInput.invalid && passwordInput.touched">
-          Password must be at least 6 characters long
+          La contraseña debe tener al menos 6 caracteres
         </div>
       </div>
 
@@ -52,14 +53,14 @@
           [disabled]="loginForm.invalid || loading"
         >
           <span *ngIf="loading" class="spinner"></span>
-          <span *ngIf="!loading">Login</span>
+          <span *ngIf="!loading">Ingresar</span>
         </button>
       </div>
 
       <div class="auth-links">
-        <a (click)="resetPassword()" class="forgot-password">Forgot Password?</a>
-        <a routerLink="/register" class="register-link">Don't have an account? Register</a>
+        <a (click)="resetPassword()" class="forgot-password">Olviaste tu contraseña?</a>
+        <a routerLink="/register" class="register-link">No tienes una cuenta? Registrarse</a>
       </div>
     </form>
   </div>
-</div> 
+</div>
