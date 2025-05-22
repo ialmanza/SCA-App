@@ -49,7 +49,9 @@
           <div class="dropdown-menu">
             <a (click)="navegarToDashboard()">Atrás</a>
             <a (click)="logout()">Salir</a>
-            <a (click)="deleteProject()">Eliminar Proyecto</a>
+            <a (click)="openDeleteModal(); $event.stopPropagation()" class="btn-icon">
+              <i class="fas fa-trash"></i>
+            </a>
           </div>
         </div>
       </div>
@@ -77,6 +79,8 @@
           <li [class.active]="activeTab === 'seleccion'">
             <a (click)="setActiveTab('seleccion')">Tabla de selección</a>
           </li>
+          <li [class.active]="activeTab === 'elecciones'">
+            <a (click)="setActiveTab('elecciones')">Elección</a>
         </ul>
       </nav>
     </div>
@@ -162,6 +166,22 @@
       <div class="tab-pane" *ngIf="activeTab === 'seleccion'">
         <app-tabla-de-seleccion [projectId]="project.id || ''"></app-tabla-de-seleccion>
       </div>
+
+      <!-- Eleccion Tab -->
+      <div class="tab-pane" *ngIf="activeTab === 'elecciones'">
+        <app-eleccion [projectId]="project.id || ''"></app-eleccion>
+      </div>
+
     </div>
   </div>
+
+  <app-confirmation-modal
+    [isOpen]="showDeleteModal"
+    title="Eliminar Proyecto"
+    message="¿Está seguro que desea eliminar este proyecto? Esta acción no se puede deshacer."
+    confirmText="Eliminar"
+    cancelText="Cancelar"
+    (confirm)="deleteProject()"
+    (cancel)="onDeleteCancel()"
+  ></app-confirmation-modal>
 </div>

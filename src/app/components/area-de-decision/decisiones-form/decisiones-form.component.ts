@@ -22,6 +22,7 @@ import { UltimopasoComponent } from "../../ultimopaso/ultimopaso.component";
 import { NotificationService } from '../../../services/supabaseServices/notification.service';
 import { NotificationsComponent } from "../../notifications/notifications.component";
 import { Vinculo } from '../../../models/interfaces';
+import { EleccionComponent } from '../../eleccion/eleccion.component';
 
 @Component({
   selector: 'app-decisiones-form',
@@ -29,7 +30,7 @@ import { Vinculo } from '../../../models/interfaces';
   imports: [FormsModule, ReactiveFormsModule, CommonModule, CrearDecisionComponent,
     GrafoComponent, PosiblesAlternativasComponent, ModoDeComparacionComponent, TablaDeComparacionComponent,
     TablaDecisionesComponent, DecisionCheckComponent, VinculosComponent, PuntuacionesMinimasComponent,
-    TablaDeSeleccionComponent, UltimopasoComponent, NotificationsComponent],
+    TablaDeSeleccionComponent, UltimopasoComponent, NotificationsComponent, EleccionComponent],
   templateUrl: './decisiones-form.component.html',
   styleUrl: './decisiones-form.component.css'
 })

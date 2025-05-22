@@ -1,4 +1,4 @@
-<!-- Loading indicator -->
+<!-- Loading -->
 <div *ngIf="isLoading" class="loading-container">
   <div class="loading-spinner"></div>
   <p>Cargando datos...</p>
@@ -12,6 +12,18 @@
 
 <!-- Main content -->
 <div class="container" *ngIf="!isLoading && !error">
+  <!-- Action bar -->
+  <div class="actions-bar">
+    <button
+      (click)="calculateAllPathScores()"
+      class="action-button"
+      [disabled]="isCalculatingScores"
+    >
+      {{ isCalculatingScores ? 'Calculando...' : 'Recalcular puntajes' }}
+    </button>
+  </div>
+
+  <!-- Table -->
   <div class="table-container" *ngIf="paths && paths.length > 0">
     <table>
       <thead>
@@ -24,15 +36,33 @@
       </thead>
       <tbody>
         <tr *ngFor="let path of paths; trackBy: trackByFn">
-          <td class="path-hex clickable" (click)="openPathModal(path)">{{ path.hexa }}</td>
-          <td class="path-name">
-            <!-- Aquí puedes mostrar el nombre del path si lo tienes -->
+          <td class="path-hex clickable" (click)="openPathModal(path)">
+            {{ path.hexa }}
           </td>
-          <td *ngFor="let mode of comparisonModes; trackBy: trackByFn"
-              class="symbol-cell"
-              [attr.data-mode-id]="mode.id"
-              [class.valid]="isValidCell(path, mode.id)">
-            {{ getSymbolsForCell(path, mode.id) }}
+          <td class="path-name">
+            <!-- Espacio para el nombre del path -->
+          </td>
+
+          <!-- Celdas por cada modo de comparación con emojis -->
+          <td
+            *ngFor="let mode of comparisonModes; trackBy: trackByFn"
+            class="symbol-cell"
+            [attr.data-mode-id]="mode.id"
+            [class.valid]="isValidCell(path, mode.id)"
+          >
+            <div class="cell-content">
+              <div class="emoji-display">
+                {{ getEmojisForCell(path, mode.id) }}
+              </div>
+              <div
+                class="area-score-cell"
+                *ngIf="path.areaScores && path.areaScores[mode.comparison_area] !== undefined"
+              >
+                <!-- <span class="area-score-value">
+                  {{ getPathAreaScore(path, mode.comparison_area) }}
+                </span> -->
+              </div>
+            </div>
           </td>
         </tr>
       </tbody>
@@ -49,5 +79,5 @@
 <app-path-modal
   [isOpen]="isModalOpen"
   [path]="selectedPath"
-  (closeEvent)="closeModal()">
-</app-path-modal>
+  (closeEvent)="closeModal()"
+></app-path-modal>

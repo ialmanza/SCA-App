@@ -10,6 +10,7 @@ import { SelectedPathsService } from '../../services/supabaseServices/selected-p
 import { ComparisonCellService } from '../../services/supabaseServices/comparison-cell.service';
 import { PathModalComponent } from '../path-modal/path-modal.component';
 import { PathDescriptionsService } from '../../services/supabaseServices/path-descriptions.service';
+import { PathAreaScoreService, PathAreaScore } from '../../services/supabaseServices/path-area-score.service';
 import { supabase } from '../../config/supabase.config';
 
 interface CellState {
@@ -38,30 +39,49 @@ interface PathValues {
     isValid: boolean;
     minScore: number | null;
   }[];
+  areaScores?: { [areaName: string]: number };
+}
+
+interface DecisionArea {
+  id: string;
+  rotulo: string;
+  project_id: string;
 }
 
 @Component({
   selector: 'app-tabla-de-seleccion',
   standalone: true,
   imports: [CommonModule, PathModalComponent],
-  providers: [OpcionesService, ComparisonModeService, ComparisonCellService, SelectedPathsService, PathDescriptionsService],
+  providers: [
+    OpcionesService,
+    ComparisonModeService,
+    ComparisonCellService,
+    SelectedPathsService,
+    PathDescriptionsService,
+    PathAreaScoreService
+  ],
   templateUrl: './tabla-de-seleccion.component.html',
   styleUrl: './tabla-de-seleccion.component.css'
 })
 export class TablaDeSeleccionComponent implements OnInit, OnChanges {
-  opciones$: Observable<Opcion[]>;
-  comparisonModes$: Observable<ComparisonMode[]>;
+  opciones$: Observable<Opcion[]> = of([]);
+  comparisonModes$: Observable<ComparisonMode[]> = of([]);
   cellStates: Map<string, CellState> = new Map();
   opciones: Opcion[] = [];
   paths: PathValues[] = [];
   comparisonModes: ComparisonMode[] = [];
+  decisionAreas: DecisionArea[] = [];
   validOptionsMap: Map<string, Set<string>> = new Map();
   selectedPath: { hexa: string; path: string[] } | null = null;
-  isModalOpen: boolean = false;
+  isModalOpen = false;
   optionIdMap: Map<string, Opcion> = new Map();
+  pathAreaScores: PathAreaScore[] = [];
+  isCalculatingScores = false;
+  allCells: any[] = [];
+  modeEmojiMap: Map<string, string> = new Map();
 
-  @Input() projectId: string = '';
-  isLoading: boolean = false;
+  @Input() projectId = '';
+  isLoading = false;
   error: string | null = null;
 
   constructor(
@@ -70,23 +90,21 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
     private comparisonCellService: ComparisonCellService,
     private cdr: ChangeDetectorRef,
     private selectedPathsService: SelectedPathsService,
-    private pathDescriptionsService: PathDescriptionsService // Nuevo servicio inyectado
-  ) {
-    this.opciones$ = of([]);
-    this.comparisonModes$ = of([]);
-  }
+    private pathDescriptionsService: PathDescriptionsService,
+    private pathAreaScoreService: PathAreaScoreService
+  ) {}
 
   ngOnInit(): void {
     if (this.projectId && this.projectId.trim() !== '') {
       this.loadData();
     } else {
-      console.warn('No se ha proporcionado un projectId válido');
       this.error = 'No se ha proporcionado un ID de proyecto válido';
     }
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['projectId'] && changes['projectId'].currentValue &&
+    if (changes['projectId'] &&
+        changes['projectId'].currentValue &&
         changes['projectId'].currentValue !== changes['projectId'].previousValue) {
       this.error = null;
       this.loadData();
@@ -100,14 +118,12 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
       return;
     }
 
-    console.log('Cargando datos para el proyecto:', this.projectId);
     this.isLoading = true;
     this.error = null;
 
     this.opciones$ = from(this.opcionService.getOpcionesByProject(this.projectId))
       .pipe(
         catchError(err => {
-          console.error('Error al cargar opciones:', err);
           this.error = `Error al cargar opciones: ${err.message || JSON.stringify(err)}`;
           this.isLoading = false;
           return of([]);
@@ -116,14 +132,21 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
 
     this.comparisonModes$ = from(this.comparisonModeService.getComparisonModesByProject(this.projectId))
       .pipe(
-        map((modes: ComparisonMode[]) => modes.sort((a, b) => Number(a.order_num) - Number(b.order_num))),
+        map((modes: ComparisonMode[]) => {
+          this.modeEmojiMap.clear();
+          modes.forEach(mode => {
+            this.modeEmojiMap.set(mode.id, mode.symbol);
+          });
+          return modes.sort((a, b) => Number(a.order_num) - Number(b.order_num));
+        }),
         catchError(err => {
-          console.error('Error al cargar modos de comparación:', err);
           this.error = `Error al cargar modos de comparación: ${err.message || JSON.stringify(err)}`;
           this.isLoading = false;
           return of([]);
         })
       );
+
+    const decisionAreas$ = of([]);  // Ya no necesitamos cargar áreas de decisión
 
     forkJoin({
       paths: from(supabase
@@ -135,7 +158,6 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
           return data || [];
         }))
         .pipe(catchError(err => {
-          console.error('Error al cargar paths:', err);
           this.error = `Error al cargar paths: ${err.message || JSON.stringify(err)}`;
           this.isLoading = false;
           return of([]);
@@ -143,10 +165,13 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
       modes: this.comparisonModes$,
       opciones: this.opciones$,
       validOptions: this.comparisonCellService.getCellsWithMinimumScores(this.projectId),
-      cellValues: this.comparisonCellService.getComparisonCellsByProject(this.projectId)
+      cellValues: this.comparisonCellService.getComparisonCellsByProject(this.projectId),
+      decisionAreas: decisionAreas$,
+      pathAreaScores: this.pathAreaScoreService.getProjectPathAreaScores(this.projectId)
     }).subscribe({
-      next: ({ paths, modes, opciones, validOptions, cellValues }) => {
-        console.log('Datos recibidos:', { paths, modes, opciones, validOptions, cellValues });
+      next: ({ paths, modes, opciones, validOptions, cellValues, decisionAreas, pathAreaScores }) => {
+        // Guardar todas las celdas de comparación
+        this.allCells = cellValues;
 
         // Guardar opciones y crear un mapa de IDs para búsqueda eficiente
         this.opciones = opciones;
@@ -155,38 +180,67 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
           this.optionIdMap.set(opcion.id, opcion);
         });
 
-        // Transformar los paths al formato esperado
-        this.paths = paths.map((path: PathDescription) => ({
-          id: path.id,
-          hexa: path.hex_code,
-          path: path.path_descriptions,
-          descriptions: path.path_descriptions,
-          values: modes.map(mode => {
-            const cellValue = cellValues.find(
-              cell => cell.opcion_id === path.id && cell.mode_id === mode.id
-            );
-
-            return {
-              area: mode.id,
-              symbol: mode.symbol,
-              value: cellValue ? Number(cellValue.value) : 0,
-              minScore: mode.puntuacion_minima || null,
-              isValid: false
-            };
-          })
-        }));
-
+        this.decisionAreas = decisionAreas;
+        this.pathAreaScores = pathAreaScores;
         this.comparisonModes = modes;
+
+        // Transformar los paths al formato esperado
+        this.paths = paths.map((path: PathDescription) => {
+          const pathValues: PathValues = {
+            id: path.id,
+            hexa: path.hex_code,
+            path: path.path_descriptions,
+            descriptions: path.path_descriptions,
+            values: modes.map(mode => {
+              const cellValue = cellValues.find(
+                cell => cell.opcion_id === path.id && cell.mode_id === mode.id
+              );
+
+              return {
+                area: mode.id,
+                symbol: mode.symbol,
+                value: cellValue ? Number(cellValue.value) : 0,
+                minScore: mode.puntuacion_minima || null,
+                isValid: false
+              };
+            }),
+            areaScores: {}
+          };
+
+          // Añadir los puntajes por área a este path si existen
+          const scores = pathAreaScores.filter(score => score.path_id === path.id);
+          if (scores && scores.length > 0) {
+            scores.forEach(score => {
+              if (pathValues.areaScores) {
+                pathValues.areaScores[score.area_rotulo] = score.score;
+              }
+            });
+          }
+
+          return pathValues;
+        });
+
         this.validOptionsMap = validOptions;
 
         // Actualizar los valores de las celdas con la información de validez
         this.updateCellValidity();
 
+        // Forzar la detección de cambios aquí
+        this.cdr.detectChanges();
+
+        // Si hay paths sin puntajes por área, calcularlos
+        const pathsWithoutScores = this.paths.filter(path =>
+          !path.areaScores || Object.keys(path.areaScores).length === 0
+        );
+
+        if (pathsWithoutScores.length > 0) {
+          this.calculatePathAreaScoresCorrectly(pathsWithoutScores);
+        }
+
         this.isLoading = false;
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Error al cargar datos:', error);
         this.error = `Error al cargar datos: ${error.message || JSON.stringify(error)}`;
         this.isLoading = false;
         this.cdr.detectChanges();
@@ -194,138 +248,191 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
     });
   }
 
-  // Método para cargar las descripciones de los paths
-  loadPathDescriptions(): void {
-    if (!this.paths || this.paths.length === 0) {
-      this.isLoading = false;
-      this.cdr.detectChanges();
-      return;
-    }
+  getEmojisForCell(path: PathValues, modeId: string): string {
+    if (!path || !path.values || !Array.isArray(path.values)) return '';
 
-    // Creamos un array de promesas para las descripciones de cada path
-    const descriptionPromises = this.paths.map(path =>
-      from(this.pathDescriptionsService.getPathDescription(this.projectId, path.hexa))
-        .pipe(
-          map(descriptions => ({ hexCode: path.hexa, descriptions })),
-          catchError(error => {
-            console.warn(`Error al cargar descripciones para el camino ${path.hexa}:`, error);
-            return of({ hexCode: path.hexa, descriptions: null });
-          })
-        )
-    );
+    // Encontrar el modo de comparación correspondiente
+    const mode = this.comparisonModes.find(m => m.id === modeId);
+    if (!mode) return '';
 
-    // Ejecutamos todas las promesas en paralelo
-    forkJoin(descriptionPromises).subscribe({
-      next: (results) => {
-        results.forEach(result => {
-          const pathIndex = this.paths.findIndex(p => p.hexa === result.hexCode);
-          if (pathIndex !== -1 && result.descriptions) {
-            this.paths[pathIndex].descriptions = result.descriptions;
-          }
-        });
+    // Obtener el emoji para este modo
+    const emoji = this.modeEmojiMap.get(modeId) || mode.symbol || '⭐';
 
-        this.generateAndSavePathDescriptions();
+    // Usar el puntaje calculado del área en lugar del valor de la celda
+    const areaScore = path.areaScores?.[mode.comparison_area] || 0;
 
-        this.isLoading = false;
-        this.cdr.detectChanges();
-      },
-      error: (error) => {
-        console.error('Error al cargar descripciones de los caminos:', error);
-        this.isLoading = false;
-        this.cdr.detectChanges();
-      }
-    });
-  }
-
-  // Método para generar y guardar descripciones para los paths que no tienen
-  generateAndSavePathDescriptions(): void {
-    const pathsWithoutDescriptions = this.paths.filter(path => !path.descriptions);
-
-    if (pathsWithoutDescriptions.length === 0) return;
-
-    console.log(`Generando descripciones para ${pathsWithoutDescriptions.length} caminos...`);
-
-    pathsWithoutDescriptions.forEach(path => {
-      const descriptions = this.generatePathDescriptions(path);
-
-      this.pathDescriptionsService.savePathDescription(this.projectId, path.hexa, descriptions)
-        .then(() => {
-          console.log(`Descripciones guardadas para el camino ${path.hexa}`);
-          const pathIndex = this.paths.findIndex(p => p.hexa === path.hexa);
-          if (pathIndex !== -1) {
-            this.paths[pathIndex].descriptions = descriptions;
-          }
-          this.cdr.detectChanges();
-        })
-        .catch(error => {
-          console.error(`Error al guardar descripciones para el camino ${path.hexa}:`, error);
-        });
-    });
-  }
-
-  // Método para generar las descripciones de un path basado en las opciones
-  generatePathDescriptions(path: PathValues): string[] {
-    return path.path.map(optionId => {
-      if (!optionId || optionId === "NaN" || optionId === "undefined") {
-        return "[Opción no especificada]";
-      }
-
-      let opcion = this.optionIdMap.get(optionId);
-
-      if (!opcion) {
-        opcion = this.opciones.find(op =>
-          op.id.startsWith(optionId) || optionId.startsWith(op.id)
-        );
-      }
-
-      if (!opcion) {
-        opcion = this.opciones.find(op =>
-          op.id.includes(optionId) || optionId.includes(op.id)
-        );
-      }
-
-      if (!opcion) {
-        console.warn(`No se encontró opción para ID: ${optionId}`);
-      }
-
-      return opcion ? opcion.descripcion : `[${optionId || "Desconocido"}]`;
-    });
-  }
-
-  updateCellValidity(): void {
-    if (!this.paths || !Array.isArray(this.paths)) {
-      console.warn('No hay paths disponibles o no es un array');
-      return;
-    }
-
-    this.paths.forEach(path => {
-      if (!path || !path.values || !Array.isArray(path.values)) {
-        console.warn('Path inválido o sin valores:', path);
-        return;
-      }
-
-      path.values.forEach(value => {
-        if (!value || !value.area) {
-          console.warn('Valor inválido en path:', value);
-          return;
-        }
-
-        value.isValid = value.minScore === null || value.value >= value.minScore;
-      });
-    });
+    // Repetir el emoji según el valor calculado del área
+    return areaScore > 0 ? emoji.repeat(areaScore) : '';
   }
 
   getSymbolsForCell(path: PathValues, modeId: string): string {
-    if (!path || !path.values || !Array.isArray(path.values)) return '';
+    return this.getEmojisForCell(path, modeId);
+  }
 
-    const valueObj = path.values.find(v => v && v.area === modeId);
-    if (!valueObj) return '';
+  calculatePathAreaScoresCorrectly(pathsToCalculate: PathValues[]): void {
+    if (!pathsToCalculate || pathsToCalculate.length === 0) return;
 
-    if (valueObj.value > 0 && valueObj.isValid) {
-      return valueObj.symbol.repeat(valueObj.value);
+    this.isCalculatingScores = true;
+
+    // Para cada camino, necesitamos:
+    // 1. Convertir las descripciones de opciones a IDs de opciones
+    // 2. Para cada opción, buscar sus celdas de comparación
+    // 3. Agrupar y sumar valores por área de comparación
+
+    const calculationPromises = pathsToCalculate.map(path => {
+      // Necesitamos resolver las descripciones de opciones a IDs reales
+      const getOptionIdsFromDescriptions = async (descriptions: string[]): Promise<string[]> => {
+        if (!descriptions || descriptions.length === 0) return [];
+
+        // Crear un mapa de descripciones a IDs
+        const descToIdMap = new Map<string, string>();
+        this.opciones.forEach(option => {
+          descToIdMap.set(option.descripcion.trim(), option.id);
+        });
+
+        // Mapear cada descripción a su ID correspondiente
+        return descriptions.map(desc => {
+          const trimmedDesc = desc.trim();
+          return descToIdMap.get(trimmedDesc) || '';
+        }).filter(id => id !== '');
+      };
+
+      return getOptionIdsFromDescriptions(path.descriptions || path.path)
+        .then(optionIds => {
+          return this.calcularPuntajesPorArea(this.projectId, path.id, path.hexa, optionIds);
+        });
+    });
+
+    Promise.all(calculationPromises)
+      .then(results => {
+        // Actualizar los puntajes en el modelo local
+        results.forEach((scores, index) => {
+          const pathId = pathsToCalculate[index].id;
+          const pathIndex = this.paths.findIndex(p => p.id === pathId);
+
+          if (pathIndex !== -1) {
+            if (!this.paths[pathIndex].areaScores) {
+              this.paths[pathIndex].areaScores = {};
+            }
+
+            for (const areaId in scores) {
+              const mode = this.comparisonModes.find(m => m.id === areaId);
+              if (mode) {
+                this.paths[pathIndex].areaScores![mode.comparison_area] = scores[areaId];
+              }
+            }
+          }
+        });
+
+        this.isCalculatingScores = false;
+        this.cdr.detectChanges();
+      })
+      .catch(error => {
+        this.isCalculatingScores = false;
+        this.cdr.detectChanges();
+      });
+  }
+
+  async calcularPuntajesPorArea(projectId: string, pathId: string, hexCode: string, optionIds: string[]): Promise<{[areaId: string]: number}> {
+    try {
+      // Crear un mapa para almacenar puntajes por área
+      const areaScores: {[areaId: string]: number} = {};
+
+      // Inicializar puntajes a 0 para todas las áreas de comparación
+      this.comparisonModes.forEach(mode => {
+        areaScores[mode.id] = 0;
+      });
+
+      // Filtrar las celdas de comparación para las opciones de este camino
+      const optionCells = this.allCells.filter(cell =>
+        optionIds.includes(cell.opcion_id)
+      );
+
+      // Sumar los valores por área de comparación
+      optionCells.forEach(cell => {
+        const modeId = cell.mode_id;
+        if (modeId in areaScores) {
+          areaScores[modeId] += Number(cell.value);
+        }
+      });
+
+      // Primero, necesitamos obtener las áreas de decisión del proyecto
+      const { data: decisionAreas, error: areasError } = await supabase
+        .from('decision_areas')
+        .select('id, rotulo')
+        .eq('project_id', projectId);
+
+      if (areasError) throw areasError;
+
+      // Preparar registros para guardar en la base de datos
+      const pathAreaScores: PathAreaScore[] = [];
+
+      for (const modeId in areaScores) {
+        const mode = this.comparisonModes.find(m => m.id === modeId);
+        if (!mode) continue;
+
+        // Buscar el área de decisión correspondiente al área de comparación
+        const matchingArea = decisionAreas.find(area =>
+          area.rotulo === mode.comparison_area ||
+          area.rotulo.includes(mode.comparison_area) ||
+          mode.comparison_area.includes(area.rotulo)
+        );
+
+        if (!matchingArea) continue;
+
+        pathAreaScores.push({
+          project_id: projectId,
+          path_id: pathId,
+          decision_area_id: matchingArea.id,
+          area_rotulo: mode.comparison_area,
+          score: areaScores[modeId]
+        });
+      }
+
+      // Eliminar puntajes existentes para este camino
+      await supabase
+        .from('path_area_scores')
+        .delete()
+        .eq('path_id', pathId);
+
+      // Insertar nuevos puntajes
+      if (pathAreaScores.length > 0) {
+        const { data: insertedData, error: insertError } = await supabase
+          .from('path_area_scores')
+          .insert(pathAreaScores)
+          .select();
+
+        if (insertError) throw insertError;
+      }
+
+      return areaScores;
+    } catch (error) {
+      return {};
     }
+  }
 
-    return '';
+  calculateAllPathScores(): void {
+    if (!this.paths || this.paths.length === 0) return;
+    this.isCalculatingScores = true;
+    this.calculatePathAreaScoresCorrectly(this.paths);
+  }
+
+  getPathAreaScore(path: PathValues, areaRotulo: string): number {
+    if (!path.areaScores) return 0;
+    return path.areaScores[areaRotulo] || 0;
+  }
+
+  updateCellValidity(): void {
+    if (!this.paths || !Array.isArray(this.paths)) return;
+
+    this.paths.forEach(path => {
+      if (!path || !path.values || !Array.isArray(path.values)) return;
+
+      path.values.forEach(value => {
+        if (!value || !value.area) return;
+        value.isValid = value.minScore === null || value.value >= value.minScore;
+      });
+    });
   }
 
   isValidCell(path: PathValues, modeId: string): boolean {
@@ -355,6 +462,92 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
     );
   }
 
+  loadPathDescriptions(): void {
+    if (!this.paths || this.paths.length === 0) {
+      this.isLoading = false;
+      this.cdr.detectChanges();
+      return;
+    }
+
+    // Creamos un array de promesas para las descripciones de cada path
+    const descriptionPromises = this.paths.map(path =>
+      from(this.pathDescriptionsService.getPathDescription(this.projectId, path.hexa))
+        .pipe(
+          map(descriptions => ({ hexCode: path.hexa, descriptions })),
+          catchError(error => {
+            return of({ hexCode: path.hexa, descriptions: null });
+          })
+        )
+    );
+
+    // Ejecutamos todas las promesas en paralelo
+    forkJoin(descriptionPromises).subscribe({
+      next: (results) => {
+        results.forEach(result => {
+          const pathIndex = this.paths.findIndex(p => p.hexa === result.hexCode);
+          if (pathIndex !== -1 && result.descriptions) {
+            this.paths[pathIndex].descriptions = result.descriptions;
+          }
+        });
+
+        this.generateAndSavePathDescriptions();
+
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      },
+      error: (error) => {
+        this.isLoading = false;
+        this.cdr.detectChanges();
+      }
+    });
+  }
+
+  generateAndSavePathDescriptions(): void {
+    const pathsWithoutDescriptions = this.paths.filter(path => !path.descriptions);
+
+    if (pathsWithoutDescriptions.length === 0) return;
+
+    pathsWithoutDescriptions.forEach(path => {
+      const descriptions = this.generatePathDescriptions(path);
+
+      this.pathDescriptionsService.savePathDescription(this.projectId, path.hexa, descriptions)
+        .then(() => {
+          const pathIndex = this.paths.findIndex(p => p.hexa === path.hexa);
+          if (pathIndex !== -1) {
+            this.paths[pathIndex].descriptions = descriptions;
+          }
+          this.cdr.detectChanges();
+        })
+        .catch(error => {
+          // Error silencioso
+        });
+    });
+  }
+
+  generatePathDescriptions(path: PathValues): string[] {
+    return path.path.map(optionId => {
+      if (!optionId || optionId === "NaN" || optionId === "undefined") {
+        return "[Opción no especificada]";
+      }
+
+      let opcion = this.optionIdMap.get(optionId);
+
+      if (!opcion) {
+        opcion = this.opciones.find(op =>
+          op.id.startsWith(optionId) || optionId.startsWith(op.id)
+        );
+      }
+
+      if (!opcion) {
+        opcion = this.opciones.find(op =>
+          op.id.includes(optionId) || optionId.includes(op.id)
+        );
+      }
+
+      return opcion ? opcion.descripcion : `[${optionId || "Desconocido"}]`;
+    });
+  }
+
   openPathModal(path: PathValues): void {
     this.isLoading = true;
 
@@ -372,7 +565,6 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
     from(this.pathDescriptionsService.getPathDescription(this.projectId, path.hexa))
       .pipe(
         catchError(error => {
-          console.error(`Error al cargar descripciones para ${path.hexa}:`, error);
           return of(null);
         })
       )
@@ -401,7 +593,9 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
                 path: generatedDescriptions
               };
             })
-            .catch(error => console.error(`Error al guardar descripciones para ${path.hexa}:`, error));
+            .catch(error => {
+              // Error silencioso
+            });
         }
 
         this.isModalOpen = true;
@@ -414,5 +608,14 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
     this.isModalOpen = false;
     this.selectedPath = null;
     this.cdr.detectChanges();
+  }
+
+  getCellScore(path: PathValues, modeId: string): number {
+    if (!path || !path.values || !Array.isArray(path.values)) return 0;
+
+    const valueObj = path.values.find(v => v && v.area === modeId);
+    if (!valueObj) return 0;
+
+    return valueObj.value;
   }
 }

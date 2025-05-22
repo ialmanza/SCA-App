@@ -1,45 +1,51 @@
-.container {
-  width: 100%;
-  padding: 20px;
+/* Base */
+* {
   box-sizing: border-box;
 }
 
+.container {
+  width: 100%;
+  padding: 20px;
+}
+
+/* Tabla */
 .table-container {
   width: 100%;
   overflow-x: auto;
-  margin: 20px 0;
+  margin: 1rem 0;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
   background-color: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 th, td {
-  padding: 12px;
-  text-align: center;
-  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 th {
-  background-color: #f5f5f5;
-  font-weight: bold;
+  background-color: #f9fafb;
+  font-weight: 600;
 }
 
 tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
+/* Celdas de ruta hexadecimal */
 .path-hex {
-  font-weight: bold;
   font-family: monospace;
+  font-weight: bold;
 }
 
 .path-hex.clickable {
   cursor: pointer;
-  color: #2196F3;
+  color: #2563eb;
   transition: color 0.2s ease;
 }
 
@@ -48,10 +54,10 @@ tr:nth-child(even) {
   text-decoration: underline;
 }
 
+/* Celdas de símbolos */
 .symbol-cell {
   text-align: center;
   min-width: 100px;
-  padding: 0.75rem;
   font-size: 1.2rem;
 }
 
@@ -61,94 +67,45 @@ tr:nth-child(even) {
 }
 
 .symbol-cell:not(.valid) {
-  background-color: #fee2e2;
+  /* background-color: #fee2e2; */
+  background-color: #dcfce7;
   color: #991b1b;
 }
 
-/* Asegurar que los emojis se muestren correctamente */
-.symbol-cell span {
-  display: inline-block;
-  font-size: 1.2rem;
-  line-height: 1;
-  vertical-align: middle;
-}
-
-/* Estilo para celdas vacías */
-.symbol-cell:empty {
-  background-color: #f3f4f6;
-  color: #6b7280;
-}
-
-.buttons-container {
+.cell-content {
   display: flex;
-  justify-content: space-between;
-  padding: 10px 0;
+  flex-direction: column;
+  align-items: center;
 }
 
-.btn-back, .btn-continue {
-  padding: 10px 20px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
+.score-value {
   font-weight: bold;
+  margin-bottom: 4px;
 }
 
-.btn-back {
-  background-color: #f2f2f2;
-  color: #333;
+.symbol-display {
+  font-size: 1.2em;
 }
 
-.btn-continue {
-  background-color: #4CAF50;
-  color: white;
+.area-score-cell {
+  margin-top: 4px;
+  font-size: 12px;
+  color: #444;
 }
 
-.btn-continue:disabled {
-  background-color: #cccccc;
-  cursor: not-allowed;
+.area-score-label {
+  font-weight: bold;
+  margin-right: 4px;
 }
 
-.loading {
-  text-align: center;
-  padding: 20px;
-  color: #666;
-}
-
-.error {
-  text-align: center;
-  padding: 20px;
-  color: #d32f2f;
-  background-color: #ffebee;
-  border-radius: 4px;
-  margin: 20px 0;
-}
-
-.error-message {
-  color: #d9534f;
-  padding: 15px;
-  margin-bottom: 20px;
-  border: 1px solid #ebccd1;
-  border-radius: 4px;
-  background-color: #f2dede;
-}
-
-.retry-button {
-  background-color: #d9534f;
-  color: white;
-  border: none;
-  padding: 8px 15px;
-  border-radius: 4px;
+.area-score-value {
+  color: #2a7ae2;
+  font-weight: bold;
+  font-size: 16px;
   cursor: pointer;
-  margin-top: 10px;
 }
 
-.empty-state {
-  text-align: center;
-  color: #777;
-  padding: 30px;
-  font-style: italic;
-}
-
+/* Estados: Cargando */
 .loading-container {
   display: flex;
   flex-direction: column;
@@ -173,6 +130,7 @@ tr:nth-child(even) {
   100% { transform: rotate(360deg); }
 }
 
+/* Estados: Error */
 .error-container {
   padding: 1rem;
   margin: 1rem;
@@ -201,53 +159,36 @@ tr:nth-child(even) {
   background-color: #dc2626;
 }
 
+/* Estados: Sin datos */
 .no-data-container {
   padding: 2rem;
   text-align: center;
   color: #6b7280;
 }
 
-.table-container {
-  overflow-x: auto;
-  margin: 1rem 0;
+/* Barra de acciones */
+.actions-bar {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 15px;
 }
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background-color: white;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-th, td {
-  padding: 0.75rem;
-  text-align: left;
-  border-bottom: 1px solid #e5e7eb;
-}
-
-th {
-  background-color: #f9fafb;
-  font-weight: 600;
-}
-
-.path-hex {
-  font-family: monospace;
+.action-button {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 4px;
   cursor: pointer;
-  color: #2563eb;
+  font-size: 14px;
+  transition: background-color 0.3s;
 }
 
-.path-hex:hover {
-  text-decoration: underline;
+.action-button:hover {
+  background-color: #45a049;
 }
 
-.symbol-cell {
-  text-align: center;
-}
-
-.symbol-cell.valid {
-  background-color: #dcfce7;
-}
-
-.symbol-cell:not(.valid) {
-  background-color: #dcfce7;
+.action-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }
