@@ -1,6 +1,16 @@
 import { Injectable } from '@angular/core';
 import { supabase } from '../../config/supabase.config';
 
+// Interfaz para los datos de path_descriptions
+export interface PathDescription {
+  id: string;
+  project_id: string;
+  hex_code: string;
+  path_descriptions: string[];
+  created_at: string;
+  updated_at: string;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -95,5 +105,35 @@ export class PathDescriptionsService {
       .eq('hex_code', hexCode);
 
     if (error) throw error;
+  }
+
+  // NUEVO MÉTODO para el componente de elección
+  async getAllPathDescriptionsByProject(projectId: string): Promise<PathDescription[]> {
+    const { data, error } = await supabase
+      .from('path_descriptions')
+      .select('*')
+      .eq('project_id', projectId)
+      .order('hex_code');
+
+    if (error) throw error;
+
+    return data || [];
+  }
+
+  // NUEVO MÉTODO alternativo que devuelve solo los campos necesarios
+  async getPathDescriptionsForElection(projectId: string): Promise<{
+    id: string;
+    hex_code: string;
+    path_descriptions: string[];
+  }[]> {
+    const { data, error } = await supabase
+      .from('path_descriptions')
+      .select('id, hex_code, path_descriptions')
+      .eq('project_id', projectId)
+      .order('hex_code');
+
+    if (error) throw error;
+
+    return data || [];
   }
 }

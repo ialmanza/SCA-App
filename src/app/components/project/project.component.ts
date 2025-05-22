@@ -24,6 +24,7 @@ import { TablaDeSeleccionComponent } from '../tabla-de-seleccion/tabla-de-selecc
 import { PuntuacionesMinimasComponent } from '../puntuaciones-minimas/puntuaciones-minimas.component';
 import { DecisionCheckComponent } from '../area-de-decision/decision-check/decision-check.component';
 import { ConfirmationModalComponent } from '../shared/confirmation-modal/confirmation-modal.component';
+import { EleccionComponent } from "../eleccion/eleccion.component";
 
 @Component({
   selector: 'app-project',
@@ -41,8 +42,9 @@ import { ConfirmationModalComponent } from '../shared/confirmation-modal/confirm
     TablaDeSeleccionComponent,
     PuntuacionesMinimasComponent,
     DecisionCheckComponent,
-    ConfirmationModalComponent
-  ],
+    ConfirmationModalComponent,
+    EleccionComponent
+],
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.css']
 })
@@ -58,7 +60,7 @@ export class ProjectComponent implements OnInit {
 
   // Modal properties
   showModal = false;
-  activeModal: 'puntuaciones' | 'decision-check' | 'grafo' | 'vinculos'| null = null;
+  activeModal: 'puntuaciones' | 'decision-check' | 'grafo' | 'vinculos' | null = null;
   modalTitle = '';
 
   // Statistics
