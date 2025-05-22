@@ -21,6 +21,7 @@ import { RegisterComponent } from './components/auth/register/register.component
 import { authGuard } from './guards/auth.guard';
 import { ProjectComponent } from './components/project/project.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
+import { EleccionComponent } from './components/eleccion/eleccion.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -42,7 +43,8 @@ export const routes: Routes = [
       { path: 'decision-check', component: DecisionCheckComponent },
       { path: 'puntuaciones-minimas', component: PuntuacionesMinimasComponent },
       { path: 'tabla-de-seleccion', component: TablaDeSeleccionComponent },
-      { path: 'ultimopaso', component: UltimopasoComponent }
+      { path: 'ultimopaso', component: UltimopasoComponent },
+      { path: 'eleccion', component: EleccionComponent },
     ]
   },
   { path: 'crear-decision', component: CrearDecisionComponent, canActivate: [authGuard] },
@@ -61,5 +63,6 @@ export const routes: Routes = [
   { path: 'puntuaciones-minimas', component: PuntuacionesMinimasComponent, canActivate: [authGuard] },
   { path: 'tabla-de-seleccion', component: TablaDeSeleccionComponent, canActivate: [authGuard] },
   { path: 'ultimopaso', component: UltimopasoComponent, canActivate: [authGuard] },
+  { path: 'eleccion', component: EleccionComponent, canActivate: [authGuard] },
 
 ];

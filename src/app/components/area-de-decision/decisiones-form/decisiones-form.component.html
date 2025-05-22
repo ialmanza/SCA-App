@@ -257,22 +257,6 @@
 
   <div *ngIf="pasoActual === 10">
     <!-- Paso 10: Próximo paso -->
-    <div class=" comparacion">
-      <h1>Modo de comparación</h1>
-    </div>
-      <app-puntuaciones-minimas [projectId]="projectId"></app-puntuaciones-minimas>
-
-    <div class="flex justify-between mt-6">
-      <button class="atras"
-        (click)="retrocederPaso()">Atrás</button>
-        <button class="avanzar"
-        (click)="avanzarPaso()">Continuar</button>
-    </div>
-
-  </div>
-
-  <div *ngIf="pasoActual === 11">
-    <!-- Paso 11: Próximo paso -->
     <div class=" selección">
       <h1>Modo de Selección</h1>
     </div>
@@ -287,8 +271,40 @@
 
   </div>
 
-    <div *ngIf="pasoActual === 12">
-      <!-- Paso 12: Próximo paso -->
+  <div *ngIf="pasoActual === 11">
+    <!-- Paso 11: Próximo paso -->
+    <div class=" comparacion">
+      <h1>Modo de comparación</h1>
+    </div>
+      <app-puntuaciones-minimas [projectId]="projectId"></app-puntuaciones-minimas>
+
+    <div class="flex justify-between mt-6">
+      <button class="atras"
+        (click)="retrocederPaso()">Atrás</button>
+        <button class="avanzar"
+        (click)="avanzarPaso()">Continuar</button>
+    </div>
+
+  </div>
+
+  <div *ngIf="pasoActual === 12">
+    <!-- Paso 12: Próximo paso -->
+    <div class="selección">
+      <h1>Modo de selección</h1>
+    </div>
+      <app-eleccion [projectId]="projectId || ''"></app-eleccion>
+
+    <div class="flex justify-between mt-6">
+      <button class="atras"
+        (click)="retrocederPaso()">Atrás</button>
+        <button class="avanzar"
+        (click)="avanzarPaso()">Continuar</button>
+    </div>
+
+  </div>
+
+  <div *ngIf="pasoActual === 13">
+      <!-- Paso 13: Próximo paso -->
       <div class=" selección">
         <h1>Fin del Proceso</h1>
       </div>

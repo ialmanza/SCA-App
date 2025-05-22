@@ -121,26 +121,75 @@ export class ComparisonCellService {
     ).pipe(
       map(response => {
         if (response.error) throw response.error;
-        
+
         const validOptionsMap = new Map<string, Set<string>>();
-        
+
         (response.data as ComparisonModeWithCells[]).forEach(mode => {
           const minScore = mode.puntuacion_minima;
           if (minScore !== null) {
             const validOptions = new Set<string>();
-            
+
             mode.comparison_cells.forEach(cell => {
               if (cell.value >= minScore) {
                 validOptions.add(cell.opcion_id);
               }
             });
-            
+
             validOptionsMap.set(mode.id, validOptions);
           }
         });
-        
+
         return validOptionsMap;
       })
     );
   }
+
+  // Agregar este método a tu ComparisonCellService
+
+  // async getCellsWithMinimumScores(projectId: string): Promise<Map<string, Set<string>>> {
+  //   try {
+  //     // Obtener los modos de comparación con sus puntuaciones mínimas
+  //     const { data: comparisonModes, error: modesError } = await supabase
+  //       .from('comparison_modes')
+  //       .select('id, puntuacion_minima')
+  //       .eq('project_id', projectId);
+
+  //     if (modesError) throw modesError;
+
+  //     // Obtener todas las celdas de comparación del proyecto
+  //     const { data: cells, error: cellsError } = await supabase
+  //       .from('comparison_cells')
+  //       .select('opcion_id, mode_id, value')
+  //       .eq('project_id', projectId);
+
+  //     if (cellsError) throw cellsError;
+
+  //     // Crear el mapa de opciones válidas por modo
+  //     const validOptionsMap = new Map<string, Set<string>>();
+
+  //     comparisonModes.forEach(mode => {
+  //       const validOptions = new Set<string>();
+
+  //       // Filtrar celdas que cumplan con la puntuación mínima (si existe)
+  //       const modeCells = cells.filter(cell => cell.mode_id === mode.id);
+
+  //       modeCells.forEach(cell => {
+  //         const cellValue = Number(cell.value);
+  //         const minScore = mode.puntuacion_minima;
+
+  //         // Si no hay puntuación mínima o la celda cumple con la mínima
+  //         if (minScore === null || minScore === undefined || cellValue >= minScore) {
+  //           validOptions.add(cell.opcion_id);
+  //         }
+  //       });
+
+  //       validOptionsMap.set(mode.id, validOptions);
+  //     });
+
+  //     return validOptionsMap;
+  //   } catch (error) {
+  //     console.error('Error al obtener celdas con puntuaciones mínimas:', error);
+  //     return new Map();
+  //   }
+  // }
 }

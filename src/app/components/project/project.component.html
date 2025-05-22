@@ -79,6 +79,8 @@
           <li [class.active]="activeTab === 'seleccion'">
             <a (click)="setActiveTab('seleccion')">Tabla de selección</a>
           </li>
+          <li [class.active]="activeTab === 'elecciones'">
+            <a (click)="setActiveTab('elecciones')">Elección</a>
         </ul>
       </nav>
     </div>
@@ -164,6 +166,12 @@
       <div class="tab-pane" *ngIf="activeTab === 'seleccion'">
         <app-tabla-de-seleccion [projectId]="project.id || ''"></app-tabla-de-seleccion>
       </div>
+
+      <!-- Eleccion Tab -->
+      <div class="tab-pane" *ngIf="activeTab === 'elecciones'">
+        <app-eleccion [projectId]="project.id || ''"></app-eleccion>
+      </div>
+
     </div>
   </div>
 

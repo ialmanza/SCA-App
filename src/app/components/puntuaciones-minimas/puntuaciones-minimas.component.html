@@ -10,7 +10,7 @@
         </thead>
         <tbody formArrayName="areas">
           <tr *ngFor="let area of areasFormArray.controls; let i = index" [formGroupName]="i">
-            <td>{{ area.get('area')?.value }}</td>
+            <td>{{ area.get('rotulo')?.value }}</td>
             <td>
               <mat-form-field appearance="outline">
                 <input matInput

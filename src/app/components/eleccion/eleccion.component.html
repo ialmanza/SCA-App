@@ -1,0 +1,92 @@
+<div class="eleccion-container">
+  <h2>Selección de Alternativas</h2>
+
+  <div *ngIf="loading" class="loading">
+    Cargando datos...
+  </div>
+
+  <div *ngIf="error" class="error">
+    Error: {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error && alternativas.length === 0" class="no-data">
+    No hay alternativas disponibles
+  </div>
+
+  <div *ngIf="!loading && !error && alternativas.length > 0" class="table-container">
+    <table class="eleccion-table">
+      <thead>
+        <tr>
+          <th>Identificador</th>
+          <th *ngFor="let area of importantAreas" class="area-header">
+            {{ area.decision.nombre_area }}
+          </th>
+          <th>Estado</th>
+          <!-- <th>Puntuación Total</th> -->
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let alternativa of alternativas"
+            [class.valid-row]="alternativa.isValid"
+            [class.invalid-row]="!alternativa.isValid">
+
+          <!-- Identificador Hexa -->
+          <td class="hexa-cell">
+            <span class="hexa-id">{{ alternativa.hexaId }}</span>
+          </td>
+
+          <!-- Opciones por área -->
+          <td *ngFor="let area of importantAreas; let i = index" class="option-cell">
+            <div class="option-content">
+              {{ getOptionForArea(alternativa, i) }}
+            </div>
+            <div *ngIf="!isAreaValid(alternativa, area.decision.id)"
+                 class="invalid-indicator">
+              ⚠️ No cumple requisitos mínimos
+            </div>
+          </td>
+
+          <!-- Estado de validez -->
+          <td class="status-cell">
+            <span *ngIf="alternativa.isValid" class="status-valid">✅ Válida</span>
+            <span *ngIf="!alternativa.isValid" class="status-invalid">
+              ❌ Inválida
+              <div class="invalid-areas" *ngIf="alternativa.invalidAreas.length > 0">
+                Áreas problemáticas: {{ alternativa.invalidAreas.join(', ') }}
+              </div>
+            </span>
+          </td>
+
+          <!-- Puntuación total -->
+          <!-- <td class="score-cell">
+            <span class="total-score">{{ getTotalScore(alternativa) }}</span>
+            <div class="score-breakdown">
+              <div *ngFor="let score of alternativa.areaScores" class="area-score">
+                {{ score.area_rotulo }}: {{ score.score }}
+              </div>
+            </div>
+          </td> -->
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Resumen estadístico -->
+  <div *ngIf="!loading && alternativas.length > 0" class="summary">
+    <h3>Resumen</h3>
+    <div class="summary-stats">
+      <div class="stat-item">
+        <span class="stat-label">Total de alternativas:</span>
+        <span class="stat-value">{{ alternativas.length }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Alternativas válidas:</span>
+        <span class="stat-value valid">{{ getValidAlternativesCount() }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Alternativas inválidas:</span>
+        <span class="stat-value invalid">{{ getInvalidAlternativesCount() }}</span>
+      </div>
+    </div>
+  </div>
+</div>
