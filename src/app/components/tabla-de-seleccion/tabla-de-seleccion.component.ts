@@ -422,6 +422,11 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
     return path.areaScores[areaRotulo] || 0;
   }
 
+  getTotalScore(path: PathValues): number {
+    if (!path.areaScores) return 0;
+    return Object.values(path.areaScores).reduce((sum, score) => sum + score, 0);
+  }
+
   updateCellValidity(): void {
     if (!this.paths || !Array.isArray(this.paths)) return;
 

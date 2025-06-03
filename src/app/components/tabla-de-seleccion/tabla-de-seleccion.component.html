@@ -32,6 +32,7 @@
           <th *ngFor="let mode of comparisonModes; trackBy: trackByFn">
             {{ mode.label }}
           </th>
+          <th>Sumatoria</th>
         </tr>
       </thead>
       <tbody>
@@ -58,11 +59,15 @@
                 class="area-score-cell"
                 *ngIf="path.areaScores && path.areaScores[mode.comparison_area] !== undefined"
               >
-                <!-- <span class="area-score-value">
+                <span class="area-score-value">
                   {{ getPathAreaScore(path, mode.comparison_area) }}
-                </span> -->
+                </span>
               </div>
             </div>
+          </td>
+          <!-- Nueva columna para la suma total -->
+          <td class="total-score-cell">
+            {{ getTotalScore(path) }}
           </td>
         </tr>
       </tbody>
