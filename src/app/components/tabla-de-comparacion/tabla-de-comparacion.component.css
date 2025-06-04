@@ -240,3 +240,140 @@
     padding: 10px 20px;
   }
 }
+
+/* Overlay de guardado */
+.saving-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(2px);
+}
+
+/* Modal de guardado */
+.saving-modal {
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+  max-width: 320px;
+  width: 90%;
+  position: relative;
+  animation: fadeInScale 0.3s ease-out;
+}
+
+/* Animación de entrada del modal */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Spinner de guardado */
+.saving-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #4CAF50;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 1rem auto;
+}
+
+/* Animación del spinner */
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Texto principal de guardado */
+.saving-text {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+  margin: 0 0 0.5rem 0;
+}
+
+/* Subtexto de guardado */
+.saving-subtext {
+  font-size: 0.9rem;
+  color: #666;
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Estados deshabilitados durante el guardado */
+.comparison-table button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Efecto de pulsación en el botón de guardar cuando está activo */
+.save-button:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+/* Spinner más pequeño para el botón (opcional) */
+.button-spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid currentColor;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+  margin-right: 0.5rem;
+}
+
+/* Responsive para dispositivos móviles */
+@media (max-width: 768px) {
+  .saving-modal {
+    margin: 1rem;
+    padding: 1.5rem;
+  }
+
+  .saving-text {
+    font-size: 1.1rem;
+  }
+
+  .saving-subtext {
+    font-size: 0.85rem;
+  }
+}
+
+/* Variante de spinner con colores personalizados */
+.saving-spinner.primary {
+  border-top-color: #2196F3;
+}
+
+.saving-spinner.success {
+  border-top-color: #4CAF50;
+}
+
+.saving-spinner.warning {
+  border-top-color: #FF9800;
+}
+
+/* Efecto de difuminado en el contenido de fondo */
+.table-container:has(.saving-overlay) .table-wrapper,
+.table-container:has(.saving-overlay) .actions-container {
+  filter: blur(1px);
+  pointer-events: none;
+}

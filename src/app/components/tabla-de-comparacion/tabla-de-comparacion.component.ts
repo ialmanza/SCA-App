@@ -41,6 +41,7 @@ export class TablaDeComparacionComponent implements OnInit {
   opciones: Opcion[] = [];
   @Input() projectId: string = '';
   loading: boolean = true;
+  saving: boolean = false; // Nuevo estado para el guardado
   error: string | null = null;
 
 
@@ -275,6 +276,8 @@ export class TablaDeComparacionComponent implements OnInit {
   }
 
   async saveAllCells(): Promise<void> {
+    this.saving = true; // Activar estado de guardado
+
     try {
       const cellsToSave = Array.from(this.cellStates.values()).map(state => ({
         opcion_id: state.opcionId,
@@ -288,10 +291,14 @@ export class TablaDeComparacionComponent implements OnInit {
       for (const cell of cellsToSave) {
         await this.comparisonCellService.upsertComparisonCell(cell.opcion_id, cell.mode_id, cell.value, this.projectId);
       }
+
       this.notificationService.show('Todas las celdas guardadas exitosamente', 'success');
     } catch (error) {
       console.error('Error al guardar las celdas:', error);
       this.notificationService.show('Error al guardar las celdas', 'error');
+    } finally {
+      this.saving = false; // Desactivar estado de guardado
+      this.cdr.detectChanges();
     }
   }
 

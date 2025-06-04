@@ -1,3 +1,6 @@
+<!-- Agregar el componente de rango de puntuaciones al inicio -->
+<app-rango-puntuaciones (rangeChange)="onScoreRangeChange($event)"></app-rango-puntuaciones>
+
 <!-- Loading -->
 <div *ngIf="isLoading" class="loading-container">
   <div class="loading-spinner"></div>
@@ -13,7 +16,7 @@
 <!-- Main content -->
 <div class="container" *ngIf="!isLoading && !error">
   <!-- Action bar -->
-  <div class="actions-bar">
+  <!-- <div class="actions-bar">
     <button
       (click)="calculateAllPathScores()"
       class="action-button"
@@ -21,10 +24,10 @@
     >
       {{ isCalculatingScores ? 'Calculando...' : 'Recalcular puntajes' }}
     </button>
-  </div>
+  </div> -->
 
   <!-- Table -->
-  <div class="table-container" *ngIf="paths && paths.length > 0">
+  <div class="table-container" *ngIf="filteredPaths && filteredPaths.length > 0">
     <table>
       <thead>
         <tr>
@@ -36,7 +39,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let path of paths; trackBy: trackByFn">
+        <tr *ngFor="let path of filteredPaths; trackBy: trackByFn">
           <td class="path-hex clickable" (click)="openPathModal(path)">
             {{ path.hexa }}
           </td>
@@ -75,8 +78,13 @@
   </div>
 
   <!-- No data message -->
-  <div *ngIf="!paths || paths.length === 0" class="no-data-container">
-    <p>No hay alternativas disponibles para mostrar</p>
+  <div *ngIf="!filteredPaths || filteredPaths.length === 0" class="no-data-container">
+    <p *ngIf="minScore !== null || maxScore !== null">
+      No hay alternativas que cumplan con el rango de puntuación especificado
+    </p>
+    <p *ngIf="minScore === null && maxScore === null">
+      No hay alternativas disponibles para mostrar
+    </p>
   </div>
 </div>
 
