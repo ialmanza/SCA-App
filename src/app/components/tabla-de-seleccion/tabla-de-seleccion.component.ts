@@ -14,6 +14,7 @@ import { PathAreaScoreService, PathAreaScore } from '../../services/supabaseServ
 import { supabase } from '../../config/supabase.config';
 import { RangoPuntuacionesComponent } from '../rango-puntuaciones/rango-puntuaciones.component';
 
+
 interface CellState {
   value: number;
   opcionId: string;
