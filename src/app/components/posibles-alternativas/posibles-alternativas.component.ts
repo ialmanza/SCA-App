@@ -48,6 +48,7 @@ export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
   @Input() projectId!: string;
   private subscription: Subscription = new Subscription();
   private previousSelections: { [key: string]: boolean } = {};
+  selectedOptionsCount: number = 0;
 
   constructor(
     private opcionesService: OpcionesService,
@@ -226,6 +227,24 @@ export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
 
     this.decisionTree.forEach(node => updateNode(node));
     this.changeDetectorRef.detectChanges();
+    this.updateSelectedOptionsCount();
+  }
+
+
+  private updateSelectedOptionsCount(): void {
+    this.selectedOptionsCount = 0;
+    const countOptions = (node: DecisionNode) => {
+      node.options.forEach(option => {
+        if (option.isLastArea) {
+          this.selectedOptionsCount++; // Contar todas las opciones del último nivel
+        }
+        if (option.children) {
+          option.children.forEach(childNode => countOptions(childNode));
+        }
+      });
+    };
+    this.decisionTree.forEach(node => countOptions(node));
+
   }
 
   getUniqueAreas(): string[] {

@@ -12,6 +12,7 @@ import { PathModalComponent } from '../path-modal/path-modal.component';
 import { PathDescriptionsService } from '../../services/supabaseServices/path-descriptions.service';
 import { PathAreaScoreService, PathAreaScore } from '../../services/supabaseServices/path-area-score.service';
 import { supabase } from '../../config/supabase.config';
+import { RangoPuntuacionesComponent } from '../rango-puntuaciones/rango-puntuaciones.component';
 
 interface CellState {
   value: number;
@@ -51,7 +52,7 @@ interface DecisionArea {
 @Component({
   selector: 'app-tabla-de-seleccion',
   standalone: true,
-  imports: [CommonModule, PathModalComponent],
+  imports: [CommonModule, PathModalComponent, RangoPuntuacionesComponent],
   providers: [
     OpcionesService,
     ComparisonModeService,
@@ -83,6 +84,10 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
   @Input() projectId = '';
   isLoading = false;
   error: string | null = null;
+
+  filteredPaths: PathValues[] = [];
+  minScore: number | null = null;
+  maxScore: number | null = null;
 
   constructor(
     private opcionService: OpcionesService,
@@ -219,6 +224,9 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
 
           return pathValues;
         });
+
+        // Inicializar los paths filtrados con todos los paths
+        this.filteredPaths = [...this.paths];
 
         this.validOptionsMap = validOptions;
 
@@ -393,7 +401,8 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
       await supabase
         .from('path_area_scores')
         .delete()
-        .eq('path_id', pathId);
+        .eq('path_id', pathId)
+        .eq('project_id', projectId);
 
       // Insertar nuevos puntajes
       if (pathAreaScores.length > 0) {
@@ -622,5 +631,36 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
     if (!valueObj) return 0;
 
     return valueObj.value;
+  }
+
+  onScoreRangeChange(range: {min: number | null, max: number | null}): void {
+    this.minScore = range.min;
+    this.maxScore = range.max;
+    this.filterPaths();
+  }
+
+  filterPaths(): void {
+    if (!this.paths) return;
+
+    if (this.minScore === null && this.maxScore === null) {
+      // Si no hay filtros, mostrar todos los paths
+      this.filteredPaths = [...this.paths];
+    } else {
+      this.filteredPaths = this.paths.filter(path => {
+        const totalScore = this.getTotalScore(path);
+
+        if (this.minScore !== null && totalScore < this.minScore) {
+          return false;
+        }
+
+        if (this.maxScore !== null && totalScore > this.maxScore) {
+          return false;
+        }
+
+        return true;
+      });
+    }
+
+    this.cdr.detectChanges();
   }
 }

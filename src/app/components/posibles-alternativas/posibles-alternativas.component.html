@@ -1,4 +1,12 @@
 <app-notifications></app-notifications>
+
+<div class="alternatives-counter" *ngIf="!isLoading && decisionTree.length">
+  <div class="counter-badge">
+    <span class="counter-label">Total de alternativas posibles:</span>
+    <span class="counter-number">{{ selectedOptionsCount }}</span>
+  </div>
+</div>
+
 <div class="decision-tree-container" *ngIf="!isLoading && decisionTree.length">
   <div class="area-titles">
     <ng-container *ngFor="let area of uniqueAreas$ | async">

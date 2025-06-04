@@ -13,6 +13,15 @@
     <p>{{ error }}</p>
   </div>
 
+  <!-- Indicador de guardado -->
+  <div *ngIf="saving" class="saving-overlay">
+    <div class="saving-modal">
+      <div class="saving-spinner"></div>
+      <p class="saving-text">Guardando tabla...</p>
+      <p class="saving-subtext">Por favor espere mientras se guardan todos los datos</p>
+    </div>
+  </div>
+
   <!-- Contenido de la tabla cuando hay datos -->
   <ng-container *ngIf="!loading && !error">
     <ng-container *ngIf="opciones.length > 0 && comparisonModes.length > 0; else noData">
@@ -44,7 +53,7 @@
                     class="counter-btn decrease"
                     (click)="decrement(opcion.id, mode.id, $event)"
                     [attr.data-cell-id]="getCellKey(opcion.id, mode.id)"
-                    [disabled]="getCellValue(opcion.id, mode.id) <= 0"
+                    [disabled]="getCellValue(opcion.id, mode.id) <= 0 || saving"
                     aria-label="Decrementar valor">
                     <fa-icon [icon]="faMinus"></fa-icon>
                   </button>
@@ -53,7 +62,7 @@
                     class="counter-btn increase"
                     (click)="increment(opcion.id, mode.id, $event)"
                     [attr.data-cell-id]="getCellKey(opcion.id, mode.id)"
-                    [disabled]="getCellValue(opcion.id, mode.id) >= 5"
+                    [disabled]="getCellValue(opcion.id, mode.id) >= 5 || saving"
                     aria-label="Incrementar valor">
                     <fa-icon [icon]="faPlus"></fa-icon>
                   </button>
@@ -68,15 +77,16 @@
         <button
           class="action-button save-button"
           (click)="saveAllCells()"
-          [disabled]="!hasUnsavedChanges()"
+          [disabled]="!hasUnsavedChanges() || saving"
           aria-label="Guardar cambios">
           <fa-icon [icon]="faSave" class="button-icon"></fa-icon>
-          Guardar Tabla
+          <span *ngIf="!saving">Guardar Tabla</span>
+          <span *ngIf="saving">Guardando...</span>
         </button>
         <button
           class="action-button reset-button"
           (click)="resetTable()"
-          [disabled]="!hasUnsavedChanges()"
+          [disabled]="!hasUnsavedChanges() || saving"
           aria-label="Reiniciar tabla">
           <fa-icon [icon]="faUndo" class="button-icon"></fa-icon>
           Reiniciar Tabla
