@@ -45,6 +45,7 @@ export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
   contador: number = 0;
   updatingOptions: { [key: string]: boolean } = {};
   isLoading: boolean = true;
+  isFullscreen: boolean = false;
   @Input() projectId!: string;
   private subscription: Subscription = new Subscription();
   private previousSelections: { [key: string]: boolean } = {};
@@ -115,8 +116,18 @@ export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleFullscreen(): void {
+    this.isFullscreen = !this.isFullscreen;
+    if (this.isFullscreen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    document.body.style.overflow = '';
   }
 
   private saveCurrentSelections(): void {
