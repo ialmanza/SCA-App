@@ -88,6 +88,35 @@
   </div>
 </div>
 
+  <!-- No data message -->
+  <div *ngIf="!filteredPaths || filteredPaths.length === 0" class="no-data-container">
+    <p *ngIf="minScore !== null || maxScore !== null">
+      No hay alternativas que cumplan con el rango de puntuación especificado
+    </p>
+    <p *ngIf="minScore === null && maxScore === null">
+      No hay alternativas disponibles para mostrar
+    </p>
+  </div>
+
+  <!-- Resumen estadístico -->
+  <div *ngIf="filteredPaths && filteredPaths.length > 0" class="summary">
+    <h3>Resumen</h3>
+    <div class="summary-stats">
+      <div class="stat-item">
+        <span class="stat-label">Total de alternativas:</span>
+        <span class="stat-value">{{ valorFilteredPaths.length }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Alternativas válidas:</span>
+        <span class="stat-value valid">{{ getValidAlternativesCount() }}</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-label">Alternativas inválidas:</span>
+        <span class="stat-value invalid">{{ getInvalidAlternativesCount() }}</span>
+      </div>
+    </div>
+  </div>
+
 <!-- Path Modal -->
 <app-path-modal
   [isOpen]="isModalOpen"

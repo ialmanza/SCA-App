@@ -89,6 +89,7 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
   filteredPaths: PathValues[] = [];
   minScore: number | null = null;
   maxScore: number | null = null;
+  valorFilteredPaths: PathValues[] = [];
 
   constructor(
     private opcionService: OpcionesService,
@@ -228,6 +229,8 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
 
         // Inicializar los paths filtrados con todos los paths
         this.filteredPaths = [...this.paths];
+
+        this.valorFilteredPaths = this.filteredPaths;
 
         this.validOptionsMap = validOptions;
 
@@ -663,5 +666,21 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
     }
 
     this.cdr.detectChanges();
+  }
+
+  getValidAlternativesCount(): number {
+    if (this.minScore === null && this.maxScore === null) {
+      return 0; // Si no hay filtros, no hay alternativas válidas
+    }
+
+    return this.filteredPaths.length; // Las alternativas que pasan el filtro son válidas
+  }
+
+  getInvalidAlternativesCount(): number {
+    if (this.minScore === null && this.maxScore === null) {
+      return 0; // Si no hay filtros, no hay alternativas inválidas
+    }
+
+    return this.paths.length - this.filteredPaths.length; // Las que no pasan el filtro son inválidas
   }
 }
