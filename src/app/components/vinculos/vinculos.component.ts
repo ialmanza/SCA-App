@@ -17,13 +17,15 @@ import { Vinculo } from '../../models/interfaces';
   templateUrl: './vinculos.component.html',
   styleUrl: './vinculos.component.css'
 })
+
 export class VinculosComponent implements OnInit {
   selectedArea1: Decision | null = null;
-  selectedArea2: Decision | null = null;
+  selectedAreas2: Decision[] = [];
   areas: Decision[] = [];
   vinculos: Vinculo[] = [];
   vinculoAEliminar: Vinculo | null = null;
   decisiones: Decision[] = [];
+  showDropdown: boolean = false;
   @Input() projectId!: string;
 
   constructor(
@@ -62,22 +64,95 @@ export class VinculosComponent implements OnInit {
     });
   }
 
-  crearVinculo(): void {
-    if (this.selectedArea1 && this.selectedArea2 && this.selectedArea1 !== this.selectedArea2) {
-      const area_id = this.selectedArea1.id;
-      const related_area_id = this.selectedArea2.id;
-
-      this.vinculosService.createVinculo(this.projectId, area_id, related_area_id)
-        .then(() => {
-          this.cargarVinculos();
-          this.selectedArea1 = null;
-          this.selectedArea2 = null;
-        })
-        .catch(error => {
-          this.notificationservice.show('Error al crear vínculo', 'error');
-        });
+  toggleAreaSelection(area: Decision): void {
+    const index = this.selectedAreas2.findIndex(selected => selected.id === area.id);
+    if (index > -1) {
+      this.selectedAreas2.splice(index, 1);
     } else {
-      this.notificationservice.show('Áreas no válidas para crear un vínculo', 'error');
+      this.selectedAreas2.push(area);
+    }
+  }
+
+  isAreaSelected(area: Decision): boolean {
+    return this.selectedAreas2.some(selected => selected.id === area.id);
+  }
+
+  getAvailableDestinationAreas(): Decision[] {
+    return this.areas.filter(area => area.id !== this.selectedArea1?.id);
+  }
+
+  getSelectedAreasText(): string {
+    if (this.selectedAreas2.length === 0) {
+      return 'Seleccionar áreas destino';
+    }
+    if (this.selectedAreas2.length === 1) {
+      return this.selectedAreas2[0].nombre_area;
+    }
+    return `${this.selectedAreas2.length} áreas seleccionadas`;
+  }
+
+  vinculoExiste(area1Id: string, area2Id: string): boolean {
+    return this.vinculos.some(vinculo =>
+      (vinculo.area_id === area1Id && vinculo.related_area_id === area2Id) ||
+      (vinculo.area_id === area2Id && vinculo.related_area_id === area1Id)
+    );
+  }
+
+  tieneVinculoConOrigen(area: Decision): boolean {
+    if (!this.selectedArea1) return false;
+    return this.vinculoExiste(this.selectedArea1.id, area.id);
+  }
+
+  crearVinculo(): void {
+    if (this.selectedArea1 && this.selectedAreas2.length > 0) {
+      const area_id = this.selectedArea1.id;
+      const promises: Promise<any>[] = [];
+      const vinculosExistentes: string[] = [];
+      const vinculosNuevos: string[] = [];
+
+      this.selectedAreas2.forEach(area2 => {
+        if (area2.id !== area_id) {
+          if (this.vinculoExiste(area_id, area2.id)) {
+            vinculosExistentes.push(`${this.selectedArea1!.nombre_area} ↔ ${area2.nombre_area}`);
+          } else {
+            vinculosNuevos.push(`${this.selectedArea1!.nombre_area} → ${area2.nombre_area}`);
+            promises.push(
+              this.vinculosService.createVinculo(this.projectId, area_id, area2.id)
+            );
+          }
+        }
+      });
+
+      if (vinculosExistentes.length > 0) {
+        this.notificationservice.show(
+          `Los siguientes vínculos ya existen (recuerda que los vínculos son bidireccionales): ${vinculosExistentes.join(', ')}`,
+          'info'
+        );
+      }
+
+      if (promises.length > 0) {
+        Promise.all(promises)
+          .then(() => {
+            let mensaje = `Se crearon ${promises.length} vínculos exitosamente`;
+            if (vinculosExistentes.length > 0) {
+              mensaje += ` (${vinculosExistentes.length} ya existían)`;
+            }
+            this.notificationservice.show(mensaje, 'success');
+            this.cargarVinculos();
+            this.selectedArea1 = null;
+            this.selectedAreas2 = [];
+            this.showDropdown = false;
+          })
+          .catch(error => {
+            this.notificationservice.show('Error al crear algunos vínculos', 'error');
+          });
+      } else if (vinculosExistentes.length > 0 && vinculosNuevos.length === 0) {
+        this.selectedArea1 = null;
+        this.selectedAreas2 = [];
+        this.showDropdown = false;
+      }
+    } else {
+      this.notificationservice.show('Debe seleccionar un área origen y al menos un área destino', 'error');
     }
   }
 
@@ -104,5 +179,9 @@ export class VinculosComponent implements OnInit {
       this.eliminarVinculo(this.vinculoAEliminar);
       this.vinculoAEliminar = null;
     }
+  }
+
+  clearDestinationSelection(): void {
+    this.selectedAreas2 = [];
   }
 }
