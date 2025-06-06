@@ -1,31 +1,46 @@
 <app-notifications></app-notifications>
-<div class="decision-tree-container" *ngIf="!isLoading && decisionTree.length">
-  <div class="area-titles">
-    <ng-container *ngFor="let area of uniqueAreas$ | async">
-      <div class="area-title">{{ area }}</div>
-    </ng-container>
-    <div class="area-title">Opciones</div>
+
+<div class="fullscreen-container" [class.fullscreen]="isFullscreen">
+  <button class="fullscreen-toggle" (click)="toggleFullscreen()">
+    <span *ngIf="!isFullscreen">Ampliar</span>
+    <span *ngIf="isFullscreen">Reducir</span>
+  </button>
+
+  <div class="alternatives-counter" *ngIf="!isLoading && decisionTree.length">
+    <div class="counter-badge">
+      <span class="counter-label">Total de alternativas posibles:</span>
+      <span class="counter-number">{{ selectedOptionsCount }}</span>
+    </div>
   </div>
 
-  <div class="decision-tree">
-    <ng-container *ngFor="let node of decisionTree">
-      <div class="decision-area">
-        <div class="options-container">
-          <ng-container *ngFor="let option of node.options">
-            <div class="option-group">
-              <div class="option-item">
-                <label>{{ option.text }}</label>
-                <div class="connector-line" *ngIf="option.children"></div>
+  <div class="decision-tree-container" *ngIf="!isLoading && decisionTree.length">
+    <div class="area-titles">
+      <ng-container *ngFor="let area of uniqueAreas$ | async">
+        <div class="area-title">{{ area }}</div>
+      </ng-container>
+      <div class="area-title">Opciones</div>
+    </div>
+
+    <div class="decision-tree">
+      <ng-container *ngFor="let node of decisionTree">
+        <div class="decision-area">
+          <div class="options-container">
+            <ng-container *ngFor="let option of node.options">
+              <div class="option-group">
+                <div class="option-item">
+                  <label>{{ option.text }}</label>
+                  <div class="connector-line" *ngIf="option.children"></div>
+                </div>
+                <div class="children-container" *ngIf="option.children">
+                  <ng-container *ngTemplateOutlet="recursiveTree; context: { $implicit: option.children, parentPath: [option.id] }">
+                  </ng-container>
+                </div>
               </div>
-              <div class="children-container" *ngIf="option.children">
-                <ng-container *ngTemplateOutlet="recursiveTree; context: { $implicit: option.children, parentPath: [option.id] }">
-                </ng-container>
-              </div>
-            </div>
-          </ng-container>
+            </ng-container>
+          </div>
         </div>
-      </div>
-    </ng-container>
+      </ng-container>
+    </div>
   </div>
 </div>
 
@@ -66,6 +81,18 @@
   </ng-container>
 </ng-template>
 
-<div *ngIf="isLoading" class="loading-container">
-  Cargando...
-</div>
+<div *ngIf="isLoading" class="professional-loading-container">
+    <div class="professional-spinner">
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+    </div>
+    <div class="loading-content">
+      <h3>Cargando</h3>
+      <p>Por favor espere mientras cargamos los datos...</p>
+      <div class="loading-progress">
+        <div class="progress-bar"></div>
+      </div>
+    </div>
+  </div>

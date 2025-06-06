@@ -1,0 +1,103 @@
+{
+  "common": {
+    "welcome": "Bem-vindo",
+    "login": "Entrar",
+    "register": "Registrar",
+    "logout": "Sair",
+    "profile": "Perfil",
+    "settings": "Configurações"
+  },
+  "navigation": {
+    "home": "Início",
+    "about": "Sobre",
+    "contact": "Contato"
+  },
+  "project": {
+    "loading": "Carregando projetos...",
+    "error": {
+      "title": "Erro",
+      "retry": "Tentar Novamente"
+    },
+    "header": {
+      "created": "Criado",
+      "name": "Nome do Projeto",
+      "namePlaceholder": "Digite o nome do projeto",
+      "save": "Salvar",
+      "cancel": "Cancelar",
+      "edit": "Editar Projeto"
+    },
+    "tabs": {
+      "overview": "Visão geral",
+      "decisionAreas": "Áreas de Decisão",
+      "alternatives": "Alternativas possíveis",
+      "comparison": "Modo de comparação",
+      "comparisonTable": "Tabela de comparação",
+      "selectionTable": "Tabela de seleção",
+      "choice": "Escolha"
+    },
+    "dashboard": {
+      "stats": {
+        "title": "Estatísticas do projeto",
+        "decisionAreas": "Áreas de Decisão",
+        "options": "Opções",
+        "comparisonModes": "Modos de Comparação",
+        "importantAreas": "Áreas Importantes"
+      },
+      "quickActions": {
+        "title": "Acesso rápido",
+        "links": "Vínculos",
+        "selectImportantAreas": "Selecionar áreas importantes",
+        "graph": "Grafo",
+        "minScores": "Pontuações Mínimas"
+      }
+    },
+    "deleteModal": {
+      "title": "Excluir Projeto",
+      "message": "Tem certeza que deseja excluir este projeto? Esta ação não pode ser desfeita.",
+      "confirm": "Excluir",
+      "cancel": "Cancelar"
+    },
+    "notifications": {
+      "languageChanged": "Idioma alterado com sucesso",
+      "projectUpdated": "Projeto atualizado com sucesso",
+      "projectDeleted": "Projeto excluído com sucesso",
+      "logoutSuccess": "Sessão encerrada com sucesso",
+      "errorUpdating": "Erro ao atualizar o projeto",
+      "errorDeleting": "Erro ao excluir o projeto",
+      "errorLogout": "Erro ao encerrar a sessão"
+    }
+  },
+  "vinculos": {
+    "title": "Criar conexão entre áreas",
+    "form": {
+      "originArea": "Área Origem",
+      "destinationAreas": "Áreas Destino",
+      "selectOrigin": "Selecionar área origem",
+      "selectDestinations": "Selecionar áreas destino",
+      "selectedCount": "selecionadas",
+      "clear": "Limpar",
+      "alreadyLinked": "(Já vinculada)",
+      "noAreasAvailable": "Não há áreas disponíveis",
+      "createButton": "Criar",
+      "createMultiple": "Vínculos"
+    },
+    "confirmDelete": {
+      "title": "Confirmar exclusão",
+      "message": "Tem certeza que deseja excluir o vínculo entre",
+      "and": "e",
+      "cancel": "Cancelar",
+      "delete": "Excluir"
+    },
+    "notifications": {
+      "noProjectId": "ID do projeto não encontrado",
+      "errorLoadingAreas": "Erro ao carregar áreas de decisão",
+      "errorLoadingLinks": "Erro ao carregar vínculos",
+      "linksAlreadyExist": "Os seguintes vínculos já existem (lembre-se que os vínculos são bidirecionais)",
+      "linksCreatedSuccess": "{count} vínculos criados com sucesso",
+      "someAlreadyExisted": "({count} já existiam)",
+      "errorCreatingLinks": "Erro ao criar alguns vínculos",
+      "selectOriginAndDestination": "Deve selecionar uma área origem e pelo menos uma área destino",
+      "errorDeletingLink": "Erro ao excluir vínculo"
+    }
+  }
+}

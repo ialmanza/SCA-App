@@ -45,9 +45,11 @@ export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
   contador: number = 0;
   updatingOptions: { [key: string]: boolean } = {};
   isLoading: boolean = true;
+  isFullscreen: boolean = false;
   @Input() projectId!: string;
   private subscription: Subscription = new Subscription();
   private previousSelections: { [key: string]: boolean } = {};
+  selectedOptionsCount: number = 0;
 
   constructor(
     private opcionesService: OpcionesService,
@@ -114,8 +116,18 @@ export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleFullscreen(): void {
+    this.isFullscreen = !this.isFullscreen;
+    if (this.isFullscreen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+  }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    document.body.style.overflow = '';
   }
 
   private saveCurrentSelections(): void {
@@ -226,6 +238,24 @@ export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
 
     this.decisionTree.forEach(node => updateNode(node));
     this.changeDetectorRef.detectChanges();
+    this.updateSelectedOptionsCount();
+  }
+
+
+  private updateSelectedOptionsCount(): void {
+    this.selectedOptionsCount = 0;
+    const countOptions = (node: DecisionNode) => {
+      node.options.forEach(option => {
+        if (option.isLastArea) {
+          this.selectedOptionsCount++; // Contar todas las opciones del último nivel
+        }
+        if (option.children) {
+          option.children.forEach(childNode => countOptions(childNode));
+        }
+      });
+    };
+    this.decisionTree.forEach(node => countOptions(node));
+
   }
 
   getUniqueAreas(): string[] {

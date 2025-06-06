@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
@@ -11,8 +11,8 @@ import { VinculosService } from '../../services/supabaseServices/vinculos.servic
 import { NotificationService } from '../../services/supabaseServices/notification.service';
 import { AuthService } from '../../services/auth.service';
 import { ActivatedRoute, Router } from '@angular/router';
-import { catchError, switchMap } from 'rxjs/operators';
-import { of } from 'rxjs';
+import { catchError, switchMap, takeUntil } from 'rxjs/operators';
+import { of, Subject } from 'rxjs';
 import { DecisionesFormComponent } from '../area-de-decision/decisiones-form/decisiones-form.component';
 import { OpcionComponent } from '../opciones-de-decision/opcion/opcion.component';
 import { ModoDeComparacionComponent } from '../modo-de-comparacion/modo-de-comparacion.component';
@@ -25,6 +25,8 @@ import { PuntuacionesMinimasComponent } from '../puntuaciones-minimas/puntuacion
 import { DecisionCheckComponent } from '../area-de-decision/decision-check/decision-check.component';
 import { ConfirmationModalComponent } from '../shared/confirmation-modal/confirmation-modal.component';
 import { EleccionComponent } from "../eleccion/eleccion.component";
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslationService } from '../../services/translation.service';
 
 @Component({
   selector: 'app-project',
@@ -43,12 +45,13 @@ import { EleccionComponent } from "../eleccion/eleccion.component";
     PuntuacionesMinimasComponent,
     DecisionCheckComponent,
     ConfirmationModalComponent,
-    EleccionComponent
-],
+    EleccionComponent,
+    TranslateModule
+  ],
   templateUrl: './project.component.html',
   styleUrls: ['./project.component.css']
 })
-export class ProjectComponent implements OnInit {
+export class ProjectComponent implements OnInit, OnDestroy {
   project: Project | null = null;
   loading = true;
   error: string | null = null;
@@ -72,6 +75,8 @@ export class ProjectComponent implements OnInit {
   };
 
   showDeleteModal = false;
+  currentLang = 'es';
+  private destroy$ = new Subject<void>();
 
   constructor(
     private projectService: ProjectService,
@@ -83,11 +88,37 @@ export class ProjectComponent implements OnInit {
     private notificationService: NotificationService,
     private authService: AuthService,
     private route: ActivatedRoute,
-    private router: Router
+    private router: Router,
+    private translationService: TranslationService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit() {
     this.loadProject();
+    this.setupLanguageSubscription();
+  }
+
+  ngOnDestroy() {
+    this.destroy$.next();
+    this.destroy$.complete();
+  }
+
+  private setupLanguageSubscription() {
+    this.translationService.getCurrentLang()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(lang => {
+        this.currentLang = lang;
+        this.updateModalTitles();
+      });
+  }
+
+  private updateModalTitles() {
+    if (this.activeModal) {
+      this.translate.get(`project.dashboard.quickActions.${this.activeModal}`)
+        .subscribe(title => {
+          this.modalTitle = title;
+        });
+    }
   }
 
   loadProject() {
@@ -236,11 +267,15 @@ export class ProjectComponent implements OnInit {
   }
 
   showGenericNotification(message: string, type: 'success' | 'error') {
-    if(message && type == 'success' || type === 'error') {
-      console.log(message + ' ' + type);
+    if (message && (type === 'success' || type === 'error')) {
+      this.translate.get(message).subscribe(translatedMessage => {
+        console.log(translatedMessage + ' ' + type);
+        // If you have a notification service, you can use it here
+        // this.notificationService.show(translatedMessage, type);
+      });
     }
-
   }
+
   setActiveTab(tab: string) {
     this.activeTab = tab;
   }
@@ -250,13 +285,24 @@ export class ProjectComponent implements OnInit {
     this.router.navigate(['/project', this.project.id, path]);
   }
 
-  openModal(type: 'puntuaciones' | 'decision-check' | 'grafo'| 'vinculos') {
-    this.activeModal = type;
-    this.modalTitle = type === 'puntuaciones' ? 'Puntuaciones Mínimas' :
-                      type === 'vinculos' ? 'Vincular areas de decisión' :
-                     type === 'decision-check' ? 'Areas Importantes' :
-                     'Grafo';
+  openModal(modalType: "puntuaciones" | "decision-check" | "grafo" | "vinculos") {
+    this.activeModal = modalType;
     this.showModal = true;
+
+    switch(modalType) {
+      case 'vinculos':
+        this.modalTitle = 'vinculos.title';
+        break;
+      case 'decision-check':
+        this.modalTitle = 'project.dashboard.quickActions.selectImportantAreas';
+        break;
+      case 'grafo':
+        this.modalTitle = 'project.dashboard.quickActions.graph';
+        break;
+      case 'puntuaciones':
+        this.modalTitle = 'project.dashboard.quickActions.minScores';
+        break;
+    }
   }
 
   closeModal() {
@@ -265,4 +311,13 @@ export class ProjectComponent implements OnInit {
     this.modalTitle = '';
   }
 
+  changeLanguage(lang: string) {
+    this.translationService.setLanguage(lang);
+    this.currentLang = lang;
+
+    this.translate.get('project.notifications.languageChanged')
+      .subscribe(message => {
+        this.showGenericNotification(message, 'success');
+      });
+  }
 }

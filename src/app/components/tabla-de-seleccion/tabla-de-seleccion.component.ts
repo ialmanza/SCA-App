@@ -12,6 +12,8 @@ import { PathModalComponent } from '../path-modal/path-modal.component';
 import { PathDescriptionsService } from '../../services/supabaseServices/path-descriptions.service';
 import { PathAreaScoreService, PathAreaScore } from '../../services/supabaseServices/path-area-score.service';
 import { supabase } from '../../config/supabase.config';
+import { RangoPuntuacionesComponent } from '../rango-puntuaciones/rango-puntuaciones.component';
+
 
 interface CellState {
   value: number;
@@ -51,7 +53,7 @@ interface DecisionArea {
 @Component({
   selector: 'app-tabla-de-seleccion',
   standalone: true,
-  imports: [CommonModule, PathModalComponent],
+  imports: [CommonModule, PathModalComponent, RangoPuntuacionesComponent],
   providers: [
     OpcionesService,
     ComparisonModeService,
@@ -83,6 +85,14 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
   @Input() projectId = '';
   isLoading = false;
   error: string | null = null;
+
+  filteredPaths: PathValues[] = [];
+  minScore: number | null = null;
+  maxScore: number | null = null;
+  valorFilteredPaths: PathValues[] = [];
+
+  loadingMessage: string = 'Cargando datos de la tabla';
+  loadingSubtitle: string = 'Por favor espere mientras procesamos la información...';
 
   constructor(
     private opcionService: OpcionesService,
@@ -219,6 +229,11 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
 
           return pathValues;
         });
+
+        // Inicializar los paths filtrados con todos los paths
+        this.filteredPaths = [...this.paths];
+
+        this.valorFilteredPaths = this.filteredPaths;
 
         this.validOptionsMap = validOptions;
 
@@ -393,7 +408,8 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
       await supabase
         .from('path_area_scores')
         .delete()
-        .eq('path_id', pathId);
+        .eq('path_id', pathId)
+        .eq('project_id', projectId);
 
       // Insertar nuevos puntajes
       if (pathAreaScores.length > 0) {
@@ -420,6 +436,11 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
   getPathAreaScore(path: PathValues, areaRotulo: string): number {
     if (!path.areaScores) return 0;
     return path.areaScores[areaRotulo] || 0;
+  }
+
+  getTotalScore(path: PathValues): number {
+    if (!path.areaScores) return 0;
+    return Object.values(path.areaScores).reduce((sum, score) => sum + score, 0);
   }
 
   updateCellValidity(): void {
@@ -617,5 +638,59 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
     if (!valueObj) return 0;
 
     return valueObj.value;
+  }
+
+  onScoreRangeChange(range: {min: number | null, max: number | null}): void {
+    this.minScore = range.min;
+    this.maxScore = range.max;
+    this.filterPaths();
+  }
+
+  filterPaths(): void {
+    if (!this.paths) return;
+
+    if (this.minScore === null && this.maxScore === null) {
+      // Si no hay filtros, mostrar todos los paths
+      this.filteredPaths = [...this.paths];
+    } else {
+      this.filteredPaths = this.paths.filter(path => {
+        const totalScore = this.getTotalScore(path);
+
+        if (this.minScore !== null && totalScore < this.minScore) {
+          return false;
+        }
+
+        if (this.maxScore !== null && totalScore > this.maxScore) {
+          return false;
+        }
+
+        return true;
+      });
+    }
+
+    this.cdr.detectChanges();
+  }
+
+  getValidAlternativesCount(): number {
+    if (this.minScore === null && this.maxScore === null) {
+      return 0; // Si no hay filtros, no hay alternativas válidas
+    }
+
+    return this.filteredPaths.length; // Las alternativas que pasan el filtro son válidas
+  }
+
+  getInvalidAlternativesCount(): number {
+    if (this.minScore === null && this.maxScore === null) {
+      return 0; // Si no hay filtros, no hay alternativas inválidas
+    }
+
+    return this.paths.length - this.filteredPaths.length; // Las que no pasan el filtro son inválidas
+  }
+
+  setLoadingMessage(message: string, subtitle?: string): void {
+    this.loadingMessage = message;
+    if (subtitle) {
+      this.loadingSubtitle = subtitle;
+    }
   }
 }

@@ -1,16 +1,26 @@
 <div class="project-container">
-  <!-- Loading State -->
-  <div *ngIf="loading" class="loading-container">
-    <div class="spinner"></div>
-    <p>Cargando proyectos...</p>
+
+  <div *ngIf="loading" class="professional-loading-container">
+    <div class="professional-spinner">
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+    </div>
+    <div class="loading-content">
+      <h3>{{ 'project.loading' | translate }}</h3>
+      <div class="loading-progress">
+        <div class="progress-bar"></div>
+      </div>
+    </div>
   </div>
 
   <!-- Error State -->
   <div *ngIf="error" class="error-container">
     <div class="error-message">
-      <h3>Error</h3>
+      <h3>{{ 'project.error.title' | translate }}</h3>
       <p>{{ error }}</p>
-      <button (click)="loadProject()">Intente Nuevamente</button>
+      <button (click)="loadProject()">{{ 'project.error.retry' | translate }}</button>
     </div>
   </div>
 
@@ -21,34 +31,42 @@
       <div class="project-title">
         <div *ngIf="!isEditing">
           <h1>{{ project.name }}</h1>
-          <p>Creado: {{ project.created_at | date:'medium' }}</p>
+          <p>{{ 'project.header.created' | translate }}: {{ project.created_at | date:'medium' }}</p>
         </div>
         <div *ngIf="isEditing" class="project-form-container">
           <div class="form-group">
-            <label for="projectName">Nombre del Proyecto</label>
+            <label for="projectName">{{ 'project.header.name' | translate }}</label>
             <input
               type="text"
               id="projectName"
               class="form-control"
               [(ngModel)]="editForm.name"
-              placeholder="Enter project name"
+              [placeholder]="'project.header.namePlaceholder' | translate"
             >
           </div>
           <div class="project-actions">
-            <button class="btn-primary" (click)="saveProject()">Salvar</button>
-            <button class="btn-secondary" (click)="cancelEditing()">Cancelar</button>
+            <button class="btn-primary" (click)="saveProject()">{{ 'project.header.save' | translate }}</button>
+            <button class="btn-secondary" (click)="cancelEditing()">{{ 'project.header.cancel' | translate }}</button>
           </div>
         </div>
       </div>
       <div class="project-actions" *ngIf="!isEditing">
-        <button class="btn-primary" (click)="startEditing()">Editar Projecto</button>
+        <button class="btn-primary" (click)="startEditing()">{{ 'project.header.edit' | translate }}</button>
+        <div class="language-selector">
+          <button class="btn-link" (click)="changeLanguage('es')">
+            <img src="espana.png" alt="Español" width="24" height="24" class="flag-icon">
+          </button>
+          <button class="btn-link" (click)="changeLanguage('pt')">
+            <img src="brasil.png" alt="Português" width="24" height="24" class="flag-icon">
+          </button>
+        </div>
         <div class="dropdown">
           <button class="btn-secondary dropdown-toggle">
-            Acciones
+            {{ 'common.settings' | translate }}
           </button>
           <div class="dropdown-menu">
-            <a (click)="navegarToDashboard()">Atrás</a>
-            <a (click)="logout()">Salir</a>
+            <a (click)="navegarToDashboard()">{{ 'navigation.home' | translate }}</a>
+            <a (click)="logout()">{{ 'common.logout' | translate }}</a>
             <a (click)="openDeleteModal(); $event.stopPropagation()" class="btn-icon">
               <i class="fas fa-trash"></i>
             </a>
@@ -62,25 +80,26 @@
       <nav>
         <ul>
           <li [class.active]="activeTab === 'overview'">
-            <a (click)="setActiveTab('overview')">Descripción general</a>
+            <a (click)="setActiveTab('overview')">{{ 'project.tabs.overview' | translate }}</a>
           </li>
           <li [class.active]="activeTab === 'decision-areas'">
-            <a (click)="setActiveTab('decision-areas')">Decision Areas</a>
+            <a (click)="setActiveTab('decision-areas')">{{ 'project.tabs.decisionAreas' | translate }}</a>
           </li>
           <li [class.active]="activeTab === 'alternativas'">
-            <a (click)="setActiveTab('alternativas')">Posibles alternativas</a>
+            <a (click)="setActiveTab('alternativas')">{{ 'project.tabs.alternatives' | translate }}</a>
           </li>
           <li [class.active]="activeTab === 'comparison'">
-            <a (click)="setActiveTab('comparison')">Modo de comparación</a>
+            <a (click)="setActiveTab('comparison')">{{ 'project.tabs.comparison' | translate }}</a>
           </li>
           <li [class.active]="activeTab === 'comparacion'">
-            <a (click)="setActiveTab('comparacion')">Tabla de comparación</a>
+            <a (click)="setActiveTab('comparacion')">{{ 'project.tabs.comparisonTable' | translate }}</a>
           </li>
           <li [class.active]="activeTab === 'seleccion'">
-            <a (click)="setActiveTab('seleccion')">Tabla de selección</a>
+            <a (click)="setActiveTab('seleccion')">{{ 'project.tabs.selectionTable' | translate }}</a>
           </li>
-          <li [class.active]="activeTab === 'elecciones'">
-            <a (click)="setActiveTab('elecciones')">Elección</a>
+          <!-- <li [class.active]="activeTab === 'elecciones'">
+            <a (click)="setActiveTab('elecciones')">{{ 'project.tabs.choice' | translate }}</a>
+          </li> -->
         </ul>
       </nav>
     </div>
@@ -92,22 +111,22 @@
         <div class="project-dashboard">
           <!-- Statistics Card -->
           <div class="dashboard-card">
-            <h3>Estadísticas del proyecto</h3>
+            <h3>{{ 'project.dashboard.stats.title' | translate }}</h3>
             <div class="stats-container">
               <div class="stat-item">
-                <span class="stat-label">Decision Areas</span>
+                <span class="stat-label">{{ 'project.dashboard.stats.decisionAreas' | translate }}</span>
                 <span class="stat-value">{{ stats.decisionAreas }}</span>
               </div>
               <div class="stat-item">
-                <span class="stat-label">Opciones</span>
+                <span class="stat-label">{{ 'project.dashboard.stats.options' | translate }}</span>
                 <span class="stat-value">{{ stats.options }}</span>
               </div>
               <div class="stat-item">
-                <span class="stat-label">Modos de Comparación</span>
+                <span class="stat-label">{{ 'project.dashboard.stats.comparisonModes' | translate }}</span>
                 <span class="stat-value">{{ stats.comparisonModes }}</span>
               </div>
               <div class="stat-item">
-                <span class="stat-label">Areas Importantes</span>
+                <span class="stat-label">{{ 'project.dashboard.stats.importantAreas' | translate }}</span>
                 <span class="stat-value">{{ stats.importantAreas }}</span>
               </div>
             </div>
@@ -115,12 +134,12 @@
 
           <!-- Quick Actions Card -->
           <div class="dashboard-card">
-            <h3>Accesos rápidos</h3>
+            <h3>{{ 'project.dashboard.quickActions.title' | translate }}</h3>
             <div class="quick-actions">
-              <a (click)="openModal('vinculos')" class="btn-primary">Vínculos</a>
-              <a (click)="openModal('decision-check')" class="btn-primary">Seleccionar áreas Importantes</a>
-              <a (click)="openModal('grafo')" class="btn-primary">Grafo</a>
-              <a (click)="openModal('puntuaciones')" class="btn-primary">Puntuaciones Mínimas</a>
+              <a (click)="openModal('vinculos')" class="btn-primary">{{ 'project.dashboard.quickActions.links' | translate }}</a>
+              <a (click)="openModal('decision-check')" class="btn-primary">{{ 'project.dashboard.quickActions.selectImportantAreas' | translate }}</a>
+              <a (click)="openModal('grafo')" class="btn-primary">{{ 'project.dashboard.quickActions.graph' | translate }}</a>
+              <!-- <a (click)="openModal('puntuaciones')" class="btn-primary">{{ 'project.dashboard.quickActions.minScores' | translate }}</a> -->
             </div>
           </div>
 
@@ -128,7 +147,7 @@
           <div *ngIf="showModal" class="modal-overlay" (click)="closeModal()">
             <div class="modal-content" (click)="$event.stopPropagation()">
               <div class="modal-header">
-                <h2>{{ modalTitle }}</h2>
+                <h2>{{ modalTitle | translate }}</h2>
                 <button class="close-button" (click)="closeModal()">&times;</button>
               </div>
               <div class="modal-body">
@@ -139,8 +158,8 @@
               </div>
             </div>
           </div>
+          </div>
         </div>
-      </div>
 
       <!-- Decision Areas Tab -->
       <div class="tab-pane" *ngIf="activeTab === 'decision-areas'">
@@ -177,10 +196,10 @@
 
   <app-confirmation-modal
     [isOpen]="showDeleteModal"
-    title="Eliminar Proyecto"
-    message="¿Está seguro que desea eliminar este proyecto? Esta acción no se puede deshacer."
-    confirmText="Eliminar"
-    cancelText="Cancelar"
+    [title]="'project.deleteModal.title' | translate"
+    [message]="'project.deleteModal.message' | translate"
+    [confirmText]="'project.deleteModal.confirm' | translate"
+    [cancelText]="'project.deleteModal.cancel' | translate"
     (confirm)="deleteProject()"
     (cancel)="onDeleteCancel()"
   ></app-confirmation-modal>

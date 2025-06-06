@@ -77,8 +77,8 @@ export class CrearDecisionComponent implements OnInit {
 
     console.log('Intentando crear decisión con projectId:', this.projectId);
 
-    if (!area.value || !descripcion.value) {
-      this.notificationService.show('Por favor, complete todos los campos', 'error');
+    if (!area.value) {
+      this.notificationService.show('Por favor, complete el nombre del área', 'error');
       this.limpiarCampos(area, descripcion);
       return;
     }
@@ -90,7 +90,7 @@ export class CrearDecisionComponent implements OnInit {
       await this.decisionAreaService.createDecisionArea(this.projectId, {
         rotulo: this.rotuloValue,
         nombre_area: area.value,
-        descripcion: descripcion.value,
+        descripcion: descripcion.value || '',
         is_important: false
       });
 

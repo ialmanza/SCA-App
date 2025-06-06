@@ -23,6 +23,7 @@ import { NotificationService } from '../../../services/supabaseServices/notifica
 import { NotificationsComponent } from "../../notifications/notifications.component";
 import { Vinculo } from '../../../models/interfaces';
 import { EleccionComponent } from '../../eleccion/eleccion.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-decisiones-form',
@@ -59,7 +60,8 @@ export class DecisionesFormComponent implements OnInit {
     private decisionsService: DecisionsService,
     private opcionesService: OpcionesService,
     private vinculosService: VinculosService,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private router: Router,
   ) {}
 
   ngOnInit(): void {
@@ -312,6 +314,7 @@ export class DecisionesFormComponent implements OnInit {
   }
 
   recargarpagina() {
-    window.location.reload();
+    //window.location.reload();
+    this.router.navigate(['/dashboard']);
   }
 }
