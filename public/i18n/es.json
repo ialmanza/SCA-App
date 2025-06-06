@@ -1,0 +1,70 @@
+{
+  "common": {
+    "welcome": "Bienvenido",
+    "login": "Iniciar Sesión",
+    "register": "Registrarse",
+    "logout": "Cerrar Sesión",
+    "profile": "Perfil",
+    "settings": "Configuración"
+  },
+  "navigation": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "contact": "Contacto"
+  },
+  "project": {
+    "loading": "Cargando proyectos...",
+    "error": {
+      "title": "Error",
+      "retry": "Intente Nuevamente"
+    },
+    "header": {
+      "created": "Creado",
+      "name": "Nombre del Proyecto",
+      "namePlaceholder": "Enter project name",
+      "save": "Salvar",
+      "cancel": "Cancelar",
+      "edit": "Editar Projecto"
+    },
+    "tabs": {
+      "overview": "Descripción general",
+      "decisionAreas": "Decision Areas",
+      "alternatives": "Posibles alternativas",
+      "comparison": "Modo de comparación",
+      "comparisonTable": "Tabla de comparación",
+      "selectionTable": "Tabla de selección",
+      "choice": "Elección"
+    },
+    "dashboard": {
+      "stats": {
+        "title": "Estadísticas del proyecto",
+        "decisionAreas": "Decision Areas",
+        "options": "Opciones",
+        "comparisonModes": "Modos de Comparación",
+        "importantAreas": "Areas Importantes"
+      },
+      "quickActions": {
+        "title": "Accesos rápidos",
+        "links": "Vínculos",
+        "selectImportantAreas": "Seleccionar áreas Importantes",
+        "graph": "Grafo",
+        "minScores": "Puntuaciones Mínimas"
+      }
+    },
+    "deleteModal": {
+      "title": "Eliminar Proyecto",
+      "message": "¿Está seguro que desea eliminar este proyecto? Esta acción no se puede deshacer.",
+      "confirm": "Eliminar",
+      "cancel": "Cancelar"
+    },
+    "notifications": {
+      "languageChanged": "Idioma cambiado exitosamente",
+      "projectUpdated": "Proyecto actualizado exitosamente",
+      "projectDeleted": "Proyecto eliminado exitosamente",
+      "logoutSuccess": "Sesión cerrada exitosamente",
+      "errorUpdating": "Error al actualizar el proyecto",
+      "errorDeleting": "Error al eliminar el proyecto",
+      "errorLogout": "Error al cerrar sesión"
+    }
+  }
+} 
