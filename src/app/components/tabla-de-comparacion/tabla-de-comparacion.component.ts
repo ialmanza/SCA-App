@@ -43,6 +43,8 @@ export class TablaDeComparacionComponent implements OnInit {
   loading: boolean = true;
   saving: boolean = false; // Nuevo estado para el guardado
   error: string | null = null;
+  loadingMessage: string = 'Cargando datos de la tabla';
+  loadingSubtitle: string = 'Por favor espere mientras procesamos la información...';
 
 
   constructor(
@@ -312,5 +314,12 @@ export class TablaDeComparacionComponent implements OnInit {
     this.cellStates.clear();
     this.inicializarCeldasVacias();
     this.cdr.detectChanges();
+  }
+
+  setLoadingMessage(message: string, subtitle?: string): void {
+    this.loadingMessage = message;
+    if (subtitle) {
+      this.loadingSubtitle = subtitle;
+    }
   }
 }

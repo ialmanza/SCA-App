@@ -1,10 +1,20 @@
 <div class="table-container">
   <app-notifications></app-notifications>
 
-  <!-- Indicador de carga -->
-  <div *ngIf="loading" class="loading-indicator">
-    <div class="spinner"></div>
-    <p>Cargando datos...</p>
+  <div *ngIf="loading" class="professional-loading-container">
+    <div class="professional-spinner">
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+    </div>
+    <div class="loading-content">
+      <h3>Cargando datos de la tabla</h3>
+      <p>Por favor espere mientras cargamos la información...</p>
+      <div class="loading-progress">
+        <div class="progress-bar"></div>
+      </div>
+    </div>
   </div>
 
   <!-- Mensaje de error si existe -->
@@ -14,11 +24,19 @@
   </div>
 
   <!-- Indicador de guardado -->
-  <div *ngIf="saving" class="saving-overlay">
-    <div class="saving-modal">
-      <div class="saving-spinner"></div>
-      <p class="saving-text">Guardando tabla...</p>
-      <p class="saving-subtext">Por favor espere mientras se guardan todos los datos</p>
+  <div *ngIf="saving" class="professional-loading-container">
+    <div class="professional-spinner">
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+      <div class="spinner-ring"></div>
+    </div>
+    <div class="loading-content">
+      <h3>Guardando datos de la tabla</h3>
+      <p>Por favor espere mientras guardamos la información...</p>
+      <div class="loading-progress">
+        <div class="progress-bar"></div>
+      </div>
     </div>
   </div>
 

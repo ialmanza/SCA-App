@@ -91,6 +91,9 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
   maxScore: number | null = null;
   valorFilteredPaths: PathValues[] = [];
 
+  loadingMessage: string = 'Cargando datos de la tabla';
+  loadingSubtitle: string = 'Por favor espere mientras procesamos la información...';
+
   constructor(
     private opcionService: OpcionesService,
     private comparisonModeService: ComparisonModeService,
@@ -682,5 +685,12 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
     }
 
     return this.paths.length - this.filteredPaths.length; // Las que no pasan el filtro son inválidas
+  }
+
+  setLoadingMessage(message: string, subtitle?: string): void {
+    this.loadingMessage = message;
+    if (subtitle) {
+      this.loadingSubtitle = subtitle;
+    }
   }
 }
