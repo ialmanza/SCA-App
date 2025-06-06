@@ -8,11 +8,13 @@ import { DecisionsService } from '../../services/supabaseServices/decisions.serv
 import { NotificationService } from '../../services/_Notification/notification.service';
 import { NotificationsComponent } from "../notifications/notifications.component";
 import { Vinculo } from '../../models/interfaces';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslationService } from '../../services/translation.service';
 
 @Component({
   selector: 'app-vinculos',
   standalone: true,
-  imports: [GrafoComponent, FormsModule, CommonModule, NotificationsComponent],
+  imports: [GrafoComponent, FormsModule, CommonModule, NotificationsComponent, TranslateModule],
   providers: [DecisionsService, VinculosService],
   templateUrl: './vinculos.component.html',
   styleUrl: './vinculos.component.css'
@@ -31,14 +33,16 @@ export class VinculosComponent implements OnInit {
   constructor(
     private decisionsService: DecisionsService,
     private vinculosService: VinculosService,
-    private notificationservice: NotificationService
+    private notificationservice: NotificationService,
+    private translationService: TranslationService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {
     if (this.projectId) {
       this.loadData();
     } else {
-      this.notificationservice.show('No se encontró el ID del proyecto', 'error');
+      this.notificationservice.show(this.translate.instant('vinculos.notifications.noProjectId'), 'error');
     }
   }
 
@@ -50,7 +54,7 @@ export class VinculosComponent implements OnInit {
         this.cargarVinculos();
       },
       error: (error) => {
-        this.notificationservice.show('Error al cargar áreas de decisión', 'error');
+        this.notificationservice.show(this.translate.instant('vinculos.notifications.errorLoadingAreas'), 'error');
       }
     });
   }
@@ -59,7 +63,7 @@ export class VinculosComponent implements OnInit {
     this.vinculosService.getVinculosByProject(this.projectId).then((vinculos: Vinculo[]) => {
       this.vinculos = vinculos;
     }).catch(error => {
-      this.notificationservice.show('Error al cargar vínculos', 'error');
+      this.notificationservice.show(this.translate.instant('vinculos.notifications.errorLoadingLinks'), 'error');
       this.vinculos = [];
     });
   }
@@ -83,12 +87,12 @@ export class VinculosComponent implements OnInit {
 
   getSelectedAreasText(): string {
     if (this.selectedAreas2.length === 0) {
-      return 'Seleccionar áreas destino';
+      return this.translate.instant('vinculos.form.selectDestinations');
     }
     if (this.selectedAreas2.length === 1) {
       return this.selectedAreas2[0].nombre_area;
     }
-    return `${this.selectedAreas2.length} áreas seleccionadas`;
+    return `${this.selectedAreas2.length} ${this.translate.instant('vinculos.form.selectedCount')}`;
   }
 
   vinculoExiste(area1Id: string, area2Id: string): boolean {
@@ -125,7 +129,7 @@ export class VinculosComponent implements OnInit {
 
       if (vinculosExistentes.length > 0) {
         this.notificationservice.show(
-          `Los siguientes vínculos ya existen (recuerda que los vínculos son bidireccionales): ${vinculosExistentes.join(', ')}`,
+          `${this.translate.instant('vinculos.notifications.linksAlreadyExist')}: ${vinculosExistentes.join(', ')}`,
           'info'
         );
       }
@@ -133,9 +137,9 @@ export class VinculosComponent implements OnInit {
       if (promises.length > 0) {
         Promise.all(promises)
           .then(() => {
-            let mensaje = `Se crearon ${promises.length} vínculos exitosamente`;
+            let mensaje = this.translate.instant('vinculos.notifications.linksCreatedSuccess', { count: promises.length });
             if (vinculosExistentes.length > 0) {
-              mensaje += ` (${vinculosExistentes.length} ya existían)`;
+              mensaje += ` ${this.translate.instant('vinculos.notifications.someAlreadyExisted', { count: vinculosExistentes.length })}`;
             }
             this.notificationservice.show(mensaje, 'success');
             this.cargarVinculos();
@@ -144,7 +148,7 @@ export class VinculosComponent implements OnInit {
             this.showDropdown = false;
           })
           .catch(error => {
-            this.notificationservice.show('Error al crear algunos vínculos', 'error');
+            this.notificationservice.show(this.translate.instant('vinculos.notifications.errorCreatingLinks'), 'error');
           });
       } else if (vinculosExistentes.length > 0 && vinculosNuevos.length === 0) {
         this.selectedArea1 = null;
@@ -152,7 +156,7 @@ export class VinculosComponent implements OnInit {
         this.showDropdown = false;
       }
     } else {
-      this.notificationservice.show('Debe seleccionar un área origen y al menos un área destino', 'error');
+      this.notificationservice.show(this.translate.instant('vinculos.notifications.selectOriginAndDestination'), 'error');
     }
   }
 
@@ -162,7 +166,7 @@ export class VinculosComponent implements OnInit {
         this.cargarVinculos();
       })
       .catch(error => {
-        this.notificationservice.show('Error al eliminar vínculo', 'error');
+        this.notificationservice.show(this.translate.instant('vinculos.notifications.errorDeletingLink'), 'error');
       });
   }
 

@@ -66,5 +66,38 @@
       "errorDeleting": "Erro ao excluir o projeto",
       "errorLogout": "Erro ao encerrar a sessão"
     }
+  },
+  "vinculos": {
+    "title": "Criar conexão entre áreas",
+    "form": {
+      "originArea": "Área Origem",
+      "destinationAreas": "Áreas Destino",
+      "selectOrigin": "Selecionar área origem",
+      "selectDestinations": "Selecionar áreas destino",
+      "selectedCount": "selecionadas",
+      "clear": "Limpar",
+      "alreadyLinked": "(Já vinculada)",
+      "noAreasAvailable": "Não há áreas disponíveis",
+      "createButton": "Criar",
+      "createMultiple": "Vínculos"
+    },
+    "confirmDelete": {
+      "title": "Confirmar exclusão",
+      "message": "Tem certeza que deseja excluir o vínculo entre",
+      "and": "e",
+      "cancel": "Cancelar",
+      "delete": "Excluir"
+    },
+    "notifications": {
+      "noProjectId": "ID do projeto não encontrado",
+      "errorLoadingAreas": "Erro ao carregar áreas de decisão",
+      "errorLoadingLinks": "Erro ao carregar vínculos",
+      "linksAlreadyExist": "Os seguintes vínculos já existem (lembre-se que os vínculos são bidirecionais)",
+      "linksCreatedSuccess": "{count} vínculos criados com sucesso",
+      "someAlreadyExisted": "({count} já existiam)",
+      "errorCreatingLinks": "Erro ao criar alguns vínculos",
+      "selectOriginAndDestination": "Deve selecionar uma área origem e pelo menos uma área destino",
+      "errorDeletingLink": "Erro ao excluir vínculo"
+    }
   }
-} 
+}

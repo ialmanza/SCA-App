@@ -129,7 +129,7 @@
               <a (click)="openModal('vinculos')" class="btn-primary">{{ 'project.dashboard.quickActions.links' | translate }}</a>
               <a (click)="openModal('decision-check')" class="btn-primary">{{ 'project.dashboard.quickActions.selectImportantAreas' | translate }}</a>
               <a (click)="openModal('grafo')" class="btn-primary">{{ 'project.dashboard.quickActions.graph' | translate }}</a>
-              <a (click)="openModal('puntuaciones')" class="btn-primary">{{ 'project.dashboard.quickActions.minScores' | translate }}</a>
+              <!-- <a (click)="openModal('puntuaciones')" class="btn-primary">{{ 'project.dashboard.quickActions.minScores' | translate }}</a> -->
             </div>
           </div>
 
@@ -137,7 +137,7 @@
           <div *ngIf="showModal" class="modal-overlay" (click)="closeModal()">
             <div class="modal-content" (click)="$event.stopPropagation()">
               <div class="modal-header">
-                <h2>{{ modalTitle }}</h2>
+                <h2>{{ modalTitle | translate }}</h2>
                 <button class="close-button" (click)="closeModal()">&times;</button>
               </div>
               <div class="modal-body">
@@ -148,8 +148,8 @@
               </div>
             </div>
           </div>
+          </div>
         </div>
-      </div>
 
       <!-- Decision Areas Tab -->
       <div class="tab-pane" *ngIf="activeTab === 'decision-areas'">

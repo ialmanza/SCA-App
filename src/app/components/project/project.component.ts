@@ -285,13 +285,24 @@ export class ProjectComponent implements OnInit, OnDestroy {
     this.router.navigate(['/project', this.project.id, path]);
   }
 
-  openModal(type: 'puntuaciones' | 'decision-check' | 'grafo' | 'vinculos') {
-    this.activeModal = type;
-    this.translate.get(`project.dashboard.quickActions.${type}`)
-      .subscribe(title => {
-        this.modalTitle = title;
-        this.showModal = true;
-      });
+  openModal(modalType: "puntuaciones" | "decision-check" | "grafo" | "vinculos") {
+    this.activeModal = modalType;
+    this.showModal = true;
+
+    switch(modalType) {
+      case 'vinculos':
+        this.modalTitle = 'vinculos.title';
+        break;
+      case 'decision-check':
+        this.modalTitle = 'project.dashboard.quickActions.selectImportantAreas';
+        break;
+      case 'grafo':
+        this.modalTitle = 'project.dashboard.quickActions.graph';
+        break;
+      case 'puntuaciones':
+        this.modalTitle = 'project.dashboard.quickActions.minScores';
+        break;
+    }
   }
 
   closeModal() {
@@ -303,8 +314,7 @@ export class ProjectComponent implements OnInit, OnDestroy {
   changeLanguage(lang: string) {
     this.translationService.setLanguage(lang);
     this.currentLang = lang;
-    
-    // Update notifications with translated messages
+
     this.translate.get('project.notifications.languageChanged')
       .subscribe(message => {
         this.showGenericNotification(message, 'success');
