@@ -82,11 +82,18 @@
               <span class="status-text">Válida</span>
             </div>
             <div *ngIf="path.hasConflicts" class="status-invalid">
-              <span class="status-icon">❌</span>
-              <span class="status-text">Inválida</span>
-              <div class="conflict-details">
-                <small>Áreas conflictivas: {{ getConflictingAreasText(path) }}</small>
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                <span class="status-icon">❌</span>
+                <span class="status-text">Inválida</span>
               </div>
+              <!-- <div class="conflict-details">
+                <small>Áreas conflictivas:</small>
+                <div class="conflict-areas">
+                  <span *ngFor="let area of getConflictingAreasText(path)" class="conflict-area-badge">
+                    {{ area }}
+                  </span>
+                </div>
+              </div> -->
             </div>
           </td>
         </tr>
