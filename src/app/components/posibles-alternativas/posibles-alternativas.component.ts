@@ -12,6 +12,8 @@ import { NotificationService } from '../../services/_Notification/notification.s
 import { NotificationsComponent } from "../notifications/notifications.component";
 import { DecisionsService } from '../../services/supabaseServices/decisions.service';
 import { supabase } from '../../config/supabase.config';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslationService } from '../../services/translation.service';
 
 interface DecisionNode {
   areaTitle: string;
@@ -30,7 +32,7 @@ interface DecisionNode {
 @Component({
   selector: 'app-posibles-alternativas',
   standalone: true,
-  imports: [CommonModule, FormsModule, NotificationsComponent],
+  imports: [CommonModule, FormsModule, NotificationsComponent, TranslateModule],
   providers: [SelectedPathsService, OpcionesService, PathDescriptionsService],
   templateUrl: './posibles-alternativas.component.html',
   styleUrls: ['./posibles-alternativas.component.css'],
@@ -58,12 +60,15 @@ export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
     private decisionsService: DecisionsService,
     private pathDescriptionsService: PathDescriptionsService,
     private changeDetectorRef: ChangeDetectorRef,
-    private notificationService: NotificationService
+    private notificationService: NotificationService,
+    private translateService: TranslateService,
+    private translationService: TranslationService
   ) {}
 
   async ngOnInit(): Promise<void> {
     if (!this.projectId) {
-      this.notificationService.show('ID de proyecto no encontrado', 'error');
+      //this.notificationService.show('ID de proyecto no encontrado', 'error');
+      this.notificationService.show(this.translateService.instant('posiblesAlternativas.notifications.projectIdNotFound'), 'error');
       this.isLoading = false;
       return;
     }
@@ -73,7 +78,8 @@ export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
       this.subscription.add(
         this.decisionsService.getImportantStatus(this.projectId).subscribe(async (importantAreas) => {
           if (importantAreas.length === 0) {
-            this.notificationService.show('No hay áreas importantes para este proyecto', 'info');
+            //this.notificationService.show('No hay áreas importantes para este proyecto', 'info');
+            this.notificationService.show(this.translateService.instant('posiblesAlternativas.notifications.noImportantAreas'), 'info');
             this.isLoading = false;
             return;
           }
@@ -98,7 +104,8 @@ export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
       // Cargar datos iniciales
       const importantAreas = await firstValueFrom(this.decisionsService.getImportantStatus(this.projectId));
       if (importantAreas.length === 0) {
-        this.notificationService.show('No hay áreas importantes para este proyecto', 'info');
+       // this.notificationService.show('No hay áreas importantes para este proyecto', 'info');
+        this.notificationService.show(this.translateService.instant('posiblesAlternativas.notifications.noImportantAreas'), 'info');
         this.isLoading = false;
         return;
       }
@@ -112,7 +119,8 @@ export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
       this.isLoading = false;
       this.changeDetectorRef.detectChanges();
     } catch (error) {
-      this.notificationService.show('Error en la inicialización', 'error');
+      //this.notificationService.show('Error en la inicialización', 'error');
+      this.notificationService.show(this.translateService.instant('posiblesAlternativas.notifications.initializationError'), 'error');
       this.isLoading = false;
     }
   }
@@ -201,7 +209,8 @@ export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
 
       this.buildDecisionTree();
     } catch (error) {
-      this.notificationService.show('Error al cargar datos', 'error');
+      //this.notificationService.show('Error al cargar datos', 'error');
+      this.notificationService.show(this.translateService.instant('posiblesAlternativas.notifications.loadingError'), 'error');
       throw error;
     }
   }
@@ -218,7 +227,8 @@ export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
       this.paths = paths || [];
       this.updateTreeSelections();
     } catch (error) {
-      this.notificationService.show('Error obteniendo paths', 'error');
+      //this.notificationService.show('Error obteniendo paths', 'error');
+      this.notificationService.show(this.translateService.instant('posiblesAlternativas.notifications.pathsError'), 'error');
       throw error;
     }
   }
@@ -285,16 +295,21 @@ export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
       if (option.selected) {
         const descriptions = this.getPathDescriptions(path);
         await this.pathDescriptionsService.savePathDescription(this.projectId, hexCode, descriptions);
-        this.notificationService.show('Alternativa creada exitosamente', 'success');
+        //this.notificationService.show('Alternativa creada exitosamente', 'success');
+        this.notificationService.show(this.translateService.instant('posiblesAlternativas.notifications.alternativeCreated'), 'success');
+
       } else {
         await this.pathDescriptionsService.deletePathDescription(this.projectId, hexCode);
-        this.notificationService.show('Alternativa eliminada exitosamente', 'success');
+        //this.notificationService.show('Alternativa eliminada exitosamente', 'success');
+        this.notificationService.show(this.translateService.instant('posiblesAlternativas.notifications.alternativeDeleted'), 'success');
+
       }
       await this.loadExistingPaths();
       // Actualizar contador de alternativas seleccionadas después de la operación
       this.updateSelectedAlternativesCount();
     } catch (error) {
-      this.notificationService.show('Error en la operación', 'error');
+      //this.notificationService.show('Error en la operación', 'error');
+      this.notificationService.show(this.translateService.instant('posiblesAlternativas.notifications.operationError'), 'error');
       option.selected = !option.selected;
     } finally {
       delete this.updatingOptions[hexCode];

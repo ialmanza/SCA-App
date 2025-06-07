@@ -167,5 +167,25 @@
     "title": "Modo de Seleção",
     "end": "Fim do Processo",
     "start": "Começar"
+  },
+  "posiblesAlternativas": {
+    "title": "Alternativas Possíveis",
+    "loading": "Carregando",
+    "loadingMessage": "Por favor aguarde enquanto carregamos os dados...",
+    "expand": "Ampliar",
+    "reduce": "Reduzir",
+    "totalAlternatives": "Total de alternativas possíveis:",
+    "selectedAlternatives": "Alternativas selecionadas:",
+    "updating": "Atualizando...",
+    "notifications": {
+      "projectIdNotFound": "ID do projeto não encontrado",
+      "noImportantAreas": "Não há áreas importantes para este projeto",
+      "initializationError": "Erro na inicialização",
+      "loadingError": "Erro ao carregar dados",
+      "pathsError": "Erro obtendo caminhos",
+      "alternativeCreated": "Alternativa criada com sucesso",
+      "alternativeDeleted": "Alternativa excluída com sucesso",
+      "operationError": "Erro na operação"
+    }
   }
 }

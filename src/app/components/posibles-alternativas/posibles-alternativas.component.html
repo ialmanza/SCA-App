@@ -2,17 +2,17 @@
 
 <div class="fullscreen-container" [class.fullscreen]="isFullscreen">
   <button class="fullscreen-toggle" (click)="toggleFullscreen()">
-    <span *ngIf="!isFullscreen">Ampliar</span>
-    <span *ngIf="isFullscreen">Reducir</span>
+    <span *ngIf="!isFullscreen">{{ 'posiblesAlternativas.expand' | translate }}</span>
+    <span *ngIf="isFullscreen">{{ 'posiblesAlternativas.reduce' | translate }}</span>
   </button>
 
   <div class="alternatives-counter" *ngIf="!isLoading && decisionTree.length">
     <div class="counter-badge">
-      <span class="counter-label">Total de alternativas posibles:</span>
+      <span class="counter-label">{{ 'posiblesAlternativas.totalAlternatives' | translate }}</span>
       <span class="counter-number">{{ selectedOptionsCount }}</span>
     </div>
     <div class="counter-badge selected-badge">
-      <span class="counter-label">Alternativas seleccionadas:</span>
+      <span class="counter-label">{{ 'posiblesAlternativas.selectedAlternatives' | translate }}</span>
       <span class="counter-number">{{ selectedAlternativesCount }}</span>
     </div>
   </div>
@@ -22,7 +22,7 @@
       <ng-container *ngFor="let area of uniqueAreas$ | async">
         <div class="area-title">{{ area }}</div>
       </ng-container>
-      <div class="area-title">Opciones</div>
+      <div class="area-title">{{ 'designMode.table.decisionOptions' | translate }}</div>
     </div>
 
     <div class="decision-tree">
@@ -65,7 +65,7 @@
                     (change)="onOptionSelected(option, parentPath.concat(option.id))">
                   <div class="option-hex-code">{{ option.hexCode }}</div>
                   <span *ngIf="updatingOptions[option.hexCode!]" class="ml-2 text-sm text-gray-500">
-                    Actualizando...
+                    {{ 'posiblesAlternativas.updating' | translate }}
                   </span>
                 </div>
               </div>
@@ -93,8 +93,8 @@
       <div class="spinner-ring"></div>
     </div>
     <div class="loading-content">
-      <h3>Cargando</h3>
-      <p>Por favor espere mientras cargamos los datos...</p>
+      <h3>{{ 'posiblesAlternativas.loading' | translate }}</h3>
+      <p>{{ 'posiblesAlternativas.loadingMessage' | translate }}</p>
       <div class="loading-progress">
         <div class="progress-bar"></div>
       </div>
