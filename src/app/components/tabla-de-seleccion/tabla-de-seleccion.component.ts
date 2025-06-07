@@ -12,6 +12,8 @@ import { PathDescriptionsService } from '../../services/supabaseServices/path-de
 import { PathAreaScoreService, PathAreaScore } from '../../services/supabaseServices/path-area-score.service';
 import { supabase } from '../../config/supabase.config';
 import { RangoPuntuacionesComponent } from '../rango-puntuaciones/rango-puntuaciones.component';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslationService } from '../../services/translation.service';
 
 interface PathDescription {
   id: string;
@@ -38,7 +40,7 @@ interface PathValues {
 @Component({
   selector: 'app-tabla-de-seleccion',
   standalone: true,
-  imports: [CommonModule, PathModalComponent, RangoPuntuacionesComponent],
+  imports: [CommonModule, PathModalComponent, RangoPuntuacionesComponent, TranslateModule],
   providers: [
     OpcionesService,
     ComparisonModeService,
@@ -75,7 +77,9 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
     private comparisonCellService: ComparisonCellService,
     private cdr: ChangeDetectorRef,
     private pathDescriptionsService: PathDescriptionsService,
-    private pathAreaScoreService: PathAreaScoreService
+    private pathAreaScoreService: PathAreaScoreService,
+    private translationService: TranslationService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {

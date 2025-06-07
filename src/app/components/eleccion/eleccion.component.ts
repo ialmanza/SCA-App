@@ -15,6 +15,8 @@ import { supabase } from '../../config/supabase.config';
 import { Router } from '@angular/router';
 import { ValidAlternativesService } from '../../services/valid-alternatives.service';
 import { InvalidAlternativesService } from '../../services/invalid-alternatives.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslationService } from '../../services/translation.service';
 
 interface CellState {
   value: number;
@@ -57,7 +59,7 @@ interface DecisionArea {
 @Component({
   selector: 'app-eleccion',
   standalone: true,
-  imports: [CommonModule, PathModalComponent],
+  imports: [CommonModule, PathModalComponent, TranslateModule],
   templateUrl: './eleccion.component.html',
   styleUrls: ['./eleccion.component.css'],
 })
@@ -98,7 +100,9 @@ export class EleccionComponent implements OnInit, OnChanges {
     private pathAreaScoreService: PathAreaScoreService,
     private router: Router,
     private validAlternativesService: ValidAlternativesService,
-    private invalidAlternativesService: InvalidAlternativesService
+    private invalidAlternativesService: InvalidAlternativesService,
+    private selectedPathsService: SelectedPathsService,
+    private translateService: TranslateService,
   ) {}
 
   ngOnInit(): void {
