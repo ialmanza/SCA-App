@@ -14,6 +14,8 @@ import { DecisionsService } from '../../services/supabaseServices/decisions.serv
 import { ActivatedRoute } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { OpcionesService } from '../../services/supabaseServices/opciones.service';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslationService } from '../../services/translation.service';
 
 interface CellState {
   value: number;
@@ -24,7 +26,7 @@ interface CellState {
 @Component({
   selector: 'app-tabla-de-comparacion',
   standalone: true,
-  imports: [CommonModule, FontAwesomeModule, NotificationsComponent, FormsModule],
+  imports: [CommonModule, FontAwesomeModule, NotificationsComponent, FormsModule, TranslateModule],
   providers: [OpcionesService],
   templateUrl: './tabla-de-comparacion.component.html',
   styleUrl: './tabla-de-comparacion.component.css'
@@ -54,7 +56,9 @@ export class TablaDeComparacionComponent implements OnInit {
     private comparisonCellService: ComparisonCellService,
     private notificationService: NotificationService,
     private decisionsService: DecisionsService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private translate: TranslateService,
+    private translationService: TranslationService
   ) {
     this.comparisonModes$ = of([]);
   }

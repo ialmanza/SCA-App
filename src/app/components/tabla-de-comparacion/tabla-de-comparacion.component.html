@@ -9,8 +9,8 @@
       <div class="spinner-ring"></div>
     </div>
     <div class="loading-content">
-      <h3>Cargando datos de la tabla</h3>
-      <p>Por favor espere mientras cargamos la información...</p>
+      <h3>{{ 'comparisonTable.loading.message' | translate }}</h3>
+      <p>{{ 'comparisonTable.loading.subtitle' | translate }}</p>
       <div class="loading-progress">
         <div class="progress-bar"></div>
       </div>
@@ -32,8 +32,8 @@
       <div class="spinner-ring"></div>
     </div>
     <div class="loading-content">
-      <h3>Guardando datos de la tabla</h3>
-      <p>Por favor espere mientras guardamos la información...</p>
+      <h3>{{ 'comparisonTable.saving.message' | translate }}</h3>
+      <p>{{ 'comparisonTable.saving.subtitle' | translate }}</p>
       <div class="loading-progress">
         <div class="progress-bar"></div>
       </div>
@@ -44,15 +44,15 @@
   <ng-container *ngIf="!loading && !error">
     <ng-container *ngIf="opciones.length > 0 && comparisonModes.length > 0; else noData">
       <div class="debug-info" style="margin-bottom: 10px; font-size: 0.8em; color: #555">
-        Opciones: {{ opciones.length }} | Modos de comparación: {{ comparisonModes.length }}
+        {{ 'comparisonTable.debug.options' | translate }}: {{ opciones.length }} | {{ 'comparisonTable.debug.modes' | translate }}: {{ comparisonModes.length }}
       </div>
 
       <div class="table-wrapper">
         <table class="comparison-table">
           <thead>
             <tr>
-              <th rowspan="2" class="opciones-column">Opciones de Decisión</th>
-              <th [attr.colspan]="comparisonModes.length" class="areas-header">Áreas de comparación</th>
+              <th rowspan="2" class="opciones-column">{{ 'comparisonTable.headers.decisionOptions' | translate }}</th>
+              <th [attr.colspan]="comparisonModes.length" class="areas-header">{{ 'comparisonTable.headers.comparisonAreas' | translate }}</th>
             </tr>
             <tr class="label-headers">
               <th *ngFor="let mode of comparisonModes; trackBy: trackByFn" class="mode-header">
@@ -72,7 +72,7 @@
                     (click)="decrement(opcion.id, mode.id, $event)"
                     [attr.data-cell-id]="getCellKey(opcion.id, mode.id)"
                     [disabled]="getCellValue(opcion.id, mode.id) <= 0 || saving"
-                    aria-label="Decrementar valor">
+                    [attr.aria-label]="'comparisonTable.buttons.decrement' | translate">
                     <fa-icon [icon]="faMinus"></fa-icon>
                   </button>
                   <span class="counter-value">{{ getCellValue(opcion.id, mode.id) }}</span>
@@ -81,7 +81,7 @@
                     (click)="increment(opcion.id, mode.id, $event)"
                     [attr.data-cell-id]="getCellKey(opcion.id, mode.id)"
                     [disabled]="getCellValue(opcion.id, mode.id) >= 5 || saving"
-                    aria-label="Incrementar valor">
+                    [attr.aria-label]="'comparisonTable.buttons.increment' | translate">
                     <fa-icon [icon]="faPlus"></fa-icon>
                   </button>
                 </div>
@@ -96,18 +96,18 @@
           class="action-button save-button"
           (click)="saveAllCells()"
           [disabled]="!hasUnsavedChanges() || saving"
-          aria-label="Guardar cambios">
+          [attr.aria-label]="'comparisonTable.buttons.saveLabel' | translate">
           <fa-icon [icon]="faSave" class="button-icon"></fa-icon>
-          <span *ngIf="!saving">Guardar Tabla</span>
-          <span *ngIf="saving">Guardando...</span>
+          <span *ngIf="!saving">{{ 'comparisonTable.buttons.save' | translate }}</span>
+          <span *ngIf="saving">{{ 'comparisonTable.buttons.saving' | translate }}</span>
         </button>
         <button
           class="action-button reset-button"
           (click)="resetTable()"
           [disabled]="!hasUnsavedChanges() || saving"
-          aria-label="Reiniciar tabla">
+          [attr.aria-label]="'comparisonTable.buttons.reset' | translate">
           <fa-icon [icon]="faUndo" class="button-icon"></fa-icon>
-          Reiniciar Tabla
+          {{ 'comparisonTable.buttons.reset' | translate }}
         </button>
       </div>
     </ng-container>
@@ -116,9 +116,9 @@
     <ng-template #noData>
       <div class="no-data-message">
         <fa-icon [icon]="faExclamationCircle" class="no-data-icon"></fa-icon>
-        <p>No hay datos para mostrar. Asegúrate de que existan opciones y áreas de comparación.</p>
+        <p>{{ 'comparisonTable.noData.message' | translate }}</p>
         <div class="debug-info" style="margin-top: 10px; font-size: 0.8em; color: #555">
-          Opciones: {{ opciones.length }} | Modos de comparación: {{ comparisonModes.length }}
+          {{ 'comparisonTable.debug.options' | translate }}: {{ opciones.length }} | {{ 'comparisonTable.debug.modes' | translate }}: {{ comparisonModes.length }}
         </div>
       </div>
     </ng-template>

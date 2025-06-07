@@ -212,23 +212,52 @@
     "labelRequired": "El rótulo es requerido"
   },
   "confirmDelete": "¿Está seguro de eliminar este modo de comparación?",
-  "notifications": {
-    "noProjectSpecified": "Error: No se ha especificado un proyecto",
-    "errorLoading": "Error al cargar los modos de comparación",
-    "updatedSuccess": "Modo de comparación actualizado exitosamente",
-    "errorUpdating": "Error al actualizar el modo de comparación",
-    "createdSuccess": "Modo de comparación creado exitosamente",
-    "errorCreating": "Error al crear el modo de comparación",
-    "deletedSuccess": "Modo de comparación eliminado exitosamente",
-    "errorDeleting": "Error al eliminar el modo de comparación"
+    "notifications": {
+      "noProjectSpecified": "Error: No se ha especificado un proyecto",
+      "errorLoading": "Error al cargar los modos de comparación",
+      "updatedSuccess": "Modo de comparación actualizado exitosamente",
+      "errorUpdating": "Error al actualizar el modo de comparación",
+      "createdSuccess": "Modo de comparación creado exitosamente",
+      "errorCreating": "Error al crear el modo de comparación",
+      "deletedSuccess": "Modo de comparación eliminado exitosamente",
+      "errorDeleting": "Error al eliminar el modo de comparación"
+    },
+    "emojiOptions": {
+      "smile": "Sonrisa",
+      "sad": "Triste",
+      "fire": "Fuego",
+      "rocket": "Cohete",
+      "star": "Estrella"
+    }
   },
-  "emojiOptions": {
-    "smile": "Sonrisa",
-    "sad": "Triste",
-    "fire": "Fuego",
-    "rocket": "Cohete",
-    "star": "Estrella"
-  }
+  "comparisonTable": {
+    "loading": {
+      "message": "Cargando datos de la tabla",
+      "subtitle": "Por favor espere mientras cargamos la información..."
+    },
+    "saving": {
+      "message": "Guardando datos de la tabla",
+      "subtitle": "Por favor espere mientras guardamos la información..."
+    },
+    "headers": {
+      "decisionOptions": "Opciones de Decisión",
+      "comparisonAreas": "Áreas de comparación"
+    },
+    "buttons": {
+      "save": "Guardar Tabla",
+      "saving": "Guardando...",
+      "reset": "Reiniciar Tabla",
+      "decrement": "Decrementar valor",
+      "increment": "Incrementar valor",
+      "saveLabel": "Guardar cambios"
+    },
+    "noData": {
+      "message": "No hay datos para mostrar. Asegúrate de que existan opciones y áreas de comparación."
+    },
+    "debug": {
+      "options": "Opciones",
+      "modes": "Modos de comparación"
+    }
   }
 }
 
