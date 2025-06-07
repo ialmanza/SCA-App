@@ -119,5 +119,54 @@
       "selectOriginAndDestination": "Debe seleccionar un área origen y al menos un área destino",
       "errorDeletingLink": "Error al eliminar vínculo"
     }
+  },
+  "modelingMode": {
+    "title": "Modo de modelado",
+    "continue": "Continuar",
+    "back": "Atrás"
+  },
+  "designMode": {
+    "title": "Modo de diseño",
+    "table": {
+      "decisionArea": "Área de decisión",
+      "decisionOptions": "Opciones de decisión",
+      "label": "Rótulo",
+      "edit": "Editar",
+      "delete": "Eliminar",
+      "addOption": "Agregar Opción"
+    },
+    "modals": {
+      "addOption": {
+        "title": "Agregar descripción de la nueva opción",
+        "label": "Opción nueva:",
+        "placeholder": "Escribe la descripción",
+        "cancel": "Cancelar",
+        "save": "Guardar"
+      },
+      "editDecision": {
+        "title": "Editar área de decisión",
+        "codeLabel": "Complete el código:",
+        "codePlaceholder": "Escribe el código como ABC-DEF",
+        "nameLabel": "Nombre del área:",
+        "namePlaceholder": "Escribe el código",
+        "cancel": "Cancelar",
+        "save": "Guardar"
+      },
+      "deleteDecision": {
+        "title": "Eliminar",
+        "message": "¿Está seguro de eliminar esta área de decisión?",
+        "cancel": "Cancelar",
+        "accept": "Aceptar"
+      }
+    }
+  },
+  "comparisonMode": {
+    "title": "Modo de comparación"
+  },
+  "selectionMode": {
+    "title": "Modo de Selección",
+    "end": "Fin del Proceso",
+    "start": "Comenzar"
   }
 }
+

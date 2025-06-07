@@ -24,6 +24,8 @@ import { NotificationsComponent } from "../../notifications/notifications.compon
 import { Vinculo } from '../../../models/interfaces';
 import { EleccionComponent } from '../../eleccion/eleccion.component';
 import { Router } from '@angular/router';
+import { TranslateService, TranslateModule } from '@ngx-translate/core';
+import { TranslationService } from '../../../services/translation.service';
 
 @Component({
   selector: 'app-decisiones-form',
@@ -31,7 +33,7 @@ import { Router } from '@angular/router';
   imports: [FormsModule, ReactiveFormsModule, CommonModule, CrearDecisionComponent,
     GrafoComponent, PosiblesAlternativasComponent, ModoDeComparacionComponent, TablaDeComparacionComponent,
     TablaDecisionesComponent, DecisionCheckComponent, VinculosComponent, PuntuacionesMinimasComponent,
-    TablaDeSeleccionComponent, UltimopasoComponent, NotificationsComponent, EleccionComponent],
+    TablaDeSeleccionComponent, UltimopasoComponent, NotificationsComponent, EleccionComponent, TranslateModule],
   templateUrl: './decisiones-form.component.html',
   styleUrl: './decisiones-form.component.css'
 })
@@ -62,6 +64,8 @@ export class DecisionesFormComponent implements OnInit {
     private vinculosService: VinculosService,
     private notificationService: NotificationService,
     private router: Router,
+    private translationService: TranslationService,
+    private translate: TranslateService
   ) {}
 
   ngOnInit(): void {

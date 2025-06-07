@@ -3,7 +3,7 @@
 
   <div *ngIf="pasoActual === 1">
     <div class="titulo-container">
-      <h1>Modo de modelado</h1>
+      <h1>{{ 'modelingMode.title' | translate }}</h1>
     </div>
     <!-- Paso 1: Formulario para generar área de desarrollo -->
     <div class="alto">
@@ -11,13 +11,13 @@
       <app-crear-decision [projectId]="projectId"></app-crear-decision>
 
 
-      <button class="continuar" (click)="avanzarPaso()">Continuar</button>
+      <button class="continuar" (click)="avanzarPaso()">{{ 'modelingMode.continue' | translate }}</button>
     </div>
   </div>
 
   <div *ngIf="pasoActual === 2">
     <div class="titulo-container">
-      <h1>Modo de modelado</h1>
+      <h1>{{ 'modelingMode.title' | translate }}</h1>
     </div>
 
     <div class="table-container">
@@ -26,74 +26,74 @@
 
     <div class="flex justify-between mt-6">
       <button class="atras"
-        (click)="retrocederPaso()">Atrás</button>
+        (click)="retrocederPaso()">{{ 'modelingMode.back' | translate }}</button>
       <button class="avanzar"
-        (click)="avanzarPaso()">Continuar</button>
+        (click)="avanzarPaso()">{{ 'modelingMode.continue' | translate }}</button>
     </div>
   </div>
 
   <div style="margin-top: 0;">
     <div *ngIf="pasoActual === 3">
       <div class="titulo-container ">
-        <h1>Modo de modelado</h1>
+        <h1>{{ 'modelingMode.title' | translate }}</h1>
       </div>
 
 
       <app-vinculos [projectId]="projectId"></app-vinculos>
       <div class="flex justify-between">
         <button class="atras"
-        (click)="retrocederPaso()">Atrás</button>
+        (click)="retrocederPaso()">{{ 'modelingMode.back' | translate }}</button>
         <button class="avanzar"
-        (click)="avanzarPaso()">Continuar</button>
+        (click)="avanzarPaso()">{{ 'modelingMode.continue' | translate }}</button>
       </div>
     </div>
 
   </div>
   <div *ngIf="pasoActual === 4">
     <div class="titulo-container">
-      <h1>Modo de modelado</h1>
+      <h1>{{ 'modelingMode.title' | translate }}</h1>
     </div>
 
     <app-decision-check [projectId]="projectId"></app-decision-check>
 
     <div class="flex justify-between mt-6">
       <button class="atras"
-      (click)="retrocederPaso()">Atrás</button>
+      (click)="retrocederPaso()">{{ 'modelingMode.back' | translate }}</button>
       <button class="avanzar"
-      (click)="avanzarPaso()">Continuar</button>
+      (click)="avanzarPaso()">{{ 'modelingMode.continue' | translate }}</button>
     </div>
 
   </div>
 
   <div *ngIf="pasoActual === 5">
     <div class="titulo-container">
-      <h1>Modo de modelado</h1>
+      <h1>{{ 'modelingMode.title' | translate }}</h1>
     </div>
     <!-- Paso 5: Muestra los grafos conectados -->
     <app-grafo [projectId]="projectId"></app-grafo>
     <div class="flex justify-between mt-6">
       <button class="atras"
-        (click)="retrocederPaso()">Atrás</button>
+        (click)="retrocederPaso()">{{ 'modelingMode.back' | translate }}</button>
         <button class="avanzar"
-        (click)="getImportantStatusArea()">Continuar</button>
+        (click)="getImportantStatusArea()">{{ 'modelingMode.continue' | translate }}</button>
     </div>
 
   </div>
 
   <div *ngIf="pasoActual === 6">
     <div class="titulo-container diseño">
-      <h1>Modo de diseño</h1>
+      <h1>{{ 'designMode.title' | translate }}</h1>
     </div>
     <!--Paso 6:Aquí van las opciones de desarrollo-->
     <div class="overflow-x-auto overflow-y-auto mt-6">
       <table class="min-w-full bg-white shadow-md rounded-lg overflow-hidden" style="margin: auto;">
         <thead class="theaddiseño">
           <tr>
-            <th class="py-4 px-6 text-left font-semibold text-sm">Área de decisión</th>
-            <th class="py-4 px-6 text-left font-semibold text-sm">Opciones de decisión</th>
-            <th class="py-4 px-6 text-left font-semibold text-sm">Rótulo</th>
-            <th class="py-4 px-6 text-center font-semibold text-sm">Editar</th>
-            <th class="py-4 px-6 text-center font-semibold text-sm">Eliminar</th>
+            <th class="py-4 px-6 text-left font-semibold text-sm">{{ 'designMode.table.decisionArea' | translate }}</th>
+            <th class="py-4 px-6 text-left font-semibold text-sm">{{ 'designMode.table.decisionOptions' | translate }}</th>
+            <th class="py-4 px-6 text-left font-semibold text-sm">{{ 'designMode.table.label' | translate }}</th>
+            <th class="py-4 px-6 text-center font-semibold text-sm">{{ 'designMode.table.edit' | translate }}</th>
+            <th class="py-4 px-6 text-center font-semibold text-sm">{{ 'designMode.table.delete' | translate }}</th>
           </tr>
         </thead>
         <tbody>
@@ -104,12 +104,12 @@
                 <li *ngFor="let opcion of getOpcionesPorArea(decision.id!)" class="flex justify-between  border border-yellow-200  rounded-md mb-2 p-2 items-center">
                   <span>{{opcion.descripcion}}</span>
                   <button class="text-red-500 hover:text-red-700 font-semibold text-xs" (click)="deleteOpcion(opcion)">
-                    Eliminar
+                    {{ 'designMode.table.delete' | translate }}
                   </button>
                 </li>
               </ul>
               <button class="mt-2 text-green-500 hover:text-green-800 font-semibold text-sm" (click)="abrirModal(decision)">
-                Agregar Opción
+                {{ 'designMode.table.addOption' | translate }}
               </button>
             </td>
             <td class="py-4 px-6 text-sm text-gray-800">{{decision.rotulo}}</td>
@@ -137,15 +137,15 @@
               <div *ngIf="modalAbierto"
                 class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
                 <div class="modalabierto bg-white p-4 rounded shadow-lg">
-                  <h2 class="text-xl text-center font-bold mb-4">Agregar descripción de la nueva opción</h2>
+                  <h2 class="text-xl text-center font-bold mb-4">{{ 'designMode.modals.addOption.title' | translate }}</h2>
 
-                  <label for="descripcion" class="block mb-2">Opción nueva:</label>
+                  <label for="descripcion" class="block mb-2">{{ 'designMode.modals.addOption.label' | translate }}</label>
                   <input id="descripcion" type="text" [(ngModel)]="nuevaDescripcion" class="border p-2 w-full mb-4"
-                    placeholder="Escribe la descripción">
+                    [placeholder]="'designMode.modals.addOption.placeholder' | translate">
 
                   <div class="flex  justify-center mt-1">
-                    <button (click)="cerrarModal()" class= "elim bot">Cancelar</button>
-                    <button (click)="agregarOpcion()" class="mod">Guardar</button>
+                    <button (click)="cerrarModal()" class= "elim bot">{{ 'designMode.modals.addOption.cancel' | translate }}</button>
+                    <button (click)="agregarOpcion()" class="mod">{{ 'designMode.modals.addOption.save' | translate }}</button>
                   </div>
                 </div>
               </div>
@@ -155,22 +155,22 @@
                 <div *ngIf="modalEditarDecisionAbierto"
                   class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
                   <div class=" modalabierto bg-white p-4 rounded shadow-lg">
-                    <h2 class="text-xl text-center font-bold mb-4">Editar área de decisión</h2>
+                    <h2 class="text-xl text-center font-bold mb-4">{{ 'designMode.modals.editDecision.title' | translate }}</h2>
 
-                    <label for="descripcion" class="block mb-2">Complete el código:</label>
+                    <label for="descripcion" class="block mb-2">{{ 'designMode.modals.editDecision.codeLabel' | translate }}</label>
                     <input id="rotulo" type="text" [(ngModel)]="decisionSeleccionada!.rotulo"
                       class="border p-2 w-full mb-4"
-                      placeholder="{{ decisionSeleccionada?.rotulo || 'Escribe el código como ABC-DEF' }}">
+                      [placeholder]="decisionSeleccionada?.rotulo || ('designMode.modals.editDecision.codePlaceholder' | translate)">
 
-                    <label for="descripcion" class=" block mb-2">Nombre del área:</label>
+                    <label for="descripcion" class=" block mb-2">{{ 'designMode.modals.editDecision.nameLabel' | translate }}</label>
                     <input id="rotulo" type="text" [(ngModel)]="decisionSeleccionada!.nombre_area"
                       class="border p-2 w-full mb-4"
-                      placeholder="{{ decisionSeleccionada?.nombre_area || 'Escribe el código' }}">
+                      [placeholder]="decisionSeleccionada?.nombre_area || ('designMode.modals.editDecision.namePlaceholder' | translate)">
 
 
                     <div class="flex  justify-center mt-1">
-                      <button (click)="cerrarModalEditarDecision()" class= "elim bot">Cancelar</button>
-                      <button (click)="updateDecision(decisionSeleccionada!)" class="mod">Guardar</button>
+                      <button (click)="cerrarModalEditarDecision()" class= "elim bot">{{ 'designMode.modals.editDecision.cancel' | translate }}</button>
+                      <button (click)="updateDecision(decisionSeleccionada!)" class="mod">{{ 'designMode.modals.editDecision.save' | translate }}</button>
                     </div>
                   </div>
                 </div>
@@ -179,14 +179,14 @@
                 <div *ngIf="modalEliminarDecisionAbierto"
                   class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
                   <div class="bg-white p-4 rounded shadow-lg">
-                    <h2 class="text-xl text-center font-bold mb-4">Eliminar</h2>
+                    <h2 class="text-xl text-center font-bold mb-4">{{ 'designMode.modals.deleteDecision.title' | translate }}</h2>
 
-                    <label for="descripcion" class="block  mb-2">¿Está seguro de eliminar esta área de decisión?</label>
+                    <label for="descripcion" class="block  mb-2">{{ 'designMode.modals.deleteDecision.message' | translate }}</label>
 
 
                     <div class="flex justify-center mt-1">
-                      <button (click)="cerrarModalEliminarDecision()" class= "elim bot">Cancelar</button>
-                      <button (click)="deleteDecision(decisionSeleccionada!)" class="mod">Aceptar</button>
+                      <button (click)="cerrarModalEliminarDecision()" class= "elim bot">{{ 'designMode.modals.deleteDecision.cancel' | translate }}</button>
+                      <button (click)="deleteDecision(decisionSeleccionada!)" class="mod">{{ 'designMode.modals.deleteDecision.accept' | translate }}</button>
                     </div>
                   </div>
                 </div>
@@ -198,9 +198,9 @@
 
     <div class="flex justify-between mt-6">
       <button class="atras"
-        (click)="retrocederPaso()">Atrás</button>
+        (click)="retrocederPaso()">{{ 'modelingMode.back' | translate }}</button>
         <button class="avanzar"
-        (click)="avanzarPaso()">Continuar</button>
+        (click)="avanzarPaso()">{{ 'modelingMode.continue' | translate }}</button>
     </div>
 
   </div>
@@ -208,16 +208,16 @@
 
   <div *ngIf="pasoActual === 7">
     <div class="titulo-container diseño">
-      <h1>Modo de diseño</h1>
+      <h1>{{ 'designMode.title' | translate }}</h1>
     </div>
     <app-posibles-alternativas [projectId]="projectId"></app-posibles-alternativas>
 
 
     <div class="flex justify-between mt-6">
       <button class="atras"
-        (click)="retrocederPaso()">Atrás</button>
+        (click)="retrocederPaso()">{{ 'modelingMode.back' | translate }}</button>
         <button class="avanzar"
-        (click)="avanzarPaso()">Continuar</button>
+        (click)="avanzarPaso()">{{ 'modelingMode.continue' | translate }}</button>
     </div>
 
   </div>
@@ -225,16 +225,16 @@
   <div *ngIf="pasoActual === 8">
     <!-- Paso 8: Próximo paso -->
     <div class=" comparacion">
-      <h1>Modo de comparación</h1>
+      <h1>{{ 'comparisonMode.title' | translate }}</h1>
     </div>
     <app-modo-de-comparacion [projectId]="projectId"></app-modo-de-comparacion>
 
 
     <div class="flex justify-between mt-6">
       <button class="atras"
-        (click)="retrocederPaso()">Atrás</button>
+        (click)="retrocederPaso()">{{ 'modelingMode.back' | translate }}</button>
         <button class="avanzar"
-        (click)="avanzarPaso()">Continuar</button>
+        (click)="avanzarPaso()">{{ 'modelingMode.continue' | translate }}</button>
     </div>
 
   </div>
@@ -242,15 +242,15 @@
   <div *ngIf="pasoActual === 9">
     <!-- Paso 9: Próximo paso -->
     <div class=" comparacion">
-      <h1>Modo de comparación</h1>
+      <h1>{{ 'comparisonMode.title' | translate }}</h1>
     </div>
     <app-tabla-de-comparacion [projectId]="projectId"></app-tabla-de-comparacion>
 
     <div class="flex justify-between mt-6">
       <button class="atras"
-        (click)="retrocederPaso()">Atrás</button>
+        (click)="retrocederPaso()">{{ 'modelingMode.back' | translate }}</button>
         <button class="avanzar"
-        (click)="avanzarPaso()">Continuar</button>
+        (click)="avanzarPaso()">{{ 'modelingMode.continue' | translate }}</button>
     </div>
 
   </div>
@@ -258,45 +258,45 @@
   <div *ngIf="pasoActual === 10">
     <!-- Paso 10: Próximo paso -->
     <div class=" selección">
-      <h1>Modo de Selección</h1>
+      <h1>{{ 'selectionMode.title' | translate }}</h1>
     </div>
       <app-tabla-de-seleccion [projectId]="projectId"></app-tabla-de-seleccion>
 
     <div class="flex justify-between mt-6">
       <button class="atras"
-        (click)="retrocederPaso()">Atrás</button>
+        (click)="retrocederPaso()">{{ 'modelingMode.back' | translate }}</button>
         <button class="avanzar"
-        (click)="avanzarPaso()">Continuar</button>
+        (click)="avanzarPaso()">{{ 'modelingMode.continue' | translate }}</button>
     </div>
 
   </div>
 
   <div *ngIf="pasoActual === 11">
     <div class=" comparacion">
-      <h1>Modo de comparación</h1>
+      <h1>{{ 'comparisonMode.title' | translate }}</h1>
     </div>
       <app-puntuaciones-minimas [projectId]="projectId"></app-puntuaciones-minimas>
 
     <div class="flex justify-between mt-6">
       <button class="atras"
-        (click)="retrocederPaso()">Atrás</button>
+        (click)="retrocederPaso()">{{ 'modelingMode.back' | translate }}</button>
         <button class="avanzar"
-        (click)="avanzarPaso()">Continuar</button>
+        (click)="avanzarPaso()">{{ 'modelingMode.continue' | translate }}</button>
     </div>
 
   </div>
 
   <div *ngIf="pasoActual === 12">
     <div class="selección">
-      <h1>Modo de selección</h1>
+      <h1>{{ 'selectionMode.title' | translate }}</h1>
     </div>
       <app-eleccion [projectId]="projectId || ''"></app-eleccion>
 
     <div class="flex justify-between mt-6">
       <button class="atras"
-        (click)="retrocederPaso()">Atrás</button>
+        (click)="retrocederPaso()">{{ 'modelingMode.back' | translate }}</button>
         <button class="avanzar"
-        (click)="avanzarPaso()">Continuar</button>
+        (click)="avanzarPaso()">{{ 'modelingMode.continue' | translate }}</button>
     </div>
 
   </div>
@@ -304,16 +304,16 @@
   <div *ngIf="pasoActual === 13">
       <!-- Paso 13: Próximo paso -->
       <div class=" selección">
-        <h1>Fin del Proceso</h1>
+        <h1>{{ 'selectionMode.end' | translate }}</h1>
       </div>
      <app-ultimopaso></app-ultimopaso>
 
 
       <div class="flex justify-between mt-6">
         <button class="atras"
-        (click)="retrocederPaso()">Atrás</button>
+        (click)="retrocederPaso()">{{ 'modelingMode.back' | translate }}</button>
           <button class="avanzar"
-         (click)="recargarpagina()">Comenzar</button>
+         (click)="recargarpagina()">{{ 'selectionMode.start' | translate }}</button>
       </div>
 
   </div>
