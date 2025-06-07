@@ -7,6 +7,7 @@ export interface ComparisonMode {
   label: string;
   symbol: string;
   puntuacion_minima?: number;
+  puntuacion_maxima?: number;
   created_at?: string;
   updated_at?: string;
 }

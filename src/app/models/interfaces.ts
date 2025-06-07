@@ -22,6 +22,7 @@ export interface Opcion {
   descripcion: string;
   cod_area: string;
   project_id: string;
+  symbol?: string;
   created_at: string;
   updated_at: string;
 }

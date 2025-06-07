@@ -97,9 +97,9 @@
           <li [class.active]="activeTab === 'seleccion'">
             <a (click)="setActiveTab('seleccion')">{{ 'project.tabs.selectionTable' | translate }}</a>
           </li>
-          <!-- <li [class.active]="activeTab === 'elecciones'">
+          <li [class.active]="activeTab === 'elecciones'">
             <a (click)="setActiveTab('elecciones')">{{ 'project.tabs.choice' | translate }}</a>
-          </li> -->
+          </li>
         </ul>
       </nav>
     </div>
@@ -139,7 +139,7 @@
               <a (click)="openModal('vinculos')" class="btn-primary">{{ 'project.dashboard.quickActions.links' | translate }}</a>
               <a (click)="openModal('decision-check')" class="btn-primary">{{ 'project.dashboard.quickActions.selectImportantAreas' | translate }}</a>
               <a (click)="openModal('grafo')" class="btn-primary">{{ 'project.dashboard.quickActions.graph' | translate }}</a>
-              <!-- <a (click)="openModal('puntuaciones')" class="btn-primary">{{ 'project.dashboard.quickActions.minScores' | translate }}</a> -->
+              <a (click)="openModal('puntuaciones')" class="btn-primary">{{ 'project.dashboard.quickActions.minScores' | translate }}</a>
             </div>
           </div>
 

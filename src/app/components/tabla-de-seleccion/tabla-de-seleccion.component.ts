@@ -655,15 +655,17 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
     } else {
       this.filteredPaths = this.paths.filter(path => {
         const totalScore = this.getTotalScore(path);
-
+        
+        // Si hay una puntuación mínima y el score es menor, el path no es válido
         if (this.minScore !== null && totalScore < this.minScore) {
           return false;
         }
-
+        
+        // Si hay una puntuación máxima y el score es mayor, el path no es válido
         if (this.maxScore !== null && totalScore > this.maxScore) {
           return false;
         }
-
+        
         return true;
       });
     }
@@ -672,19 +674,11 @@ export class TablaDeSeleccionComponent implements OnInit, OnChanges {
   }
 
   getValidAlternativesCount(): number {
-    if (this.minScore === null && this.maxScore === null) {
-      return 0; // Si no hay filtros, no hay alternativas válidas
-    }
-
-    return this.filteredPaths.length; // Las alternativas que pasan el filtro son válidas
+    return this.filteredPaths.length;
   }
 
   getInvalidAlternativesCount(): number {
-    if (this.minScore === null && this.maxScore === null) {
-      return 0; // Si no hay filtros, no hay alternativas inválidas
-    }
-
-    return this.paths.length - this.filteredPaths.length; // Las que no pasan el filtro son inválidas
+    return this.paths.length - this.filteredPaths.length;
   }
 
   setLoadingMessage(message: string, subtitle?: string): void {

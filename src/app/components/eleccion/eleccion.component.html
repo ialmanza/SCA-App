@@ -1,83 +1,111 @@
-<div class="eleccion-container">
-  <h2>Selección de Alternativas</h2>
-
-  <div *ngIf="loading" class="loading">
-    Cargando datos...
+<!-- Loading spinner -->
+<div *ngIf="isLoading" class="professional-loading-container">
+  <div class="professional-spinner">
+    <div class="spinner-ring"></div>
+    <div class="spinner-ring"></div>
+    <div class="spinner-ring"></div>
+    <div class="spinner-ring"></div>
   </div>
-
-  <div *ngIf="error" class="error">
-    Error: {{ error }}
+  <div class="loading-content">
+    <h3>{{ loadingMessage }}</h3>
+    <p>{{ loadingSubtitle }}</p>
+    <div class="loading-progress">
+      <div class="progress-bar"></div>
+    </div>
   </div>
+</div>
 
-  <div *ngIf="!loading && !error && alternativas.length === 0" class="no-data">
-    No hay alternativas disponibles
-  </div>
+<!-- Error message -->
+<div *ngIf="error && !isLoading" class="error-container">
+  <p class="error-message">{{ error }}</p>
+  <button (click)="loadData()" class="retry-button">Intentar de nuevo</button>
+</div>
 
-  <div *ngIf="!loading && !error && alternativas.length > 0" class="table-container">
-    <table class="eleccion-table">
+<!-- Main content -->
+<div class="container" *ngIf="!isLoading && !error">
+
+  <!-- Table -->
+  <div class="table-container" *ngIf="filteredPaths && filteredPaths.length > 0">
+    <table>
       <thead>
         <tr>
-          <th>Identificador</th>
-          <th *ngFor="let area of importantAreas" class="area-header">
-            {{ area.decision.nombre_area }}
+          <th colspan="2">Alternativas de Decisión</th>
+          <th *ngFor="let mode of comparisonModes; trackBy: trackByFn">
+            {{ mode.label }}
           </th>
+          <th>Sumatoria</th>
           <th>Estado</th>
-          <!-- <th>Puntuación Total</th> -->
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let alternativa of alternativas"
-            [class.valid-row]="alternativa.isValid"
-            [class.invalid-row]="!alternativa.isValid">
-
-          <!-- Identificador Hexa -->
-          <td class="hexa-cell">
-            <span class="hexa-id">{{ alternativa.hexaId }}</span>
+        <tr *ngFor="let path of filteredPaths; trackBy: trackByFn"
+            [class.invalid-path]="path.hasConflicts">
+          <td class="path-hex clickable" (click)="openPathModal(path)">
+            {{ path.hexa }}
+          </td>
+          <td class="path-name">
+            <!-- Espacio para el nombre del path -->
           </td>
 
-          <!-- Opciones por área -->
-          <td *ngFor="let area of importantAreas; let i = index" class="option-cell">
-            <div class="option-content">
-              {{ getOptionForArea(alternativa, i) }}
-            </div>
-            <div *ngIf="!isAreaValid(alternativa, area.decision.id)"
-                 class="invalid-indicator">
-              ⚠️ No cumple requisitos mínimos
+          <!-- Celdas por cada modo de comparación con emojis -->
+          <td
+            *ngFor="let mode of comparisonModes; trackBy: trackByFn"
+            class="symbol-cell"
+            [attr.data-mode-id]="mode.id"
+            [class.valid]="isValidCell(path, mode.id)"
+            [class.invalid-range]="!isValidCellRange(path, mode.id)"
+          >
+            <div class="cell-content">
+              <div class="emoji-display">
+                {{ getEmojisForCell(path, mode.id) }}
+              </div>
+              <div
+                class="area-score-cell"
+                *ngIf="path.areaScores && path.areaScores[mode.comparison_area] !== undefined"
+              >
+                <span class="area-score-value">
+                  {{ getPathAreaScore(path, mode.comparison_area) }}
+                </span>
+              </div>
             </div>
           </td>
 
-          <!-- Estado de validez -->
+          <!-- Nueva columna para la suma total -->
+          <td class="total-score-cell">
+            {{ getTotalScore(path) }}
+          </td>
+
+          <!-- Nueva columna de estado -->
           <td class="status-cell">
-            <span *ngIf="alternativa.isValid" class="status-valid">✅ Válida</span>
-            <span *ngIf="!alternativa.isValid" class="status-invalid">
-              ❌ Inválida
-              <div class="invalid-areas" *ngIf="alternativa.invalidAreas.length > 0">
-                Áreas problemáticas: {{ alternativa.invalidAreas.join(', ') }}
-              </div>
-            </span>
-          </td>
-
-          <!-- Puntuación total -->
-          <!-- <td class="score-cell">
-            <span class="total-score">{{ getTotalScore(alternativa) }}</span>
-            <div class="score-breakdown">
-              <div *ngFor="let score of alternativa.areaScores" class="area-score">
-                {{ score.area_rotulo }}: {{ score.score }}
+            <div *ngIf="!path.hasConflicts" class="status-valid">
+              <span class="status-icon">✅</span>
+              <span class="status-text">Válida</span>
+            </div>
+            <div *ngIf="path.hasConflicts" class="status-invalid">
+              <span class="status-icon">❌</span>
+              <span class="status-text">Inválida</span>
+              <div class="conflict-details">
+                <small>Áreas conflictivas: {{ getConflictingAreasText(path) }}</small>
               </div>
             </div>
-          </td> -->
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
 
-  <!-- Resumen estadístico -->
-  <div *ngIf="!loading && alternativas.length > 0" class="summary">
+  <!-- No data message -->
+  <div *ngIf="!filteredPaths || filteredPaths.length === 0" class="no-data-container">
+    <p>No hay alternativas que cumplan con los criterios especificados</p>
+  </div>
+
+  <!-- Resumen estadístico actualizado -->
+  <div *ngIf="getTotalAlternativesCount() > 0" class="summary">
     <h3>Resumen</h3>
     <div class="summary-stats">
       <div class="stat-item">
         <span class="stat-label">Total de alternativas:</span>
-        <span class="stat-value">{{ alternativas.length }}</span>
+        <span class="stat-value">{{ getTotalAlternativesCount() }}</span>
       </div>
       <div class="stat-item">
         <span class="stat-label">Alternativas válidas:</span>
@@ -90,3 +118,10 @@
     </div>
   </div>
 </div>
+
+<!-- Path Modal -->
+<app-path-modal
+  [isOpen]="isModalOpen"
+  [path]="selectedPath"
+  (closeEvent)="closeModal()">
+</app-path-modal>

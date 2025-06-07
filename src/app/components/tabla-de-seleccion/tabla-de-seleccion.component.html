@@ -87,17 +87,6 @@
       No hay alternativas disponibles para mostrar
     </p>
   </div>
-</div>
-
-  <!-- No data message -->
-  <div *ngIf="!filteredPaths || filteredPaths.length === 0" class="no-data-container">
-    <p *ngIf="minScore !== null || maxScore !== null">
-      No hay alternativas que cumplan con el rango de puntuación especificado
-    </p>
-    <p *ngIf="minScore === null && maxScore === null">
-      No hay alternativas disponibles para mostrar
-    </p>
-  </div>
 
   <!-- Resumen estadístico -->
   <div *ngIf="filteredPaths && filteredPaths.length > 0" class="summary">
@@ -117,6 +106,7 @@
       </div>
     </div>
   </div>
+</div>
 
 <!-- Path Modal -->
 <app-path-modal

@@ -11,6 +11,7 @@ export interface ComparisonMode {
   label: string;
   symbol: string;
   puntuacion_minima?: number;
+  puntuacion_maxima?: number;
   created_at: string;
   updated_at: string;
 }
@@ -100,16 +101,19 @@ export class ComparisonModeService {
     return true;
   }
 
-  async updatePuntuacionMinima(id: string, puntuacion_minima: number): Promise<boolean> {
+  async updatePuntuaciones(id: string, puntuacion_minima: number, puntuacion_maxima: number | null): Promise<boolean> {
     const { data, error } = await supabase
       .from('comparison_modes')
-      .update({ puntuacion_minima })
+      .update({ 
+        puntuacion_minima,
+        puntuacion_maxima
+      })
       .eq('id', id)
       .select()
       .single();
 
     if (error) {
-      console.error('Error updating minimum score:', error);
+      console.error('Error updating scores:', error);
       return false;
     }
 

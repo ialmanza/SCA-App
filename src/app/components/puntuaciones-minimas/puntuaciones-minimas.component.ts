@@ -1,5 +1,5 @@
 import { ComparisonModeService, ComparisonMode } from './../../services/supabaseServices/comparison-mode.service';
-import { Component, OnInit, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, Output, EventEmitter } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
@@ -18,6 +18,13 @@ import { NotificationService } from '../../services/supabaseServices/notificatio
 })
 export class PuntuacionesMinimasComponent implements OnInit, OnChanges {
   @Input() projectId!: string;
+  @Input() comparisonModes: any;
+  @Output() filterChange = new EventEmitter<{
+    areaId: string;
+    minScore: number | null;
+    maxScore: number | null;
+  }>();
+
   areasForm: FormGroup;
   loading = false;
   error = '';
@@ -55,7 +62,7 @@ export class PuntuacionesMinimasComponent implements OnInit, OnChanges {
 
     this.loading = true;
     this.error = '';
-    this.areasFormArray.clear(); // Limpiamos el array antes de cargar nuevos datos
+    this.areasFormArray.clear();
 
     from(this.comparacionService.getComparisonModesByProject(this.projectId)).pipe(
       catchError(error => {
@@ -74,7 +81,8 @@ export class PuntuacionesMinimasComponent implements OnInit, OnChanges {
           id: [area.id],
           rotulo: [area.label],
           area: [area.comparison_area],
-          puntuacion: [area.puntuacion_minima || 0]
+          puntuacionMinima: [area.puntuacion_minima || 0],
+          puntuacionMaxima: [area.puntuacion_maxima || null]
         }));
       });
     });
@@ -83,9 +91,10 @@ export class PuntuacionesMinimasComponent implements OnInit, OnChanges {
   updatePuntuacion(index: number): void {
     const areaControl = this.areasFormArray.at(index);
     const id = areaControl.get('id')?.value;
-    const puntuacion = areaControl.get('puntuacion')?.value;
+    const puntuacionMinima = areaControl.get('puntuacionMinima')?.value;
+    const puntuacionMaxima = areaControl.get('puntuacionMaxima')?.value;
 
-    if (id === undefined || puntuacion === undefined) {
+    if (id === undefined) {
       return;
     }
 
@@ -93,12 +102,12 @@ export class PuntuacionesMinimasComponent implements OnInit, OnChanges {
     this.error = '';
     this.successMessage = '';
 
-    from(this.comparacionService.updatePuntuacionMinima(id, puntuacion)).pipe(
+    from(this.comparacionService.updatePuntuaciones(id, puntuacionMinima, puntuacionMaxima)).pipe(
       catchError(error => {
-        this.error = 'Error al actualizar la puntuación';
+        this.error = 'Error al actualizar las puntuaciones';
         this.notificationService.createNotification({
           project_id: this.projectId,
-          message: 'Error al actualizar la puntuación',
+          message: 'Error al actualizar las puntuaciones',
           type: 'error'
         });
         return of(false);
@@ -106,13 +115,20 @@ export class PuntuacionesMinimasComponent implements OnInit, OnChanges {
       finalize(() => this.loading = false)
     ).subscribe((success: boolean) => {
       if (success) {
-        this.successMessage = 'Puntuación actualizada correctamente';
+        this.successMessage = 'Puntuaciones actualizadas correctamente';
         this.notificationService.createNotification({
           project_id: this.projectId,
-          message: 'Puntuación actualizada correctamente',
+          message: 'Puntuaciones actualizadas correctamente',
           type: 'success'
         });
         setTimeout(() => this.successMessage = '', 3000);
+
+        // Emitir el cambio de filtro
+        this.filterChange.emit({
+          areaId: id,
+          minScore: puntuacionMinima,
+          maxScore: puntuacionMaxima
+        });
       }
     });
   }
