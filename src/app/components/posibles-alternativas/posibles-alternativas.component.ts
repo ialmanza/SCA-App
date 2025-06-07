@@ -49,7 +49,8 @@ export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
   @Input() projectId!: string;
   private subscription: Subscription = new Subscription();
   private previousSelections: { [key: string]: boolean } = {};
-  selectedOptionsCount: number = 0;
+  selectedOptionsCount: number = 0; // Total de alternativas posibles
+  selectedAlternativesCount: number = 0; // Contador de alternativas seleccionadas
 
   constructor(
     private opcionesService: OpcionesService,
@@ -239,8 +240,8 @@ export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
     this.decisionTree.forEach(node => updateNode(node));
     this.changeDetectorRef.detectChanges();
     this.updateSelectedOptionsCount();
+    this.updateSelectedAlternativesCount(); // Actualizar contador de seleccionadas
   }
-
 
   private updateSelectedOptionsCount(): void {
     this.selectedOptionsCount = 0;
@@ -255,7 +256,21 @@ export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
       });
     };
     this.decisionTree.forEach(node => countOptions(node));
+  }
 
+  private updateSelectedAlternativesCount(): void {
+    this.selectedAlternativesCount = 0;
+    const countSelectedOptions = (node: DecisionNode) => {
+      node.options.forEach(option => {
+        if (option.isLastArea && option.selected) {
+          this.selectedAlternativesCount++; // Contar solo las opciones del último nivel que están seleccionadas
+        }
+        if (option.children) {
+          option.children.forEach(childNode => countSelectedOptions(childNode));
+        }
+      });
+    };
+    this.decisionTree.forEach(node => countSelectedOptions(node));
   }
 
   getUniqueAreas(): string[] {
@@ -276,6 +291,8 @@ export class PosiblesAlternativasComponent implements OnInit, OnDestroy {
         this.notificationService.show('Alternativa eliminada exitosamente', 'success');
       }
       await this.loadExistingPaths();
+      // Actualizar contador de alternativas seleccionadas después de la operación
+      this.updateSelectedAlternativesCount();
     } catch (error) {
       this.notificationService.show('Error en la operación', 'error');
       option.selected = !option.selected;

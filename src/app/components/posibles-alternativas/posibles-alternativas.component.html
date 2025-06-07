@@ -11,6 +11,10 @@
       <span class="counter-label">Total de alternativas posibles:</span>
       <span class="counter-number">{{ selectedOptionsCount }}</span>
     </div>
+    <div class="counter-badge selected-badge">
+      <span class="counter-label">Alternativas seleccionadas:</span>
+      <span class="counter-number">{{ selectedAlternativesCount }}</span>
+    </div>
   </div>
 
   <div class="decision-tree-container" *ngIf="!isLoading && decisionTree.length">
