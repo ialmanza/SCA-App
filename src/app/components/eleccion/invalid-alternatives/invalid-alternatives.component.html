@@ -1,0 +1,101 @@
+<!-- Loading spinner -->
+<div *ngIf="isLoading" class="professional-loading-container">
+  <div class="professional-spinner">
+    <div class="spinner-ring"></div>
+    <div class="spinner-ring"></div>
+    <div class="spinner-ring"></div>
+    <div class="spinner-ring"></div>
+  </div>
+  <div class="loading-content">
+    <h3>Cargando alternativas inválidas...</h3>
+    <p>Por favor espere mientras procesamos la información...</p>
+    <div class="loading-progress">
+      <div class="progress-bar"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Error message -->
+<div *ngIf="error && !isLoading" class="error-container">
+  <p class="error-message">{{ error }}</p>
+  <button (click)="goBack()" class="retry-button">Volver</button>
+</div>
+
+<!-- Main content -->
+<div class="container" *ngIf="!isLoading && !error">
+  <div class="header">
+    <h2>Alternativas Inválidas</h2>
+    <button class="back-button" (click)="goBack()">Volver a la vista general</button>
+  </div>
+
+  <!-- Table -->
+  <div class="table-container" *ngIf="paths && paths.length > 0">
+    <table>
+      <thead>
+        <tr>
+          <th colspan="2">Alternativas de Decisión</th>
+          <th *ngFor="let mode of comparisonModes; trackBy: trackByFn">
+            {{ mode.label }}
+          </th>
+          <th>Sumatoria</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let path of paths; trackBy: trackByFn"
+            class="invalid-path">
+          <td class="path-hex clickable" (click)="openPathModal(path)">
+            {{ path.hexa }}
+          </td>
+          <td class="path-name">
+            <!-- Espacio para el nombre del path -->
+          </td>
+
+          <!-- Celdas por cada modo de comparación -->
+          <td
+            *ngFor="let mode of comparisonModes; trackBy: trackByFn"
+            class="symbol-cell"
+            [attr.data-mode-id]="mode.id"
+          >
+            <div class="cell-content">
+              <div class="area-score-cell"
+                *ngIf="path.areaScores && path.areaScores[mode.comparison_area] !== undefined">
+                <span class="area-score-value">
+                  {{ getPathAreaScore(path, mode.comparison_area) }}
+                </span>
+              </div>
+            </div>
+          </td>
+
+          <!-- Columna para la suma total -->
+          <td class="total-score-cell">
+            {{ getTotalScore(path) }}
+          </td>
+
+          <!-- Columna de estado -->
+          <td class="status-cell">
+            <div class="status-invalid">
+              <span class="status-icon">❌</span>
+              <span class="status-text">Inválida</span>
+              <div class="conflict-details">
+                <small>Áreas conflictivas: {{ path.conflictingAreas?.join(', ') }}</small>
+              </div>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- No data message -->
+  <div *ngIf="!paths || paths.length === 0" class="no-data-container">
+    <p>No hay alternativas inválidas que mostrar</p>
+  </div>
+</div>
+
+<!-- Path Modal -->
+<app-path-modal
+  [isOpen]="isModalOpen"
+  [path]="selectedPath"
+  (closeEvent)="closeModal()">
+</app-path-modal>

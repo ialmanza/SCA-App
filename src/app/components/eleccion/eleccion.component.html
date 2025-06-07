@@ -107,11 +107,11 @@
         <span class="stat-label">Total de alternativas:</span>
         <span class="stat-value">{{ getTotalAlternativesCount() }}</span>
       </div>
-      <div class="stat-item">
+      <div class="stat-item clickable" (click)="goToValidAlternatives()">
         <span class="stat-label">Alternativas válidas:</span>
         <span class="stat-value valid">{{ getValidAlternativesCount() }}</span>
       </div>
-      <div class="stat-item">
+      <div class="stat-item clickable" (click)="navigateToInvalidAlternatives()">
         <span class="stat-label">Alternativas inválidas:</span>
         <span class="stat-value invalid">{{ getInvalidAlternativesCount() }}</span>
       </div>

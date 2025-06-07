@@ -12,6 +12,9 @@ import { PathModalComponent } from '../path-modal/path-modal.component';
 import { PathDescriptionsService } from '../../services/supabaseServices/path-descriptions.service';
 import { PathAreaScoreService, PathAreaScore } from '../../services/supabaseServices/path-area-score.service';
 import { supabase } from '../../config/supabase.config';
+import { Router } from '@angular/router';
+import { ValidAlternativesService } from '../../services/valid-alternatives.service';
+import { InvalidAlternativesService } from '../../services/invalid-alternatives.service';
 
 interface CellState {
   value: number;
@@ -93,7 +96,10 @@ export class EleccionComponent implements OnInit, OnChanges {
     private cdr: ChangeDetectorRef,
     private selectedPathsService: SelectedPathsService,
     private pathDescriptionsService: PathDescriptionsService,
-    private pathAreaScoreService: PathAreaScoreService
+    private pathAreaScoreService: PathAreaScoreService,
+    private router: Router,
+    private validAlternativesService: ValidAlternativesService,
+    private invalidAlternativesService: InvalidAlternativesService
   ) {}
 
   ngOnInit(): void {
@@ -402,7 +408,7 @@ export class EleccionComponent implements OnInit, OnChanges {
         });
 
         this.updateCellValidityWithRanges();
-        this.filterPathsByAreaRanges();
+        //this.filterPathsByAreaRanges();
 
         this.isCalculatingScores = false;
         this.cdr.detectChanges();
@@ -612,5 +618,21 @@ export class EleccionComponent implements OnInit, OnChanges {
     if (subtitle) {
       this.loadingSubtitle = subtitle;
     }
+  }
+
+  goToValidAlternatives(): void {
+    const validPaths = this.filteredPaths.filter(path => !path.hasConflicts);
+    this.validAlternativesService.setValidAlternatives(validPaths);
+    this.router.navigate(['/valid-alternatives'], {
+      queryParams: { projectId: this.projectId }
+    });
+  }
+
+  navigateToInvalidAlternatives(): void {
+    const invalidPaths = this.paths.filter(path => path.hasConflicts);
+    this.invalidAlternativesService.setInvalidAlternatives(invalidPaths);
+    this.router.navigate(['/invalid-alternatives'], {
+      queryParams: { projectId: this.projectId }
+    });
   }
 }

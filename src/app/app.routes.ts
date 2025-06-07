@@ -22,6 +22,8 @@ import { authGuard } from './guards/auth.guard';
 import { ProjectComponent } from './components/project/project.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { EleccionComponent } from './components/eleccion/eleccion.component';
+import { ValidAlternativesComponent } from './components/eleccion/valid-alternatives/valid-alternatives.component';
+import { InvalidAlternativesComponent } from './components/eleccion/invalid-alternatives/invalid-alternatives.component';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -45,6 +47,8 @@ export const routes: Routes = [
       { path: 'tabla-de-seleccion', component: TablaDeSeleccionComponent },
       { path: 'ultimopaso', component: UltimopasoComponent },
       { path: 'eleccion', component: EleccionComponent },
+      { path: 'valid-alternatives', component: ValidAlternativesComponent },
+      { path: 'invalid-alternatives', component: InvalidAlternativesComponent },
     ]
   },
   { path: 'crear-decision', component: CrearDecisionComponent, canActivate: [authGuard] },
@@ -64,5 +68,6 @@ export const routes: Routes = [
   { path: 'tabla-de-seleccion', component: TablaDeSeleccionComponent, canActivate: [authGuard] },
   { path: 'ultimopaso', component: UltimopasoComponent, canActivate: [authGuard] },
   { path: 'eleccion', component: EleccionComponent, canActivate: [authGuard] },
-
+  { path: 'valid-alternatives', component: ValidAlternativesComponent, canActivate: [authGuard] },
+  { path: 'invalid-alternatives', component: InvalidAlternativesComponent, canActivate: [authGuard] },
 ];

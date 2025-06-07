@@ -184,6 +184,7 @@ tr:nth-child(even) {
   display: flex;
   gap: 2rem;
   flex-wrap: wrap;
+  cursor: pointer;
 }
 
 .stat-item {
