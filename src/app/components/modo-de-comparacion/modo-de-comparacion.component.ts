@@ -7,11 +7,13 @@ import { ComparisonModeService } from '../../services/supabaseServices/compariso
 import { Subscription } from 'rxjs';
 import { NotificationService } from '../../services/_Notification/notification.service';
 import { NotificationsComponent } from "../notifications/notifications.component";
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslationService } from '../../services/translation.service';
 
 @Component({
   selector: 'app-modo-de-comparacion',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormsModule, NotificationsComponent],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, NotificationsComponent, TranslateModule],
   providers: [ ComparisonModeService ],
   templateUrl: './modo-de-comparacion.component.html',
   styleUrl: './modo-de-comparacion.component.css'
@@ -35,7 +37,9 @@ export class ModoDeComparacionComponent implements OnInit, OnDestroy {
   constructor(
     private fb: FormBuilder,
     private comparisonModeService: ComparisonModeService,
-    private notificationservice: NotificationService
+    private notificationservice: NotificationService,
+    private translationService: TranslationService,
+    private translate: TranslateService
   ) {
     this.comparisonForm = this.fb.group({
       order_num: ['', [Validators.required, Validators.min(1)]],

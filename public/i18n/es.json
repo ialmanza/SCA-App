@@ -160,9 +160,6 @@
       }
     }
   },
-  "comparisonMode": {
-    "title": "Modo de comparación"
-  },
   "selectionMode": {
     "title": "Modo de Selección",
     "end": "Fin del Proceso",
@@ -187,6 +184,51 @@
       "alternativeDeleted": "Alternativa eliminada exitosamente",
       "operationError": "Error en la operación"
     }
+  },
+  "comparisonMode": {
+  "title": "Modo de comparación",
+  "form": {
+    "orderImportance": "Orden de importancia:",
+    "newAreaName": "Nombre de la nueva área:",
+    "label": "Rótulo:",
+    "emoji": "Emoji:",
+    "addButton": "Agregar",
+    "updateButton": "Actualizar",
+    "cancelButton": "Cancelar"
+  },
+  "table": {
+    "order": "Orden",
+    "comparisonArea": "Área de comparación",
+    "label": "Rótulo",
+    "parameter": "Parámetro",
+    "actions": "Acciones",
+    "edit": "Editar",
+    "delete": "Eliminar",
+    "noModes": "No hay modos de comparación registrados"
+  },
+  "validations": {
+    "orderRequired": "El orden es requerido",
+    "areaRequired": "El área es requerida",
+    "labelRequired": "El rótulo es requerido"
+  },
+  "confirmDelete": "¿Está seguro de eliminar este modo de comparación?",
+  "notifications": {
+    "noProjectSpecified": "Error: No se ha especificado un proyecto",
+    "errorLoading": "Error al cargar los modos de comparación",
+    "updatedSuccess": "Modo de comparación actualizado exitosamente",
+    "errorUpdating": "Error al actualizar el modo de comparación",
+    "createdSuccess": "Modo de comparación creado exitosamente",
+    "errorCreating": "Error al crear el modo de comparación",
+    "deletedSuccess": "Modo de comparación eliminado exitosamente",
+    "errorDeleting": "Error al eliminar el modo de comparación"
+  },
+  "emojiOptions": {
+    "smile": "Sonrisa",
+    "sad": "Triste",
+    "fire": "Fuego",
+    "rocket": "Cohete",
+    "star": "Estrella"
+  }
   }
 }
 

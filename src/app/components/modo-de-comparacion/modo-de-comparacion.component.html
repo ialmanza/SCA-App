@@ -5,37 +5,37 @@
     <form [formGroup]="comparisonForm" [ngClass]="{'table-resaltada': modoedicion}" (ngSubmit)="onSubmit()"
       class="form-container">
       <div class="form-group">
-        <label for="order_num">Orden de importancia:</label>
+        <label for="order_num">{{ 'comparisonMode.form.orderImportance' | translate }}</label>
         <input type="number" id="order_num" formControlName="order_num" class="form-control"
           [class.is-invalid]="comparisonForm.get('order_num')?.invalid && comparisonForm.get('order_num')?.touched">
         <div class="invalid-feedback"
           *ngIf="comparisonForm.get('order_num')?.errors?.['required'] && comparisonForm.get('order_num')?.touched">
-          El orden es requerido
+          {{ 'comparisonMode.validations.orderRequired' | translate }}
         </div>
       </div>
 
       <div class="form-group">
-        <label for="comparison_area">Nombre de la nueva área:</label>
+        <label for="comparison_area">{{ 'comparisonMode.form.newAreaName' | translate }}</label>
         <input type="text" id="comparison_area" formControlName="comparison_area" class="form-control"
           [class.is-invalid]="comparisonForm.get('comparison_area')?.invalid && comparisonForm.get('comparison_area')?.touched">
         <div class="invalid-feedback"
           *ngIf="comparisonForm.get('comparison_area')?.errors?.['required'] && comparisonForm.get('comparison_area')?.touched">
-          El área es requerida
+          {{ 'comparisonMode.validations.areaRequired' | translate }}
         </div>
       </div>
 
       <div class="form-group">
-        <label for="label">Rótulo:</label>
+        <label for="label">{{ 'comparisonMode.form.label' | translate }}</label>
         <input type="text" id="label" formControlName="label" class="form-control"
           [class.is-invalid]="comparisonForm.get('label')?.invalid && comparisonForm.get('label')?.touched">
         <div class="invalid-feedback"
           *ngIf="comparisonForm.get('label')?.errors?.['required'] && comparisonForm.get('label')?.touched">
-          El rótulo es requerido
+          {{ 'comparisonMode.validations.labelRequired' | translate }}
         </div>
       </div>
 
       <div class="form-group">
-        <label for="symbol">Emoji:</label>
+        <label for="symbol">{{ 'comparisonMode.form.emoji' | translate }}</label>
         <select id="symbol" formControlName="symbol" class="form-control">
           <option *ngFor="let emoji of emojiOptions" [value]="emoji.value">
             {{ emoji.value }}
@@ -45,10 +45,10 @@
 
       <div class="button-group">
         <button type="submit" class="btn btn-primary" [disabled]="comparisonForm.invalid">
-          {{ isEditing ? 'Actualizar' : 'Agregar' }}
+          {{ isEditing ? ('comparisonMode.form.updateButton' | translate) : ('comparisonMode.form.addButton' | translate) }}
         </button>
         <button type="button" class="btn btn-secondary" *ngIf="isEditing" (click)="resetForm()">
-          Cancelar
+          {{ 'comparisonMode.form.cancelButton' | translate }}
         </button>
       </div>
     </form>
@@ -59,11 +59,11 @@
         <table class="table table-hover">
           <thead>
             <tr>
-              <th scope="col">Orden</th>
-              <th scope="col">Área de comparación</th>
-              <th scope="col">Rótulo</th>
-              <th scope="col">Parámetro</th>
-              <th scope="col">Acciones</th>
+              <th scope="col">{{ 'comparisonMode.table.order' | translate }}</th>
+              <th scope="col">{{ 'comparisonMode.table.comparisonArea' | translate }}</th>
+              <th scope="col">{{ 'comparisonMode.table.label' | translate }}</th>
+              <th scope="col">{{ 'comparisonMode.table.parameter' | translate }}</th>
+              <th scope="col">{{ 'comparisonMode.table.actions' | translate }}</th>
             </tr>
           </thead>
           <tbody>
@@ -75,15 +75,15 @@
 
               <td>
                 <button class="mod" (click)="editMode(mode)">
-                  Editar
+                  {{ 'comparisonMode.table.edit' | translate }}
                 </button>
                 <button class="elim" (click)="deleteMode(mode.id)">
-                  Eliminar
+                  {{ 'comparisonMode.table.delete' | translate }}
                 </button>
               </td>
             </tr>
             <tr *ngIf="comparisonModes.length === 0">
-              <td colspan="5" class="text-center">No hay modos de comparación registrados</td>
+              <td colspan="5" class="text-center">{{ 'comparisonMode.table.noModes' | translate }}</td>
             </tr>
           </tbody>
         </table>
