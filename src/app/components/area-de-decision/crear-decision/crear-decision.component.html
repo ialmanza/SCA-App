@@ -1,53 +1,70 @@
 <app-notifications></app-notifications>
 <div class="sm:mx-auto sm:w-full sm:max-w-sm">
 </div>
-  <div class="container p-4">
-
-    <div class="row">
-      <div class="con">
-        <div class="card">
-          <div class="card-body form">
-            <form (submit)="addDecision( nombre_area, descripcion)" >
-              <div class="form-group p-2">
-                <div class="resaltado">
-                  <h2>Generar áreas de decisiones</h2>
-                </div>
-                <div class="mb-3">
-                  <label for="rotulo">Ingresar un rótulo válido:</label>
-                  <input
+<div class="container p-4">
+  <div class="row">
+    <div class="con">
+      <div class="card">
+        <div class="card-body form">
+          <form (submit)="addDecision(nombre_area, descripcion)">
+            <div class="form-group p-2">
+              <div class="resaltado">
+                <h2>{{ 'decisionArea.title' | translate }}</h2>
+              </div>
+              <div class="mb-3">
+                <label for="rotulo">{{ 'decisionArea.form.labelField' | translate }}</label>
+                <input
                   type="text"
                   name="rotulo"
                   id="rotulo"
-                  placeholder="ABC_DEF"
+                  [placeholder]="'decisionArea.form.labelPlaceholder' | translate"
                   pattern="^[A-Z]{3}_[A-Z]{3}$"
                   required
                   class="input-custom"
                   [(ngModel)]="rotuloValue"
                   #rotulo="ngModel"
                 />
-                </div>
-
-                <div>
-                  <label for="nombre_area" >Complete el nombre del área:</label>
-                  <input type="text" name="nombre_area" id="nombre_area" placeholder="Nombre" class="input-custom" required="" #nombre_area>
-                </div>
-
-                <div>
-                  <label for="descripcion">Complete su descripción:</label>
-                  <textarea type="text" name="descripcion" id="descripcion" placeholder="Descripción del área creada" class="input-custom" required="" rows="4" #descripcion></textarea>
-                </div>
-                <div class="botones">
-                  <button type="submit"  class="btn añade">
-                    Añadir
-                  </button>
-                  <button type="submit"  class="btn cancela">
-                    Cancelar
-                  </button>
-                </div>
               </div>
-            </form>
-          </div>
+
+              <div>
+                <label for="nombre_area">{{ 'decisionArea.form.nameField' | translate }}</label>
+                <input
+                  type="text"
+                  name="nombre_area"
+                  id="nombre_area"
+                  [placeholder]="'decisionArea.form.namePlaceholder' | translate"
+                  class="input-custom"
+                  required
+                  #nombre_area
+                />
+              </div>
+
+              <div>
+                <label for="descripcion">{{ 'decisionArea.form.descriptionField' | translate }}</label>
+                <textarea
+                  type="text"
+                  name="descripcion"
+                  id="descripcion"
+                  [placeholder]="'decisionArea.form.descriptionPlaceholder' | translate"
+                  class="input-custom"
+                  required
+                  rows="4"
+                  #descripcion
+                ></textarea>
+              </div>
+
+              <div class="botones">
+                <button type="submit" class="btn añade">
+                  {{ 'decisionArea.form.addButton' | translate }}
+                </button>
+                <button type="button" class="btn cancela">
+                  {{ 'decisionArea.form.cancelButton' | translate }}
+                </button>
+              </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   </div>
+</div>

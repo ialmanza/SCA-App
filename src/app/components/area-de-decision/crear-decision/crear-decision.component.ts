@@ -6,11 +6,13 @@ import { DecisionAreaService } from '../../../services/supabaseServices/decision
 import { NotificationService } from '../../../services/_Notification/notification.service';
 import { NotificationsComponent } from "../../notifications/notifications.component";
 import { ActivatedRoute } from '@angular/router';
+import { TranslateModule, TranslateService } from '@ngx-translate/core';
+import { TranslationService } from '../../../services/translation.service';
 
 @Component({
   selector: 'app-crear-decision',
   standalone: true,
-  imports: [ReactiveFormsModule, FormsModule, CommonModule, NotificationsComponent],
+  imports: [ReactiveFormsModule, FormsModule, CommonModule, NotificationsComponent, TranslateModule],
   providers: [DecisionAreaService],
   templateUrl: './crear-decision.component.html',
   styleUrl: './crear-decision.component.css'
@@ -24,7 +26,9 @@ export class CrearDecisionComponent implements OnInit {
   constructor(
     private decisionAreaService: DecisionAreaService,
     private notificationService: NotificationService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private translateService: TranslateService,
+    private translationService: TranslationService
   ) {}
 
   ngOnInit() {
@@ -62,6 +66,11 @@ export class CrearDecisionComponent implements OnInit {
         } else {
           console.warn('No se encontró projectId en ninguna fuente');
           this.projectIdConfirmed = false;
+          // Usar traducción para el mensaje de advertencia
+          this.notificationService.show(
+            this.translateService.instant('decisionArea.notifications.projectIdNotFound'),
+            'info'
+          );
         }
       });
     });
@@ -70,7 +79,10 @@ export class CrearDecisionComponent implements OnInit {
   async addDecision(area: HTMLInputElement, descripcion: HTMLTextAreaElement) {
     if (!this.projectId || this.projectId.trim() === '' || !this.isValidUUID(this.projectId)) {
       console.error('ID del proyecto no válido o no encontrado:', this.projectId);
-      this.notificationService.show('ID del proyecto no válido o no encontrado', 'error');
+      this.notificationService.show(
+        this.translateService.instant('decisionArea.notifications.invalidProjectId'),
+        'error'
+      );
       this.limpiarCampos(area, descripcion);
       return;
     }
@@ -78,7 +90,10 @@ export class CrearDecisionComponent implements OnInit {
     console.log('Intentando crear decisión con projectId:', this.projectId);
 
     if (!area.value) {
-      this.notificationService.show('Por favor, complete el nombre del área', 'error');
+      this.notificationService.show(
+        this.translateService.instant('decisionArea.notifications.completeAreaName'),
+        'error'
+      );
       this.limpiarCampos(area, descripcion);
       return;
     }
@@ -94,11 +109,17 @@ export class CrearDecisionComponent implements OnInit {
         is_important: false
       });
 
-      this.notificationService.show('Área de decisión creada correctamente', 'success');
+      this.notificationService.show(
+        this.translateService.instant('decisionArea.notifications.createdSuccessfully'),
+        'success'
+      );
       this.limpiarCampos(area, descripcion);
 
     } catch (error) {
-      this.notificationService.show('Error al crear el área de decisión', 'error');
+      this.notificationService.show(
+        this.translateService.instant('decisionArea.notifications.errorCreating'),
+        'error'
+      );
     } finally {
       this.isLoading = false;
     }

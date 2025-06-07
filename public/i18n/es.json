@@ -12,6 +12,26 @@
     "about": "Acerca de",
     "contact": "Contacto"
   },
+  "decisionArea": {
+    "title": "Generar áreas de decisiones",
+    "form": {
+      "labelField": "Ingresar un rótulo válido:",
+      "labelPlaceholder": "ABC_DEF",
+      "nameField": "Complete el nombre del área:",
+      "namePlaceholder": "Nombre",
+      "descriptionField": "Complete su descripción:",
+      "descriptionPlaceholder": "Descripción del área creada",
+      "addButton": "Añadir",
+      "cancelButton": "Cancelar"
+    },
+    "notifications": {
+      "invalidProjectId": "ID del proyecto no válido o no encontrado",
+      "completeAreaName": "Por favor, complete el nombre del área",
+      "createdSuccessfully": "Área de decisión creada correctamente",
+      "errorCreating": "Error al crear el área de decisión",
+      "projectIdNotFound": "No se encontró projectId en ninguna fuente"
+    }
+  },
   "project": {
     "loading": "Cargando proyectos...",
     "error": {
