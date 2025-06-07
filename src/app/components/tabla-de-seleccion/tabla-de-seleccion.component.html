@@ -1,5 +1,3 @@
-<!-- Agregar el componente de rango de puntuaciones al inicio -->
-<app-rango-puntuaciones (rangeChange)="onScoreRangeChange($event)"></app-rango-puntuaciones>
 
 <!-- Reemplazar el div de loading existente con este nuevo spinner -->
 <div *ngIf="isLoading" class="professional-loading-container">
@@ -87,26 +85,6 @@
       No hay alternativas disponibles para mostrar
     </p>
   </div>
-
-  <!-- Resumen estadístico -->
-  <div *ngIf="filteredPaths && filteredPaths.length > 0" class="summary">
-    <h3>Resumen</h3>
-    <div class="summary-stats">
-      <div class="stat-item">
-        <span class="stat-label">Total de alternativas:</span>
-        <span class="stat-value">{{ valorFilteredPaths.length }}</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-label">Alternativas válidas:</span>
-        <span class="stat-value valid">{{ getValidAlternativesCount() }}</span>
-      </div>
-      <div class="stat-item">
-        <span class="stat-label">Alternativas inválidas:</span>
-        <span class="stat-value invalid">{{ getInvalidAlternativesCount() }}</span>
-      </div>
-    </div>
-  </div>
-</div>
 
 <!-- Path Modal -->
 <app-path-modal

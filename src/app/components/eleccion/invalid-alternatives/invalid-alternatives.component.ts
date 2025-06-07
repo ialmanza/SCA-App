@@ -38,13 +38,14 @@ export class InvalidAlternativesComponent implements OnInit {
       if (params['projectId']) {
         this.projectId = params['projectId'];
         this.paths = this.invalidAlternativesService.getInvalidAlternatives();
-        
+
         if (this.paths.length === 0) {
           this.error = 'No se encontraron alternativas inválidas';
         }
-        
+
         this.isLoading = false;
         this.loadComparisonModes();
+        this.sortPathsByTotalScore();
       } else {
         this.error = 'No se encontró el ID del proyecto';
         this.isLoading = false;
@@ -112,5 +113,9 @@ export class InvalidAlternativesComponent implements OnInit {
 
   trackByFn(index: number, item: any): string {
     return item.id || index;
+  }
+
+  sortPathsByTotalScore(): void {
+    this.paths.sort((a, b) => this.getTotalScore(b) - this.getTotalScore(a));
   }
 }

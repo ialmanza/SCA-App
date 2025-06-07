@@ -45,6 +45,7 @@ export class ValidAlternativesComponent implements OnInit {
 
         this.isLoading = false;
         this.loadComparisonModes();
+        this.sortPathsByTotalScore();
       } else {
         this.error = 'No se encontró el ID del proyecto';
         this.isLoading = false;
@@ -110,5 +111,9 @@ export class ValidAlternativesComponent implements OnInit {
 
   trackByFn(index: number, item: any): string {
     return item.id || index;
+  }
+
+  sortPathsByTotalScore(): void {
+    this.paths.sort((a, b) => this.getTotalScore(b) - this.getTotalScore(a));
   }
 }

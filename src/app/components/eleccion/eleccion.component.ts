@@ -94,7 +94,6 @@ export class EleccionComponent implements OnInit, OnChanges {
     private comparisonModeService: ComparisonModeService,
     private comparisonCellService: ComparisonCellService,
     private cdr: ChangeDetectorRef,
-    private selectedPathsService: SelectedPathsService,
     private pathDescriptionsService: PathDescriptionsService,
     private pathAreaScoreService: PathAreaScoreService,
     private router: Router,
@@ -140,16 +139,15 @@ export class EleccionComponent implements OnInit, OnChanges {
     this.isLoading = true;
     this.error = null;
 
-    this.opciones$ = from(this.opcionService.getOpcionesByProject(this.projectId))
+    const opciones$ = from(this.opcionService.getOpcionesByProject(this.projectId))
       .pipe(
         catchError(err => {
           this.error = `Error al cargar opciones: ${err.message || JSON.stringify(err)}`;
-          this.isLoading = false;
           return of([]);
         })
       );
 
-    this.comparisonModes$ = from(this.comparisonModeService.getComparisonModesByProject(this.projectId))
+    const comparisonModes$ = from(this.comparisonModeService.getComparisonModesByProject(this.projectId))
       .pipe(
         map((modes: ComparisonMode[]) => {
           this.modeEmojiMap.clear();
@@ -164,33 +162,37 @@ export class EleccionComponent implements OnInit, OnChanges {
         }),
         catchError(err => {
           this.error = `Error al cargar modos de comparación: ${err.message || JSON.stringify(err)}`;
-          this.isLoading = false;
           return of([]);
         })
       );
 
     const decisionAreas$ = of([]);
 
+    const paths$ = from(supabase
+      .from('path_descriptions')
+      .select('*')
+      .eq('project_id', this.projectId)
+      .then(({ data, error }: { data: PathDescription[] | null, error: any }) => {
+        if (error) throw error;
+        return data || [];
+      }))
+      .pipe(catchError(err => {
+        this.error = `Error al cargar paths: ${err.message || JSON.stringify(err)}`;
+        return of([]);
+      }));
+
+    const validOptions$ = this.comparisonCellService.getCellsWithMinimumScores(this.projectId);
+    const cellValues$ = this.comparisonCellService.getComparisonCellsByProject(this.projectId);
+    const pathAreaScores$ = this.pathAreaScoreService.getProjectPathAreaScores(this.projectId);
+
     forkJoin({
-      paths: from(supabase
-        .from('path_descriptions')
-        .select('*')
-        .eq('project_id', this.projectId)
-        .then(({ data, error }: { data: PathDescription[] | null, error: any }) => {
-          if (error) throw error;
-          return data || [];
-        }))
-        .pipe(catchError(err => {
-          this.error = `Error al cargar paths: ${err.message || JSON.stringify(err)}`;
-          this.isLoading = false;
-          return of([]);
-        })),
-      modes: this.comparisonModes$,
-      opciones: this.opciones$,
-      validOptions: this.comparisonCellService.getCellsWithMinimumScores(this.projectId),
-      cellValues: this.comparisonCellService.getComparisonCellsByProject(this.projectId),
+      paths: paths$,
+      modes: comparisonModes$,
+      opciones: opciones$,
+      validOptions: validOptions$,
+      cellValues: cellValues$,
       decisionAreas: decisionAreas$,
-      pathAreaScores: this.pathAreaScoreService.getProjectPathAreaScores(this.projectId)
+      pathAreaScores: pathAreaScores$
     }).subscribe({
       next: ({ paths, modes, opciones, validOptions, cellValues, decisionAreas, pathAreaScores }) => {
         this.allCells = cellValues;
@@ -242,25 +244,31 @@ export class EleccionComponent implements OnInit, OnChanges {
           return pathValues;
         });
 
-        // Guardar el total original de alternativas
         this.totalAlternativesCount = this.paths.length;
         this.filteredPaths = [...this.paths];
+        this.sortPathsByTotalScore();
         this.validOptionsMap = validOptions;
 
         this.updateCellValidityWithRanges();
-
-        this.cdr.detectChanges();
 
         const pathsWithoutScores = this.paths.filter(path =>
           !path.areaScores || Object.keys(path.areaScores).length === 0
         );
 
         if (pathsWithoutScores.length > 0) {
-          this.calculatePathAreaScoresCorrectly(pathsWithoutScores);
+          this.calculatePathAreaScoresCorrectly(pathsWithoutScores)
+            .then(() => {
+              this.isLoading = false;
+              this.cdr.detectChanges();
+            })
+            .catch(() => {
+              this.isLoading = false;
+              this.cdr.detectChanges();
+            });
+        } else {
+          this.isLoading = false;
+          this.cdr.detectChanges();
         }
-
-        this.isLoading = false;
-        this.cdr.detectChanges();
       },
       error: (error) => {
         this.error = `Error al cargar datos: ${error.message || JSON.stringify(error)}`;
@@ -333,6 +341,7 @@ export class EleccionComponent implements OnInit, OnChanges {
 
       return true;
     });
+    this.sortPathsByTotalScore();
   }
 
   getEmojisForCell(path: PathValues, modeId: string): string {
@@ -361,8 +370,8 @@ export class EleccionComponent implements OnInit, OnChanges {
     return path.conflictingAreas.join(', ');
   }
 
-  calculatePathAreaScoresCorrectly(pathsToCalculate: PathValues[]): void {
-    if (!pathsToCalculate || pathsToCalculate.length === 0) return;
+  calculatePathAreaScoresCorrectly(pathsToCalculate: PathValues[]): Promise<void> {
+    if (!pathsToCalculate || pathsToCalculate.length === 0) return Promise.resolve();
 
     this.isCalculatingScores = true;
 
@@ -387,7 +396,7 @@ export class EleccionComponent implements OnInit, OnChanges {
         });
     });
 
-    Promise.all(calculationPromises)
+    return Promise.all(calculationPromises)
       .then(results => {
         results.forEach((scores, index) => {
           const pathId = pathsToCalculate[index].id;
@@ -408,6 +417,7 @@ export class EleccionComponent implements OnInit, OnChanges {
         });
 
         this.updateCellValidityWithRanges();
+        this.sortPathsByTotalScore();
         //this.filterPathsByAreaRanges();
 
         this.isCalculatingScores = false;
@@ -634,5 +644,10 @@ export class EleccionComponent implements OnInit, OnChanges {
     this.router.navigate(['/invalid-alternatives'], {
       queryParams: { projectId: this.projectId }
     });
+  }
+
+  // Método para ordenar paths por sumatoria (mayor a menor)
+  sortPathsByTotalScore(): void {
+    this.filteredPaths.sort((a, b) => this.getTotalScore(b) - this.getTotalScore(a));
   }
 }
